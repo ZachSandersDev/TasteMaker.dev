@@ -1,0 +1,9 @@
+.app-header {
+  display: flex;
+  align-items: center;
+
+  height: 60px;
+  width: 100%;
+
+  gap: var(--spacing);
+}

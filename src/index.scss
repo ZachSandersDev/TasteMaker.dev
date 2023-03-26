@@ -1,0 +1,118 @@
+:root {
+  /* color-scheme: light dark; */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  font-family: "Raleway", sans-serif;
+  --spacing: 8px;
+}
+
+body {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+[list]::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+input {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+}
+
+.ra-view {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100vw;
+  overflow-x: hidden;
+
+  @media (min-width: 1000px) {
+    width: 700px;
+    margin: 0 auto;
+  }
+}
+
+.ra-input {
+  outline: none;
+  border: none;
+
+  min-width: 0;
+  padding: calc(var(--spacing) * 0.5) var(--spacing);
+  border-radius: calc(var(--spacing) * 0.5);
+  font-size: 0.8em;
+
+  @media (min-width: 1000px) {
+    font-size: 0.7em;
+  }
+
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+
+  transition: box-shadow 0.25s;
+
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6);
+  }
+
+  &::placeholder {
+    color: #a7a7a7;
+  }
+}
+
+.icon-button {
+  background: inherit;
+  color: inherit;
+  outline: none;
+  border: none;
+
+  cursor: pointer;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: calc(var(--spacing) * 0.5);
+  padding: var(--spacing);
+
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}

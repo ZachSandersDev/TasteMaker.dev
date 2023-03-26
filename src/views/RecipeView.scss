@@ -1,0 +1,85 @@
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  padding: var(--spacing);
+  margin: 0;
+  gap: calc(var(--spacing));
+}
+
+.recipe-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100%;
+  padding: var(--spacing);
+
+  h3 {
+    padding: var(--spacing) 0;
+  }
+}
+
+.name-field {
+  outline: none;
+  border: none;
+  padding: var(--spacing);
+  font-weight: 600;
+  font-size: 1.5em;
+  flex: 1;
+
+  &:focus {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.meta-section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 1.5);
+
+  input {
+    width: 100%;
+  }
+}
+
+.step-item {
+  display: flex;
+  flex: 1;
+  gap: var(--spacing);
+
+  > :first-child {
+    width: 2ch;
+    font-size: 0.8em;
+  }
+}
+
+.step-input {
+  flex: 1;
+}
+
+.new-button {
+  display: flex;
+  align-items: center;
+
+  gap: calc(var(--spacing) * 0.5);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+  margin-left: calc(var(--spacing) * 3);
+
+  background-color: #b6e0fb;
+  border-radius: calc(var(--spacing) * 2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background-color 0.25s;
+
+  cursor: pointer;
+  user-select: none;
+
+  i {
+    font-size: 1.25em;
+  }
+
+  &:hover {
+    background-color: #a8cee5;
+  }
+}

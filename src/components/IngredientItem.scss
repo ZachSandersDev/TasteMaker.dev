@@ -1,0 +1,35 @@
+.ingredient-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  gap: calc(var(--spacing) * 0.57);
+
+  .drag-handle {
+    cursor: pointer;
+    user-select: none;
+    font-size: 1em;
+    color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.value-field,
+.ingredient-field,
+.unit-field {
+  // width: 0;
+}
+
+.value-field {
+  // flex: 1;
+  max-width: 6ch;
+  text-align: right;
+}
+
+.unit-field {
+  max-width: 8ch;
+  // flex: 1;
+}
+
+.ingredient-field {
+  flex: 3;
+}
