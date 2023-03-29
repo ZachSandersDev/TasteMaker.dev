@@ -5,18 +5,48 @@ import { Link } from "react-router-dom";
 import { setRecipeDefaults } from "../@modules/types/recipes";
 import { newRecipe } from "../@modules/api/recipes";
 import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
+import { listenForTree, treeStore } from "../@modules/stores/tree";
 
 import AppHeader from "../components/AppHeader";
+import RecipeTree from "../components/RecipeTree/RecipeTree";
+import { saveTree } from "../@modules/api/tree";
 
 export default function MyRecipes() {
   const { recipes } = useRecoilValue(recipeStore);
+  const { tree } = useRecoilValue(treeStore);
 
   useEffect(() => {
     listenForRecipes();
+    listenForTree();
   }, []);
 
-  const makeNewRecipe = () => {
-    newRecipe(setRecipeDefaults({}));
+  const makeNewRecipe = async () => {
+    const id = await newRecipe(setRecipeDefaults({}));
+    if (!id) return;
+
+    saveTree([
+      ...tree,
+      {
+        id: 0,
+        parent: 0,
+        data: {
+          recipeId: id,
+        },
+      },
+    ]);
+  };
+
+  const makeNewFolder = async () => {
+    saveTree([
+      ...tree,
+      {
+        id: 0,
+        parent: 0,
+        data: {
+          name: "New Folder",
+        },
+      },
+    ]);
   };
 
   return (
@@ -25,15 +55,10 @@ export default function MyRecipes() {
         <h2>My Recipes</h2>
       </AppHeader>
 
-      <ul>
-        {recipes.map((r) => (
-          <li key={r._id}>
-            <Link to={`/recipe/${r._id}`}>{r.name || "Untitled"}</Link>
-          </li>
-        ))}
-      </ul>
+      {tree.length && recipes.length ? <RecipeTree /> : <span>Loading...</span>}
 
       <button onClick={makeNewRecipe}>New Recipe</button>
+      <button onClick={makeNewFolder}>New Folder</button>
     </div>
   );
 }

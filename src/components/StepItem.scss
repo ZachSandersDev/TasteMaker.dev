@@ -1,0 +1,14 @@
+.step-item {
+  display: flex;
+  flex: 1;
+  gap: var(--spacing);
+
+  > :first-child {
+    width: 2ch;
+    font-size: 0.8em;
+  }
+}
+
+.step-input {
+  flex: 1;
+}

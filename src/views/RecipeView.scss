@@ -14,7 +14,7 @@
   align-items: flex-start;
 
   width: 100%;
-  padding: var(--spacing);
+  padding: var(--spacing) 0;
 
   h3 {
     padding: var(--spacing) 0;
@@ -42,21 +42,6 @@
   input {
     width: 100%;
   }
-}
-
-.step-item {
-  display: flex;
-  flex: 1;
-  gap: var(--spacing);
-
-  > :first-child {
-    width: 2ch;
-    font-size: 0.8em;
-  }
-}
-
-.step-input {
-  flex: 1;
 }
 
 .new-button {

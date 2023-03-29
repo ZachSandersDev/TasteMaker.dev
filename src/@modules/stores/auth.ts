@@ -1,4 +1,5 @@
-import { atom, useSetRecoilState } from "recoil";
+import { atom } from "recoil";
+import debounce from "lodash/debounce"
 import {
   getAuth,
   GoogleAuthProvider,
@@ -20,7 +21,11 @@ export const authStore = atom<User>({
 export function listenForAuth() {
   const auth = getAuth(app);
 
-  onAuthStateChanged(auth, async (user) => {
+  let alreadyTried = false
+
+  onAuthStateChanged(auth, debounce(async (user) => {
+    if (alreadyTried) return;
+
     if (user) {
       setRecoil(authStore, user);
     } else {
@@ -30,7 +35,8 @@ export function listenForAuth() {
         setRecoil(authStore, user);
       } catch (err) {
         signInWithRedirect(auth, provider)
+          .catch(err => alert("Redirect auth failed" + err))
       }
     }
-  });
+  }, 200));
 }

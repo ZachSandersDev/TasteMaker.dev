@@ -55,6 +55,7 @@ h5 {
 
   width: 100vw;
   overflow-x: hidden;
+  padding: 0 var(--spacing);
 
   @media (min-width: 1000px) {
     width: 700px;
@@ -95,7 +96,8 @@ h5 {
   }
 }
 
-.icon-button {
+.icon-button,
+.icon-button-sm {
   background: inherit;
   color: inherit;
   outline: none;
@@ -110,9 +112,22 @@ h5 {
 
   border-radius: calc(var(--spacing) * 0.5);
   padding: var(--spacing);
-
+}
+.icon-button {
   transition: background-color 0.25s;
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
+}
+
+.icon-button-sm {
+  padding: calc(var(--spacing) * 0.25) calc(var(--spacing) * 0.5);
+  background: initial;
+}
+
+.drag-handle {
+  cursor: pointer;
+  user-select: none;
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.4);
 }

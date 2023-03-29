@@ -13,6 +13,7 @@ import IngredientItem from "../components/IngredientItem";
 
 import "./RecipeView.scss";
 import { useRecipe } from "../@modules/stores/recipes";
+import StepItem from "../components/StepItem";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -60,10 +61,6 @@ export default function RecipeView() {
 
   const addNewStep = () => {
     updateRecipe((r) => r.steps.push({ _id: crypto.randomUUID(), text: "" }));
-  };
-
-  const setStepText = (index: number, value: string) => {
-    updateRecipe((r) => (r.steps[index].text = value));
   };
 
   const save = () => {
@@ -139,15 +136,12 @@ export default function RecipeView() {
               className="recipe-list"
             >
               {recipe.steps.map((step, i) => (
-                <Reorder.Item className="step-item" value={step} key={step._id}>
-                  <span>{i + 1}.</span>
-                  <ContentEditable
-                    className="ra-input step-input"
-                    contentEditable
-                    html={sanitize(step.text)}
-                    onChange={(e) => setStepText(i, sanitize(e.target.value))}
-                  />
-                </Reorder.Item>
+                <StepItem
+                  step={step}
+                  key={step._id}
+                  index={i}
+                  updateRecipe={updateRecipe}
+                />
               ))}
             </Reorder.Group>
 

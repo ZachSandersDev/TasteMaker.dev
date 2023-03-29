@@ -32,14 +32,7 @@ export default function IngredientItem({
       dragListener={false}
       dragControls={controls}
     >
-      <div
-        onPointerDown={(e) => controls.start(e)}
-        style={{ touchAction: "none" }}
-      >
-        <span className="material-symbols-rounded drag-handle">
-          drag_indicator
-        </span>
-      </div>
+      <span>&bull;</span>
 
       <input
         className="ra-input value-field"
@@ -74,6 +67,15 @@ export default function IngredientItem({
           setIngredientValue(index, "ingredient", e.target.value)
         }
       />
+
+      <div
+        onPointerDown={(e) => controls.start(e)}
+        style={{ touchAction: "none" }}
+      >
+        <span className="material-symbols-rounded drag-handle">
+          drag_indicator
+        </span>
+      </div>
     </Reorder.Item>
   );
 }

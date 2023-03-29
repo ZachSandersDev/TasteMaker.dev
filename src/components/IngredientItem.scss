@@ -5,11 +5,9 @@
 
   gap: calc(var(--spacing) * 0.57);
 
-  .drag-handle {
-    cursor: pointer;
-    user-select: none;
-    font-size: 1em;
-    color: rgba(0, 0, 0, 0.4);
+  > span:first-child {
+    font-size: 1.25em;
+    margin-right: calc(var(--spacing) * 0.5);
   }
 }
 

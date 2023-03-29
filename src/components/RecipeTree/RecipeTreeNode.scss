@@ -1,0 +1,21 @@
+.recipe-tree-node {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1);
+
+  padding: calc(var(--spacing) * 0.5) var(--spacing);
+  border-radius: calc(var(--spacing));
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.recipe-tree-node-icon {
+  font-size: 1.25em;
+  max-width: 2ch;
+}
