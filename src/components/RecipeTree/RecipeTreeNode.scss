@@ -17,5 +17,10 @@
 
 .recipe-tree-node-icon {
   font-size: 1.25em;
-  max-width: 2ch;
+  width: 30px;
+  text-align: center;
+}
+
+.material-symbols-rounded.recipe-tree-node-icon {
+  font-size: 1.5em;
 }

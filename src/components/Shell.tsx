@@ -7,6 +7,7 @@ import { listenForRecipes } from "../@modules/stores/recipes";
 import { listenForTree } from "../@modules/stores/tree";
 
 import router from "../@modules/router";
+import { listenForLists } from "../@modules/stores/shoppingLists";
 
 export default function Shell() {
   const { user } = useRecoilValue(authStore);
@@ -19,6 +20,7 @@ export default function Shell() {
     if (user) {
       listenForRecipes();
       listenForTree();
+      listenForLists();
     }
   }, [user]);
 

@@ -128,7 +128,14 @@ export default function RecipeView() {
                   ingredient={ingredient}
                   index={i}
                   key={ingredient._id}
-                  updateRecipe={updateRecipe}
+                  updateIngredient={(newIngredient) =>
+                    updateRecipe((r) =>
+                      r.ingredients.splice(i, 1, newIngredient)
+                    )
+                  }
+                  deleteIngredient={() =>
+                    updateRecipe((r) => r.ingredients.splice(i, 1))
+                  }
                 />
               ))}
             </Reorder.Group>

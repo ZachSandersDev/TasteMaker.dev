@@ -1,4 +1,9 @@
-.my-recipes-card {
+.home-view {
+  height: 100%;
+  gap: var(--spacing);
+}
+
+.home-card {
   display: flex;
   flex-direction: column;
 
@@ -10,9 +15,14 @@
   padding: var(--spacing);
 }
 
-.my-recipes-card-header {
+.home-card-header {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   flex: 1;
   gap: var(--spacing);
+
+  .icon-button {
+    background-color: var(--color-background);
+  }
 }
