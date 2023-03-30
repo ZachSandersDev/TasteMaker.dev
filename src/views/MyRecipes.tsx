@@ -27,9 +27,11 @@ export default function MyRecipes() {
     saveTree([
       ...tree,
       {
-        id: 0,
-        parent: 0,
+        id: crypto.randomUUID(),
+        parent: -1,
+        text: "",
         data: {
+          icon: "🗒️",
           recipeId: id,
         },
       },
@@ -40,11 +42,9 @@ export default function MyRecipes() {
     saveTree([
       ...tree,
       {
-        id: 0,
-        parent: 0,
-        data: {
-          name: "New Folder",
-        },
+        id: crypto.randomUUID(),
+        parent: -1,
+        text: "New Folder",
       },
     ]);
   };
