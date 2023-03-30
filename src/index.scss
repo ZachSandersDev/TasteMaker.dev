@@ -38,6 +38,7 @@ body,
 #root,
 #root > main {
   height: 100vh;
+  height: -webkit-fill-available;
 }
 
 *,
@@ -139,6 +140,9 @@ h5 {
   align-items: center;
   justify-content: center;
 
+  height: 40px;
+  width: 40px;
+
   border-radius: calc(var(--spacing) * 0.5);
   padding: var(--spacing);
 
@@ -158,6 +162,8 @@ h5 {
 
 .icon-button-sm {
   padding: calc(var(--spacing) * 0.25) calc(var(--spacing) * 0.5);
+  height: 35px;
+  width: 35px;
   background: initial;
 }
 
@@ -188,6 +194,7 @@ h5 {
   @media (max-width: 500px) {
     align-self: center;
     margin: 0;
+    font-size: 0.8em;
   }
 }
 

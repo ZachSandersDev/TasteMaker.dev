@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
+import { v4 as uuid } from "uuid";
 
 import { setRecipeDefaults } from "../@modules/types/recipes";
 import { newRecipe } from "../@modules/api/recipes";
-import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
-import { listenForTree, treeStore } from "../@modules/stores/tree";
+import { recipeStore } from "../@modules/stores/recipes";
+import { treeStore } from "../@modules/stores/tree";
 
 import AppHeader from "../components/AppHeader";
 import RecipeTree from "../components/RecipeTree/RecipeTree";
@@ -13,13 +13,8 @@ import { saveTree } from "../@modules/api/tree";
 import "./MyRecipes.scss";
 
 export default function MyRecipes() {
-  const { recipes } = useRecoilValue(recipeStore);
-  const { tree } = useRecoilValue(treeStore);
-
-  useEffect(() => {
-    listenForRecipes();
-    listenForTree();
-  }, []);
+  const { loading: recipesLoading } = useRecoilValue(recipeStore);
+  const { tree, loading: treeLoading } = useRecoilValue(treeStore);
 
   const makeNewRecipe = async () => {
     const id = await newRecipe(setRecipeDefaults({}));
@@ -28,7 +23,7 @@ export default function MyRecipes() {
     saveTree([
       ...tree,
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         parent: -1,
         text: "",
         data: {
@@ -43,7 +38,7 @@ export default function MyRecipes() {
     saveTree([
       ...tree,
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         parent: -1,
         text: "New Folder",
       },
@@ -57,13 +52,13 @@ export default function MyRecipes() {
         <header className="my-recipes-card-header">
           <button
             className="icon-button material-symbols-rounded"
-            onClick={makeNewRecipe}
+            onClick={makeNewFolder}
           >
             create_new_folder
           </button>
           <button
             className="icon-button material-symbols-rounded"
-            onClick={makeNewFolder}
+            onClick={makeNewRecipe}
           >
             note_add
           </button>
@@ -71,7 +66,7 @@ export default function MyRecipes() {
       </AppHeader>
 
       <div className="my-recipes-card">
-        {tree.length && recipes.length ? (
+        {!treeLoading && !recipesLoading ? (
           <RecipeTree />
         ) : (
           <span>Loading...</span>

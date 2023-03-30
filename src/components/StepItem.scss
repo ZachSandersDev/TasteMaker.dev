@@ -1,12 +1,12 @@
 .step-item {
   display: flex;
+  align-items: center;
   flex: 1;
   gap: var(--spacing);
 
-  > :first-child {
-    width: 2ch;
-    font-size: 0.8em;
-  }
+  padding: 3px 0;
+  background-color: var(--color-background);
+  height: 100%;
 }
 
 .step-input {

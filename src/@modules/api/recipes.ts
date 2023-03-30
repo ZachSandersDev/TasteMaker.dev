@@ -8,7 +8,7 @@ import { Recipe, setRecipeDefaults } from "../types/recipes";
 import { addItemID, addListIDs, stripItemID } from "./utils";
 
 function getRecipeRef() {
-  const user = getRecoil(authStore);
+  const { user } = getRecoil(authStore);
 
   if (!user) throw "User is not logged in";
 

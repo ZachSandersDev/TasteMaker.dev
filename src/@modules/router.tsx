@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     element: <MyRecipes />,
   },
   {
-    path: "/recipe/:recipeId",
+    path: "/recipe/:treeNodeId/:recipeId",
     element: <RecipeView />,
   },
 ]);

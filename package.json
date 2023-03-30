@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@minoru/react-dnd-treeview": "^3.4.4",
+    "emoji-picker-react": "^4.4.8",
     "firebase": "^9.18.0",
     "framer-motion": "^10.9.1",
     "lodash": "^4.17.21",
@@ -18,15 +19,18 @@
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
+    "react-swipe-to-delete-ios": "^2.1.0",
     "recoil": "^0.7.7",
     "recoil-nexus": "^0.4.0",
-    "sanitize-html": "^2.10.0"
+    "sanitize-html": "^2.10.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.192",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/sanitize-html": "^2.9.0",
+    "@types/uuid": "^9.0.1",
     "@vitejs/plugin-react": "^3.1.0",
     "sass": "^1.60.0",
     "typescript": "^4.9.3",

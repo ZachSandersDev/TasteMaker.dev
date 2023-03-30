@@ -35,7 +35,7 @@ export const RecipeNode = ({
     e.stopPropagation();
 
     if (recipe) {
-      navigate(`/recipe/${recipe._id}`);
+      navigate(`/recipe/${id}/${recipe._id}`);
     } else {
       onToggle(id);
     }
@@ -71,7 +71,7 @@ export const RecipeNode = ({
         />
       ) : (
         <span onDoubleClick={() => setEditingText(true)}>
-          {recipe ? recipe.name : localText}
+          {recipe ? recipe.name || "Untitled Recipe" : localText}
         </span>
       )}
     </motion.div>

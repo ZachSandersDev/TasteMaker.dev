@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-
+import { v4 as uuid } from "uuid";
 import { Reorder } from "framer-motion";
 
 import { saveRecipe } from "../@modules/api/recipes";
@@ -13,6 +13,9 @@ import "./RecipeView.scss";
 import { useRecipe } from "../@modules/stores/recipes";
 import StepItem from "../components/StepItem";
 import ContentEditable from "react-contenteditable";
+import EmojiPicker from "emoji-picker-react";
+import { useTreeNode } from "../@modules/stores/tree";
+import EmojiPickerDialog from "../components/EmojiPickerDialog";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -30,11 +33,18 @@ function useNullishUpdater<T>(
 }
 
 export default function RecipeView() {
-  const { recipeId } = useParams();
+  const { treeNodeId, recipeId } = useParams();
 
+  const treeNode = useTreeNode(treeNodeId as string);
   const originalRecipe = useRecipe(recipeId as string);
   const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
   const updateRecipe = useNullishUpdater<Recipe>(recipe, setRecipe);
+
+  useEffect(() => {
+    if (originalRecipe && !recipe) {
+      setRecipe(originalRecipe);
+    }
+  }, [originalRecipe]);
 
   const setRecipeField = (
     key: "name" | "servingSize" | "prepTime",
@@ -49,7 +59,7 @@ export default function RecipeView() {
         value: "",
         units: "",
         ingredient: "",
-        _id: crypto.randomUUID(),
+        _id: uuid(),
       })
     );
   };
@@ -59,7 +69,7 @@ export default function RecipeView() {
   };
 
   const addNewStep = () => {
-    updateRecipe((r) => r.steps.push({ _id: crypto.randomUUID(), text: "" }));
+    updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
   const save = () => {
@@ -72,9 +82,11 @@ export default function RecipeView() {
       {recipe ? (
         <>
           <AppHeader subView>
+            {treeNode && <EmojiPickerDialog treeNode={treeNode} />}
+
             <ContentEditable
               className="name-field"
-              html={recipe.name || "Untitled"}
+              html={recipe.name || "Untitled Recipe"}
               onChange={(e) => setRecipeField("name", e.target.value)}
             />
 

@@ -1,4 +1,7 @@
 .my-recipes-card {
+  display: flex;
+  flex-direction: column;
+
   background-color: var(--color-input-background);
   border-radius: var(--spacing);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);

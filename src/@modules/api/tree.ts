@@ -8,7 +8,7 @@ import { TreeNode } from "../types/treeNode";
 import { formatTreeSnap, stripItemIDTree } from "./utils";
 
 function getTreeRef() {
-  const user = getRecoil(authStore);
+  const { user } = getRecoil(authStore);
   if (!user) throw "User is not logged in";
 
   const db = ref(getDatabase(app));

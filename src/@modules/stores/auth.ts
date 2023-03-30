@@ -4,6 +4,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signInAnonymously,
   signInWithPopup,
   signInWithRedirect,
   User
@@ -12,31 +13,34 @@ import {
 import { app } from "../api/firebase";
 import { setRecoil } from "recoil-nexus";
 
-export const authStore = atom<User>({
+export const authStore = atom<{ loading: boolean, user?: User }>({
   key: 'authStore',
-  default: undefined
+  default: { loading: false, user: undefined }
 });
-
 
 export function listenForAuth() {
   const auth = getAuth(app);
 
   let alreadyTried = false
+  setRecoil(authStore, state => ({ ...state, loading: true }));
 
   onAuthStateChanged(auth, debounce(async (user) => {
-    if (alreadyTried) return;
-
     if (user) {
-      setRecoil(authStore, user);
-    } else {
+      setRecoil(authStore, { loading: false, user });
+    } else if (alreadyTried) {
+      return;
+    } else if (import.meta.env.PROD) {
       const provider = new GoogleAuthProvider();
-      alreadyTried = true;
       try {
-        const { user } = await signInWithPopup(auth, provider)
-        setRecoil(authStore, user);
+        await signInWithPopup(auth, provider)
+        alreadyTried = true;
       } catch (err) {
         signInWithRedirect(auth, provider)
+        alreadyTried = true;
       }
+    } else {
+      signInAnonymously(auth)
+      alreadyTried = true;
     }
   }, 200));
 }

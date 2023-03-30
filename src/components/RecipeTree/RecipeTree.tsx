@@ -33,6 +33,10 @@ export default function RecipeTree() {
     saveTree(newTree);
   };
 
+  if (!tree.length) {
+    return <span style={{ alignSelf: "center" }}>No recipes found yet!</span>;
+  }
+
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
       <Tree

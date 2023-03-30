@@ -1,20 +1,20 @@
-import { atom, selector, useRecoilValue } from "recoil";
+import { atom, useRecoilValue } from "recoil";
 
 import { setRecoil } from "recoil-nexus";
 import { Recipe } from "../types/recipes";
 import { getRecipesLive } from "../api/recipes";
 
-export const recipeStore = atom<{ listener: () => void, recipes: Recipe[] }>({
+export const recipeStore = atom<{ listener: () => void, loading: boolean, recipes: Recipe[] }>({
   key: 'recipeStore',
-  default: { listener: () => undefined, recipes: [] }
+  default: { listener: () => undefined, loading: false, recipes: [] }
 });
 
 export function listenForRecipes() {
   const listener = getRecipesLive((recipes) => {
-    setRecoil(recipeStore, (state) => ({ ...state, recipes }))
+    setRecoil(recipeStore, (state) => ({ ...state, recipes, loading: false }))
   })
 
-  setRecoil(recipeStore, (state) => ({ ...state, listener }))
+  setRecoil(recipeStore, (state) => ({ ...state, loading: true, listener }))
 }
 
 export function useRecipe(recipeId: string) {
