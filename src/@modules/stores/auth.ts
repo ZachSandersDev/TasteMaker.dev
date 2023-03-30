@@ -30,12 +30,12 @@ export function listenForAuth() {
       setRecoil(authStore, user);
     } else {
       const provider = new GoogleAuthProvider();
+      alreadyTried = true;
       try {
         const { user } = await signInWithPopup(auth, provider)
         setRecoil(authStore, user);
       } catch (err) {
         signInWithRedirect(auth, provider)
-          .catch(err => alert("Redirect auth failed" + err))
       }
     }
   }, 200));
