@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { Link } from "react-router-dom";
 
 import { setRecipeDefaults } from "../@modules/types/recipes";
 import { newRecipe } from "../@modules/api/recipes";
@@ -10,6 +9,8 @@ import { listenForTree, treeStore } from "../@modules/stores/tree";
 import AppHeader from "../components/AppHeader";
 import RecipeTree from "../components/RecipeTree/RecipeTree";
 import { saveTree } from "../@modules/api/tree";
+
+import "./MyRecipes.scss";
 
 export default function MyRecipes() {
   const { recipes } = useRecoilValue(recipeStore);
@@ -53,12 +54,29 @@ export default function MyRecipes() {
     <div className="ra-view">
       <AppHeader>
         <h2>My Recipes</h2>
+        <header className="my-recipes-card-header">
+          <button
+            className="icon-button material-symbols-rounded"
+            onClick={makeNewRecipe}
+          >
+            create_new_folder
+          </button>
+          <button
+            className="icon-button material-symbols-rounded"
+            onClick={makeNewFolder}
+          >
+            note_add
+          </button>
+        </header>
       </AppHeader>
 
-      {tree.length && recipes.length ? <RecipeTree /> : <span>Loading...</span>}
-
-      <button onClick={makeNewRecipe}>New Recipe</button>
-      <button onClick={makeNewFolder}>New Folder</button>
+      <div className="my-recipes-card">
+        {tree.length && recipes.length ? (
+          <RecipeTree />
+        ) : (
+          <span>Loading...</span>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Reorder, useDragControls } from "framer-motion";
+import ContentEditable from "react-contenteditable";
 
 import { Ingredient, Recipe } from "../@modules/types/recipes";
 
@@ -59,10 +60,10 @@ export default function IngredientItem({
         <option value="fl oz" />
       </datalist>
 
-      <input
+      <ContentEditable
         placeholder="ingredient"
         className="ra-input ingredient-field"
-        value={ingredient.ingredient}
+        html={ingredient.ingredient}
         onChange={(e) =>
           setIngredientValue(index, "ingredient", e.target.value)
         }

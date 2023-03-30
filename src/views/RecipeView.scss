@@ -3,7 +3,7 @@
   flex-direction: column;
 
   width: 100%;
-  padding: var(--spacing);
+  padding: calc(var(--spacing) * 2) 0;
   margin: 0;
   gap: calc(var(--spacing));
 }
@@ -32,6 +32,10 @@
   &:focus {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
   }
+
+  @media (max-width: 500px) {
+    font-size: 1.25em;
+  }
 }
 
 .meta-section {
@@ -41,30 +45,5 @@
 
   input {
     width: 100%;
-  }
-}
-
-.new-button {
-  display: flex;
-  align-items: center;
-
-  gap: calc(var(--spacing) * 0.5);
-  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
-  margin-left: calc(var(--spacing) * 3);
-
-  background-color: #b6e0fb;
-  border-radius: calc(var(--spacing) * 2);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background-color 0.25s;
-
-  cursor: pointer;
-  user-select: none;
-
-  i {
-    font-size: 1.25em;
-  }
-
-  &:hover {
-    background-color: #a8cee5;
   }
 }

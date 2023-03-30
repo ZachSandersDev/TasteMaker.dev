@@ -1,0 +1,15 @@
+.my-recipes-card {
+  background-color: var(--color-input-background);
+  border-radius: var(--spacing);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  width: 100%;
+
+  padding: var(--spacing);
+}
+
+.my-recipes-card-header {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  gap: var(--spacing);
+}

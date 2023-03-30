@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router";
-import sanitize from "sanitize-html";
 
 import { Reorder } from "framer-motion";
-import ContentEditable from "react-contenteditable";
 
 import { saveRecipe } from "../@modules/api/recipes";
 import { Ingredient, Recipe } from "../@modules/types/recipes";
@@ -14,6 +12,7 @@ import IngredientItem from "../components/IngredientItem";
 import "./RecipeView.scss";
 import { useRecipe } from "../@modules/stores/recipes";
 import StepItem from "../components/StepItem";
+import ContentEditable from "react-contenteditable";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -73,15 +72,17 @@ export default function RecipeView() {
       {recipe ? (
         <>
           <AppHeader subView>
-            <input
+            <ContentEditable
               className="name-field"
-              type="text"
-              value={recipe.name || "Untitled"}
+              html={recipe.name || "Untitled"}
               onChange={(e) => setRecipeField("name", e.target.value)}
             />
 
-            <button className="icon-button" onClick={save}>
-              <span className="material-symbols-rounded">save</span>
+            <button
+              className="icon-button material-symbols-rounded"
+              onClick={save}
+            >
+              save
             </button>
           </AppHeader>
 
@@ -120,7 +121,7 @@ export default function RecipeView() {
               ))}
             </Reorder.Group>
 
-            <button className="new-button" onClick={addNewIngredient}>
+            <button className="chip-button" onClick={addNewIngredient}>
               <i className="material-symbols-rounded">add</i>
               New Ingredient
             </button>
@@ -145,7 +146,7 @@ export default function RecipeView() {
               ))}
             </Reorder.Group>
 
-            <button className="new-button" onClick={addNewStep}>
+            <button className="chip-button" onClick={addNewStep}>
               <i className="material-symbols-rounded">add</i>
               New Step
             </button>

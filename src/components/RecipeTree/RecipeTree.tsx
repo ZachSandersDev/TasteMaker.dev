@@ -13,6 +13,7 @@ import { RecipeNode } from "./RecipeTreeNode";
 
 import "./RecipeTree.scss";
 import { TreeNode } from "../../@modules/types/treeNode";
+import { motion } from "framer-motion";
 
 export default function RecipeTree() {
   const { tree } = useRecoilValue(treeStore);
@@ -35,11 +36,7 @@ export default function RecipeTree() {
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
       <Tree
-        tree={tree.map((tn) => ({
-          ...tn,
-          droppable: !tn.data,
-          text: tn.text || tn.id.toString(),
-        }))}
+        tree={tree}
         rootId={-1}
         render={(node, { isOpen, onToggle }) => (
           <RecipeNode
@@ -55,6 +52,7 @@ export default function RecipeTree() {
           dropTarget: "recipe-tree-drop-target",
         }}
         sort={false}
+        enableAnimateExpand={true}
         insertDroppableFirst={false}
         canDrop={(tree, { dragSource, dropTargetId }) => {
           if (dragSource?.parent === dropTargetId) {

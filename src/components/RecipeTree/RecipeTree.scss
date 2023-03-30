@@ -12,10 +12,9 @@
 
 .recipe-tree-drop-target {
   border-radius: var(--spacing);
-  background-color: #e8f6ff;
+  background-color: var(--color-input-focus);
 }
 
 .recipe-tree-dragging {
   opacity: 0.5;
-  background-color: rgba(0, 0, 0, 0.1);
 }
