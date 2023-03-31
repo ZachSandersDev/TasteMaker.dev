@@ -182,7 +182,17 @@ h5 {
 
   width: 100%;
   margin: 0;
+  padding: 0;
   gap: var(--spacing);
+}
+
+.ra-dense-list {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .ra-error-message {

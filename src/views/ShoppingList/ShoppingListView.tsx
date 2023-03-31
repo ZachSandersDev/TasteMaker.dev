@@ -100,48 +100,46 @@ export function ShoppingListView() {
     updateList((r) => (r.ingredients = ingredients));
   };
 
+  if (!list) {
+    return <span className="ra-error-message">Shopping list not found...</span>;
+  }
+
   return (
     <div className="ra-view shopping-list-view">
-      {list ? (
-        <>
-          <AppHeader subView>
-            <ContentEditable
-              value={list.name || "Untitled List"}
-              onChange={(v) => setListName(v)}
-              naked
-            />
-          </AppHeader>
+      <AppHeader subView>
+        <ContentEditable
+          value={list.name || "Untitled List"}
+          onChange={(v) => setListName(v)}
+          naked
+        />
+      </AppHeader>
 
-          <header className="ra-header">
-            <h3>Recipes</h3>
-            <button className="chip-button" onClick={addRecipe}>
-              <i className="material-symbols-rounded">add</i>
-              Add Recipe
-            </button>
-          </header>
+      <header className="ra-header">
+        <h3>Recipes</h3>
+        <button className="chip-button" onClick={addRecipe}>
+          <i className="material-symbols-rounded">add</i>
+          Add Recipe
+        </button>
+      </header>
 
-          <div className="ra-list">
-            {list.recipeIds.map((recipeId) => (
-              <RecipeItem
-                recipeId={recipeId}
-                onClick={() => navigate(`/recipe/${recipeId}`)}
-              />
-            ))}
-          </div>
-
-          <ShoppingIngredientList
-            list={list}
-            onNew={addNewIngredient}
-            onUpdate={(newIngredient, i) =>
-              updateList((r) => r.ingredients.splice(i, 1, newIngredient))
-            }
-            onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
-            onReorder={reorderIngredients}
+      <div className="ra-dense-list">
+        {list.recipeIds.map((recipeId) => (
+          <RecipeItem
+            recipeId={recipeId}
+            onClick={() => navigate(`/recipe/${recipeId}`)}
           />
-        </>
-      ) : (
-        <span>Loading...</span>
-      )}
+        ))}
+      </div>
+
+      <ShoppingIngredientList
+        list={list}
+        onNew={addNewIngredient}
+        onUpdate={(newIngredient, i) =>
+          updateList((r) => r.ingredients.splice(i, 1, newIngredient))
+        }
+        onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
+        onReorder={reorderIngredients}
+      />
     </div>
   );
 }

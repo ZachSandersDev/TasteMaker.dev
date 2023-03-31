@@ -115,7 +115,7 @@ export default function RecipeView() {
         </header>
 
         <Reorder.Group
-          className="recipe-list"
+          className="ra-dense-list"
           axis="y"
           as="div"
           values={recipe.ingredients}
@@ -150,7 +150,7 @@ export default function RecipeView() {
           axis="y"
           values={recipe.steps}
           onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-          className="recipe-list"
+          className="ra-dense-list"
         >
           {recipe.steps.map((step, i) => (
             <StepItem
