@@ -2,7 +2,7 @@ import type { DataSnapshot } from "firebase/database";
 import { TreeNode } from "../types/treeNode";
 
 export function stripItemID<T extends { _id: string }>(item: T) {
-  const val: any = item;
+  const val: any = structuredClone(item);
   delete val._id;
   return val;
 }
@@ -29,7 +29,7 @@ export function addItemIDTree(snap: DataSnapshot) {
 }
 
 export function stripItemIDTree(item: TreeNode) {
-  const temp = { ...item };
+  const temp = structuredClone(item);
   // @ts-expect-error
   delete temp.id;
   return temp;

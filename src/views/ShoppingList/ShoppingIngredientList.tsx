@@ -87,11 +87,8 @@ export function ShoppingIngredientList({
                 opacity: ingredient.complete ? ".4" : "1",
               }}
             >
-              <label
-              // htmlFor={`complete-${ingredient._id}`}
-              >
+              <label>
                 <input
-                  // id={`complete-${ingredient._id}`}
                   type="checkbox"
                   checked={!!ingredient.complete}
                   onChange={(e) => setComplete(ingredient, i, e.target.checked)}
