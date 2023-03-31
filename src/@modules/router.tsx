@@ -1,13 +1,18 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import MyRecipes from "../views/Home";
+import Home from "../views/Home";
+import LoginView from "../views/Login";
 import RecipeView from "../views/RecipeView";
 import { ShoppingListView } from "../views/ShoppingList";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MyRecipes />,
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <LoginView />,
   },
   {
     path: "/recipe/:recipeId",

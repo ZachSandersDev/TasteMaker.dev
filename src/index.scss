@@ -151,11 +151,12 @@ h5 {
   width: 100%;
 
   padding: var(--spacing) 0;
+}
 
-  .ra-actions {
-    display: flex;
-    gap: var(--spacing);
-  }
+.ra-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing);
 }
 
 .ra-dialog {

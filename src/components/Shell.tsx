@@ -13,7 +13,7 @@ import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
 import Loading from "./Loading";
 
 export default function Shell() {
-  const { user } = useRecoilValue(authStore);
+  const { loading: userLoading, user } = useRecoilValue(authStore);
   const { loading: recipesLoading } = useRecoilValue(recipeStore);
   const { loading: listsLoading } = useRecoilValue(listStore);
   const { loading: treeLoading } = useRecoilValue(treeStore);
@@ -29,6 +29,12 @@ export default function Shell() {
       listenForLists();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.navigate("/login");
+    }
+  }, [userLoading, user]);
 
   return user && !recipesLoading && !listsLoading && !treeLoading ? (
     <>

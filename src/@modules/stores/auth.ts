@@ -1,12 +1,10 @@
 import { atom } from "recoil";
 import debounce from "lodash/debounce"
 import {
+  createUserWithEmailAndPassword,
   getAuth,
-  GoogleAuthProvider,
   onAuthStateChanged,
-  signInAnonymously,
-  signInWithPopup,
-  signInWithRedirect,
+  signInWithEmailAndPassword,
   User
 } from "firebase/auth";
 
@@ -15,33 +13,28 @@ import { setRecoil } from "recoil-nexus";
 
 export const authStore = atom<{ loading: boolean, user?: User }>({
   key: 'authStore',
-  default: { loading: false, user: undefined }
+  default: { loading: true, user: undefined }
 });
 
 export function listenForAuth() {
   const auth = getAuth(app);
 
-  let alreadyTried = false
   setRecoil(authStore, state => ({ ...state, loading: true }));
 
   onAuthStateChanged(auth, debounce(async (user) => {
     if (user) {
-      setRecoil(authStore, { loading: false, user });
-    } else if (alreadyTried) {
-      setRecoil(authStore, state => ({ ...state, loading: false }));
-      return;
-    } else if (import.meta.env.PROD) {
-      const provider = new GoogleAuthProvider();
-      try {
-        await signInWithPopup(auth, provider)
-        alreadyTried = true;
-      } catch (err) {
-        signInWithRedirect(auth, provider)
-        alreadyTried = true;
-      }
-    } else {
-      signInAnonymously(auth)
-      alreadyTried = true;
+
+      setRecoil(authStore, state => ({ ...state, loading: false, user }));
     }
   }, 200));
+}
+
+export async function doLogin(email: string, password: string) {
+  const auth = getAuth(app);
+  await signInWithEmailAndPassword(auth, email, password)
+}
+
+export async function createAccount(email: string, password: string) {
+  const auth = getAuth(app);
+  await createUserWithEmailAndPassword(auth, email, password)
 }
