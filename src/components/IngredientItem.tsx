@@ -1,8 +1,8 @@
 import { Reorder, useDragControls } from "framer-motion";
-import ContentEditable from "react-contenteditable";
 import SwipeToDelete from "react-swipe-to-delete-ios";
 
 import { Ingredient, Recipe } from "../@modules/types/recipes";
+import ContentEditable from "./ContentEditable";
 
 import "./IngredientItem.scss";
 
@@ -66,9 +66,9 @@ export default function IngredientItem({
           </datalist>
           <ContentEditable
             placeholder="ingredient"
-            className="ra-input ingredient-field"
-            html={ingredient.ingredient}
-            onChange={(e) => setIngredientValue("ingredient", e.target.value)}
+            className="ingredient-field"
+            value={ingredient.ingredient}
+            onChange={(v) => setIngredientValue("ingredient", v)}
           />
           <div
             onPointerDown={(e) => controls.start(e)}

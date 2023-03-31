@@ -3,14 +3,20 @@ import { RouterProvider } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { authStore, listenForAuth } from "../@modules/stores/auth";
-import { listenForRecipes } from "../@modules/stores/recipes";
-import { listenForTree } from "../@modules/stores/tree";
+import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
+import { listenForTree, treeStore } from "../@modules/stores/tree";
+import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
 
 import router from "../@modules/router";
-import { listenForLists } from "../@modules/stores/shoppingLists";
+
+import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
+import Loading from "./Loading";
 
 export default function Shell() {
   const { user } = useRecoilValue(authStore);
+  const { loading: recipesLoading } = useRecoilValue(recipeStore);
+  const { loading: listsLoading } = useRecoilValue(listStore);
+  const { loading: treeLoading } = useRecoilValue(treeStore);
 
   useEffect(() => {
     listenForAuth();
@@ -24,11 +30,15 @@ export default function Shell() {
     }
   }, [user]);
 
-  return user ? (
-    <main>
-      <RouterProvider router={router} />
-    </main>
+  return user && !recipesLoading && !listsLoading && !treeLoading ? (
+    <>
+      <main>
+        <RouterProvider router={router} />
+      </main>
+
+      <RecipeSelectorDialog />
+    </>
   ) : (
-    <span>Loading...</span>
+    <Loading />
   );
 }

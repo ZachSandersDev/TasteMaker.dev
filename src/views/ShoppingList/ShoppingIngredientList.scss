@@ -1,0 +1,42 @@
+.sil-ingredient-line {
+  display: flex;
+  gap: var(--spacing);
+
+  label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing);
+
+    cursor: pointer;
+
+    > input {
+      display: none;
+    }
+  }
+}
+
+.sil-checkbox {
+  height: 20px;
+  width: 20px;
+  font-size: 1em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--color-input-background);
+  border-radius: calc(var(--spacing) * 0.5);
+}
+
+.sil-checkbox-checked {
+  background-color: var(--color-input-focus);
+}
+
+.sil-strikethrough {
+  position: absolute;
+  top: 50%;
+  left: calc(25px + var(--spacing));
+  width: calc(100% - 25px - var(--spacing));
+  border-bottom: 2px solid var(--color-color);
+}

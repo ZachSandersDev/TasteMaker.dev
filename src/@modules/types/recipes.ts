@@ -1,11 +1,13 @@
 export interface Recipe {
-  name: string;
-  ingredients: Ingredient[];
-  steps: Step[];
   _id: string;
+  name: string;
+  icon: string;
 
   servingSize?: string
   prepTime?: string
+
+  ingredients: Ingredient[];
+  steps: Step[];
 }
 
 export interface Ingredient {
@@ -22,8 +24,13 @@ export interface Step {
 
 export function setRecipeDefaults(recipie: Partial<Recipe>) {
   const defaultedRecipe: Recipe = {
-    name: recipie.name || "",
     _id: recipie._id || "",
+    name: recipie.name || "",
+    icon: recipie.icon || "",
+
+    servingSize: recipie.servingSize || "",
+    prepTime: recipie.prepTime || "",
+
     steps: recipie.steps || [],
     ingredients: recipie.ingredients || [],
   }

@@ -1,0 +1,13 @@
+.recipe-selector-dialog {
+  max-height: 60vh;
+  width: 400px !important;
+
+  @media (max-width: 500px) {
+    max-height: 80vh;
+    width: 95vw !important;
+  }
+
+  .ra-list {
+    overflow: auto;
+  }
+}

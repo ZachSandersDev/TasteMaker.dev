@@ -1,11 +1,10 @@
 import { Reorder, useDragControls } from "framer-motion";
-import ContentEditable from "react-contenteditable";
-import sanitize from "sanitize-html";
 import SwipeToDelete from "react-swipe-to-delete-ios";
 
 import { Recipe, Step } from "../@modules/types/recipes";
 
 import "./StepItem.scss";
+import ContentEditable from "./ContentEditable";
 
 export interface StepItemProps {
   step: Step;
@@ -17,7 +16,7 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
   const controls = useDragControls();
 
   const setStepText = (value: string) => {
-    updateRecipe((r) => (r.steps[index].text = sanitize(value)));
+    updateRecipe((r) => (r.steps[index].text = value));
   };
 
   const deleteStep = () => {
@@ -38,10 +37,9 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
         <div className="step-item">
           <span>{index + 1}.</span>
           <ContentEditable
-            className="ra-input step-input"
-            contentEditable
-            html={sanitize(step.text)}
-            onChange={(e) => setStepText(e.target.value)}
+            className="step-input"
+            value={step.text}
+            onChange={(v) => setStepText(v)}
           />
           <div
             onPointerDown={(e) => controls.start(e)}

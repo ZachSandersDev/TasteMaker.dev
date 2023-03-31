@@ -1,4 +1,5 @@
 import { getRecoil } from "recoil-nexus";
+import debounce from "lodash/debounce";
 import { child, ref, getDatabase, push, onValue, get, set } from "firebase/database";
 
 import { app } from "./firebase";
@@ -30,9 +31,9 @@ export async function getList(recipeId: string) {
   return setListDefaults(addItemID<ShoppingList>(data));
 }
 
-export function saveList(recipe: ShoppingList) {
+export const saveList = debounce((recipe: ShoppingList) => {
   return set(child(getListRef(), recipe._id), stripItemID(recipe));
-}
+}, 500);
 
 export async function newList(r: ShoppingList) {
   return await push(getListRef(), stripItemID(r)).key;

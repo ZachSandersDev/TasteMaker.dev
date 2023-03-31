@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { v4 as uuid } from "uuid";
+
 import { Reorder } from "framer-motion";
 
 import { saveRecipe } from "../@modules/api/recipes";
+import { useRecipe } from "../@modules/stores/recipes";
 import { Ingredient, Recipe } from "../@modules/types/recipes";
 
 import AppHeader from "../components/AppHeader";
+import EmojiPickerDialog from "../components/Dialogs/EmojiPickerDialog";
 import IngredientItem from "../components/IngredientItem";
-
-import "./RecipeView.scss";
-import { useRecipe } from "../@modules/stores/recipes";
 import StepItem from "../components/StepItem";
-import ContentEditable from "react-contenteditable";
-import EmojiPicker from "emoji-picker-react";
-import { useTreeNode } from "../@modules/stores/tree";
-import EmojiPickerDialog from "../components/EmojiPickerDialog";
+import ContentEditable from "../components/ContentEditable";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -33,12 +30,14 @@ function useNullishUpdater<T>(
 }
 
 export default function RecipeView() {
-  const { treeNodeId, recipeId } = useParams();
+  const { recipeId } = useParams();
 
-  const treeNode = useTreeNode(treeNodeId as string);
   const originalRecipe = useRecipe(recipeId as string);
   const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
-  const updateRecipe = useNullishUpdater<Recipe>(recipe, setRecipe);
+  const updateRecipe = useNullishUpdater<Recipe>(recipe, (r) => {
+    setRecipe(r);
+    saveRecipe(r);
+  });
 
   useEffect(() => {
     if (originalRecipe && !recipe) {
@@ -72,108 +71,97 @@ export default function RecipeView() {
     updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
-  const save = () => {
-    if (!recipe) throw "Recipe is not loaded yet";
-    saveRecipe(recipe);
-  };
+  if (!recipe) {
+    return <span className="ra-error-message">Recipe not found...</span>;
+  }
 
   return (
     <div className="ra-view">
-      {recipe ? (
-        <>
-          <AppHeader subView>
-            {treeNode && <EmojiPickerDialog treeNode={treeNode} />}
+      <AppHeader subView>
+        <EmojiPickerDialog
+          value={recipe.icon}
+          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+        />
 
-            <ContentEditable
-              className="name-field"
-              html={recipe.name || "Untitled Recipe"}
-              onChange={(e) => setRecipeField("name", e.target.value)}
+        <ContentEditable
+          value={recipe.name || "Untitled Recipe"}
+          onChange={(v) => setRecipeField("name", v)}
+          naked
+        />
+      </AppHeader>
+
+      <section className="ra-list">
+        <input
+          className="ra-input"
+          placeholder="Prep Time"
+          value={recipe.prepTime}
+          onChange={(e) => setRecipeField("prepTime", e.target.value)}
+        />
+        <input
+          className="ra-input"
+          placeholder="Serving Size"
+          value={recipe.servingSize}
+          onChange={(e) => setRecipeField("servingSize", e.target.value)}
+        />
+      </section>
+
+      <section className="ra-list">
+        <header className="ra-header">
+          <h3>Ingredients</h3>
+          <button className="chip-button" onClick={addNewIngredient}>
+            <i className="material-symbols-rounded">add</i>
+            New Ingredient
+          </button>
+        </header>
+
+        <Reorder.Group
+          className="recipe-list"
+          axis="y"
+          as="div"
+          values={recipe.ingredients}
+          onReorder={reorderIngredients}
+        >
+          {recipe.ingredients.map((ingredient, i) => (
+            <IngredientItem
+              ingredient={ingredient}
+              index={i}
+              key={ingredient._id}
+              updateIngredient={(newIngredient) =>
+                updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
+              }
+              deleteIngredient={() =>
+                updateRecipe((r) => r.ingredients.splice(i, 1))
+              }
             />
+          ))}
+        </Reorder.Group>
+      </section>
 
-            <button
-              className="icon-button material-symbols-rounded"
-              onClick={save}
-            >
-              save
-            </button>
-          </AppHeader>
+      <section className="ra-list">
+        <header className="ra-header">
+          <h3>Steps</h3>
+          <button className="chip-button" onClick={addNewStep}>
+            <i className="material-symbols-rounded">add</i>
+            New Step
+          </button>
+        </header>
 
-          <section className="recipe-section meta-section">
-            <input
-              className="ra-input"
-              placeholder="Prep Time"
-              value={recipe.prepTime}
-              onChange={(e) => setRecipeField("prepTime", e.target.value)}
+        <Reorder.Group
+          axis="y"
+          values={recipe.steps}
+          onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
+          className="recipe-list"
+        >
+          {recipe.steps.map((step, i) => (
+            <StepItem
+              step={step}
+              key={step._id}
+              index={i}
+              updateRecipe={updateRecipe}
             />
-            <input
-              className="ra-input"
-              placeholder="Serving Size"
-              value={recipe.servingSize}
-              onChange={(e) => setRecipeField("servingSize", e.target.value)}
-            />
-          </section>
-
-          <section className="recipe-section">
-            <h3>Ingredients</h3>
-
-            <Reorder.Group
-              className="recipe-list"
-              axis="y"
-              as="div"
-              values={recipe.ingredients}
-              onReorder={reorderIngredients}
-            >
-              {recipe.ingredients.map((ingredient, i) => (
-                <IngredientItem
-                  ingredient={ingredient}
-                  index={i}
-                  key={ingredient._id}
-                  updateIngredient={(newIngredient) =>
-                    updateRecipe((r) =>
-                      r.ingredients.splice(i, 1, newIngredient)
-                    )
-                  }
-                  deleteIngredient={() =>
-                    updateRecipe((r) => r.ingredients.splice(i, 1))
-                  }
-                />
-              ))}
-            </Reorder.Group>
-
-            <button className="chip-button" onClick={addNewIngredient}>
-              <i className="material-symbols-rounded">add</i>
-              New Ingredient
-            </button>
-          </section>
-
-          <section className="recipe-section">
-            <h3>Steps</h3>
-
-            <Reorder.Group
-              axis="y"
-              values={recipe.steps}
-              onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-              className="recipe-list"
-            >
-              {recipe.steps.map((step, i) => (
-                <StepItem
-                  step={step}
-                  key={step._id}
-                  index={i}
-                  updateRecipe={updateRecipe}
-                />
-              ))}
-            </Reorder.Group>
-
-            <button className="chip-button" onClick={addNewStep}>
-              <i className="material-symbols-rounded">add</i>
-              New Step
-            </button>
-          </section>
-        </>
-      ) : (
-        <span>Loading...</span>
-      )}
+          ))}
+        </Reorder.Group>
+      </section>
     </div>
   );
 }

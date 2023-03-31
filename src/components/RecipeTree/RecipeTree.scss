@@ -1,7 +1,8 @@
 .recipe-tree {
   list-style-type: none;
   margin: 0;
-  padding: calc(var(--spacing) * 2) 0;
+  padding: 0;
+  width: 100%;
 
   & ul {
     list-style-type: none;
