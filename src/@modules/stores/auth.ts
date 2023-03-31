@@ -28,6 +28,7 @@ export function listenForAuth() {
     if (user) {
       setRecoil(authStore, { loading: false, user });
     } else if (alreadyTried) {
+      setRecoil(authStore, state => ({ ...state, loading: false }));
       return;
     } else if (import.meta.env.PROD) {
       const provider = new GoogleAuthProvider();
