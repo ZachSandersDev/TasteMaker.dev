@@ -23,8 +23,9 @@ export function listenForAuth() {
 
   onAuthStateChanged(auth, debounce(async (user) => {
     if (user) {
-
       setRecoil(authStore, state => ({ ...state, loading: false, user }));
+    } else {
+      setRecoil(authStore, state => ({ ...state, loading: false }));
     }
   }, 200));
 }

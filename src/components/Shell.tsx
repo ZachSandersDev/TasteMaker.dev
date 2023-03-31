@@ -36,7 +36,8 @@ export default function Shell() {
     }
   }, [userLoading, user]);
 
-  return user && !recipesLoading && !listsLoading && !treeLoading ? (
+  return (!userLoading && !user) ||
+    (user && !recipesLoading && !listsLoading && !treeLoading) ? (
     <>
       <main>
         <RouterProvider router={router} />
