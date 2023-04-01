@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
-import { saveList } from "../../@modules/api/shoppingLists";
+import { deleteList, saveList } from "../../@modules/api/shoppingLists";
 import { Ingredient, Recipe } from "../../@modules/types/recipes";
 import { ShoppingList } from "../../@modules/types/shoppingLists";
 
@@ -15,6 +15,8 @@ import { RecipeItem } from "../../components/RecipeItem";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import { ShoppingIngredientList } from "./ShoppingIngredientList";
 import ContentEditable from "../../components/ContentEditable";
+import DropMenu from "../../components/DropMenu";
+import SwipeToDelete from "../../components/Theft/SwipeToDelete";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -81,6 +83,10 @@ export function ShoppingListView() {
     }
   };
 
+  const removeRecipe = async (index: number) => {
+    updateList((l) => l.recipeIds.splice(index, 1));
+  };
+
   const setListName = (value: string) => {
     updateList((l) => (l.name = value));
   };
@@ -100,6 +106,20 @@ export function ShoppingListView() {
     updateList((r) => (r.ingredients = ingredients));
   };
 
+  const handleMenu = (option: string) => {
+    if (!list) throw "List not loaded";
+
+    if (option === "DELETE") {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this shopping list?"
+      );
+      if (confirmed) {
+        deleteList(list._id);
+        navigate(-1);
+      }
+    }
+  };
+
   if (!list) {
     return <span className="ra-error-message">Shopping list not found...</span>;
   }
@@ -112,6 +132,19 @@ export function ShoppingListView() {
           onChange={(v) => setListName(v)}
           naked
         />
+
+        <DropMenu
+          icon="more_vert"
+          options={[
+            {
+              icon: "delete",
+              value: "DELETE",
+              text: "Delete Shopping List",
+              color: "var(--color-danger)",
+            },
+          ]}
+          onSelect={handleMenu}
+        />
       </AppHeader>
 
       <header className="ra-header">
@@ -123,11 +156,14 @@ export function ShoppingListView() {
       </header>
 
       <div className="ra-dense-list">
-        {list.recipeIds.map((recipeId) => (
-          <RecipeItem
-            recipeId={recipeId}
+        {list.recipeIds.map((recipeId, i) => (
+          <SwipeToDelete
+            key={recipeId}
+            onDelete={() => removeRecipe(i)}
             onClick={() => navigate(`/recipe/${recipeId}`)}
-          />
+          >
+            <RecipeItem recipeId={recipeId} />
+          </SwipeToDelete>
         ))}
       </div>
 

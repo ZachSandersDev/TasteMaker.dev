@@ -1,6 +1,6 @@
 import { getRecoil } from "recoil-nexus";
 import debounce from "lodash/debounce";
-import { child, ref, getDatabase, push, onValue, get, set } from "firebase/database";
+import { child, ref, getDatabase, push, onValue, get, set, remove } from "firebase/database";
 
 import { app } from "./firebase";
 import { authStore } from "../stores/auth";
@@ -37,4 +37,8 @@ export const saveRecipe = debounce((recipe: Recipe) => {
 
 export async function newRecipe(r: Recipe) {
   return await push(getRecipeRef(), stripItemID(r)).key;
+}
+
+export async function deleteRecipe(recipeId: string) {
+  return await remove(child(getRecipeRef(), recipeId));
 }

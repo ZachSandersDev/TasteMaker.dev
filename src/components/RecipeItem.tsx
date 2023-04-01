@@ -22,7 +22,7 @@ export const RecipeItem = ({ onClick, recipeId }: RecipeItemProps) => {
 
   return (
     <div className="recipe-item" onClick={handleClick}>
-      <span className="recipe-item-icon">{recipe.icon}</span>
+      <span className="recipe-item-icon">{recipe.icon || "🗒️"}</span>
       <span
         dangerouslySetInnerHTML={{
           __html: sanitize(recipe.name) || "Untitled Recipe",

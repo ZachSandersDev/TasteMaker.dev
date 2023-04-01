@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { Reorder } from "framer-motion";
 
-import { saveRecipe } from "../@modules/api/recipes";
+import { deleteRecipe, saveRecipe } from "../@modules/api/recipes";
 import { useRecipe } from "../@modules/stores/recipes";
 import { Ingredient, Recipe } from "../@modules/types/recipes";
 
@@ -13,6 +13,7 @@ import EmojiPickerDialog from "../components/Dialogs/EmojiPickerDialog";
 import IngredientItem from "../components/IngredientItem";
 import StepItem from "../components/StepItem";
 import ContentEditable from "../components/ContentEditable";
+import DropMenu from "../components/DropMenu";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -31,6 +32,7 @@ function useNullishUpdater<T>(
 
 export default function RecipeView() {
   const { recipeId } = useParams();
+  const navigate = useNavigate();
 
   const originalRecipe = useRecipe(recipeId as string);
   const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
@@ -71,6 +73,20 @@ export default function RecipeView() {
     updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
+  const handleMenu = (option: string) => {
+    if (!recipe) throw "Recipe not loaded";
+
+    if (option === "DELETE") {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this recipe?"
+      );
+      if (confirmed) {
+        deleteRecipe(recipe._id);
+        navigate(-1);
+      }
+    }
+  };
+
   if (!recipe) {
     return <span className="ra-error-message">Recipe not found...</span>;
   }
@@ -79,7 +95,7 @@ export default function RecipeView() {
     <div className="ra-view">
       <AppHeader subView>
         <EmojiPickerDialog
-          value={recipe.icon}
+          value={recipe.icon || "🗒️"}
           onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
         />
 
@@ -87,6 +103,19 @@ export default function RecipeView() {
           value={recipe.name || "Untitled Recipe"}
           onChange={(v) => setRecipeField("name", v)}
           naked
+        />
+
+        <DropMenu
+          icon="more_vert"
+          options={[
+            {
+              icon: "delete",
+              value: "DELETE",
+              text: "Delete Recipe",
+              color: "var(--color-danger)",
+            },
+          ]}
+          onSelect={handleMenu}
         />
       </AppHeader>
 

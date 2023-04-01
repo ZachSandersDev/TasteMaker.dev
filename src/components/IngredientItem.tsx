@@ -1,7 +1,7 @@
 import { Reorder, useDragControls } from "framer-motion";
-import SwipeToDelete from "react-swipe-to-delete-ios";
+import SwipeToDelete from "./Theft/SwipeToDelete";
 
-import { Ingredient, Recipe } from "../@modules/types/recipes";
+import { Ingredient } from "../@modules/types/recipes";
 import ContentEditable from "./ContentEditable";
 
 import "./IngredientItem.scss";

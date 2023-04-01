@@ -1,0 +1,58 @@
+.drop-menu-container {
+  position: relative;
+}
+
+.drop-menu.ra-card {
+  position: absolute;
+  top: calc(100% + var(--spacing) / 2);
+  right: 0;
+  width: fit-content;
+
+  padding: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.drop-menu-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.drop-menu-item {
+  outline: none;
+  border: none;
+  background-color: inherit;
+  color: inherit;
+
+  display: flex;
+  align-items: center;
+  padding: var(--spacing);
+  gap: var(--spacing);
+
+  cursor: pointer;
+  user-select: none;
+
+  font-size: 0.75em;
+
+  i {
+    font-size: 1.25em;
+  }
+
+  * {
+    white-space: nowrap;
+  }
+
+  &:hover {
+    background-color: var(--color-input-hover);
+  }
+
+  &:focus {
+    background-color: var(--color-input-focus);
+  }
+}
