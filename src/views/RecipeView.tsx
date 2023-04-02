@@ -154,7 +154,6 @@ export default function RecipeView() {
           {recipe.ingredients.map((ingredient, i) => (
             <IngredientItem
               ingredient={ingredient}
-              index={i}
               key={ingredient._id}
               updateIngredient={(newIngredient) =>
                 updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
