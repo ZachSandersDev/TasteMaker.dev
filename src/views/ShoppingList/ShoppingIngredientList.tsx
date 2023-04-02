@@ -33,8 +33,6 @@ export function ShoppingIngredientList({
     index: number,
     complete?: boolean
   ) => {
-    console.log(complete);
-
     const newIngredient = structuredClone(ingredient);
     newIngredient.complete = complete;
     onUpdate(newIngredient, index);
@@ -49,8 +47,10 @@ export function ShoppingIngredientList({
             className="chip-button"
             onClick={() => setIsEditing(!isEditing)}
           >
-            <i className="material-symbols-rounded">edit</i>
-            Edit list
+            <i className="material-symbols-rounded">
+              {isEditing ? "save" : "edit"}
+            </i>
+            {isEditing ? "Save List" : "Edit list"}
           </button>
           <button className="chip-button" onClick={onNew}>
             <i className="material-symbols-rounded">add</i>
@@ -70,7 +70,6 @@ export function ShoppingIngredientList({
           {list.ingredients.map((ingredient, i) => (
             <IngredientItem
               ingredient={ingredient}
-              index={i}
               key={ingredient._id}
               updateIngredient={(n) => onUpdate(n, i)}
               deleteIngredient={() => onDelete(i)}
@@ -104,8 +103,9 @@ export function ShoppingIngredientList({
                   {ingredient.complete ? "check" : ""}
                 </span>
                 {ingredient.complete && <div className="sil-strikethrough" />}
-                {parseFloat(ingredient.value).toString()} {ingredient.units}{" "}
-                {ingredient.ingredient}
+                {ingredient.value &&
+                  parseFloat(ingredient.value).toString()}{" "}
+                {ingredient.units} {ingredient.ingredient}
               </label>
             </div>
           ))}

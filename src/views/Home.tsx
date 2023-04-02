@@ -53,52 +53,47 @@ export default function Home() {
   };
 
   return (
-    <div className="ra-view home-view">
+    <>
       <AppHeader>
-        <h1>Recipe Awesome</h1>
+        <h1 className="app-title">Recipe Awesome</h1>
       </AppHeader>
+      <div className="ra-view home-view">
+        <header className="ra-header">
+          <h3>My Recipes</h3>
+          <div className="ra-actions">
+            <button className="chip-button" onClick={makeNewFolder}>
+              <i className="material-symbols-rounded">create_new_folder</i>
+              New Folder
+            </button>
+            <button className="chip-button" onClick={makeNewRecipe}>
+              <i className=" material-symbols-rounded">note_add</i>
+              New Recipe
+            </button>
+          </div>
+        </header>
 
-      <header className="ra-header">
-        <h3>My Recipes</h3>
-        <div className="ra-actions">
-          <button
-            className="icon-button material-symbols-rounded"
-            onClick={makeNewFolder}
-          >
-            create_new_folder
-          </button>
-          <button
-            className="icon-button material-symbols-rounded"
-            onClick={makeNewRecipe}
-          >
-            note_add
-          </button>
-        </div>
-      </header>
+        <RecipeTree />
 
-      <RecipeTree />
+        <header className="ra-header">
+          <h3>Shopping Lists</h3>
+          <div className="ra-actions">
+            <button className="chip-button" onClick={makeNewShoppingList}>
+              <i className=" material-symbols-rounded">note_add</i>
+              New List
+            </button>
+          </div>
+        </header>
 
-      <header className="ra-header">
-        <h3>Shopping Lists</h3>
-        <div className="ra-actions">
-          <button
-            className="icon-button material-symbols-rounded"
-            onClick={makeNewShoppingList}
-          >
-            note_add
-          </button>
-        </div>
-      </header>
-
-      {lists.length ? (
-        <div className="ra-list">
-          {lists.map((l) => (
-            <ShoppingListItem key={l._id} shoppingList={l} />
-          ))}
-        </div>
-      ) : (
-        <span>No shopping lists yet!</span>
-      )}
-    </div>
+        {lists.length ? (
+          <div className="ra-list">
+            {lists.map((l) => (
+              <ShoppingListItem key={l._id} shoppingList={l} />
+            ))}
+          </div>
+        ) : (
+          <span>No shopping lists yet!</span>
+        )}
+      </div>
+    </>
   );
 }

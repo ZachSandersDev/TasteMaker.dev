@@ -1,5 +1,5 @@
 import { Reorder, useDragControls } from "framer-motion";
-import SwipeToDelete from "./Theft/SwipeToDelete";
+import SwipeToDelete from "./SwipeToDelete";
 
 import { Recipe, Step } from "../@modules/types/recipes";
 

@@ -21,7 +21,11 @@ export default function ContentEditable({
   return (
     <ReactContentEditable
       placeholder={placeholder}
-      className={[naked ? "content-editable-naked" : "ra-input", className]
+      className={[
+        "content-editable",
+        naked ? "content-editable-naked" : "ra-input",
+        className,
+      ]
         .filter((s) => !!s)
         .join(" ")}
       html={sanitize(value)}

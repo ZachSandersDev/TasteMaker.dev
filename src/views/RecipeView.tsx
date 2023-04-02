@@ -94,12 +94,8 @@ export default function RecipeView() {
   return (
     <div className="ra-view">
       <AppHeader subView>
-        <EmojiPickerDialog
-          value={recipe.icon || "🗒️"}
-          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
-        />
-
         <ContentEditable
+          className="app-title"
           value={recipe.name || "Untitled Recipe"}
           onChange={(v) => setRecipeField("name", v)}
           naked
@@ -120,6 +116,11 @@ export default function RecipeView() {
       </AppHeader>
 
       <section className="ra-list">
+        <EmojiPickerDialog
+          value={recipe.icon || "🗒️"}
+          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+        />
+
         <input
           className="ra-input"
           placeholder="Prep Time"

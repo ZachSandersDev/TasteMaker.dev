@@ -16,7 +16,7 @@ import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import { ShoppingIngredientList } from "./ShoppingIngredientList";
 import ContentEditable from "../../components/ContentEditable";
 import DropMenu from "../../components/DropMenu";
-import SwipeToDelete from "../../components/Theft/SwipeToDelete";
+import SwipeToDelete from "../../components/SwipeToDelete";
 
 function useNullishUpdater<T>(
   value: T | undefined | null,
@@ -128,6 +128,7 @@ export function ShoppingListView() {
     <div className="ra-view shopping-list-view">
       <AppHeader subView>
         <ContentEditable
+          className="app-title"
           value={list.name || "Untitled List"}
           onChange={(v) => setListName(v)}
           naked

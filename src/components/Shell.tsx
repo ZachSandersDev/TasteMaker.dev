@@ -11,6 +11,7 @@ import router from "../@modules/router";
 
 import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
 import Loading from "./Loading";
+import { listenForIngredients } from "../@modules/stores/ingredients";
 
 export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
@@ -27,6 +28,7 @@ export default function Shell() {
       listenForRecipes();
       listenForTree();
       listenForLists();
+      listenForIngredients();
     }
   }, [user]);
 

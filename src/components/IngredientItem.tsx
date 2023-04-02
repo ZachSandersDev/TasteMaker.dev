@@ -1,24 +1,27 @@
 import { Reorder, useDragControls } from "framer-motion";
-import SwipeToDelete from "./Theft/SwipeToDelete";
+import SwipeToDelete from "./SwipeToDelete";
 
 import { Ingredient } from "../@modules/types/recipes";
 import ContentEditable from "./ContentEditable";
 
 import "./IngredientItem.scss";
+import { useRecoilValue } from "recoil";
+import { ingredientStore } from "../@modules/stores/ingredients";
+import { addIngredient } from "../@modules/api/ingredients";
 
 export interface IngredientItemProps {
   ingredient: Ingredient;
-  index: number;
   updateIngredient: (i: Ingredient) => void;
   deleteIngredient: () => void;
 }
 
 export default function IngredientItem({
   ingredient,
-  index,
   updateIngredient,
   deleteIngredient,
 }: IngredientItemProps) {
+  const { ingredients } = useRecoilValue(ingredientStore);
+
   const controls = useDragControls();
 
   const setIngredientValue = (key: keyof Ingredient, value: string) => {
@@ -42,7 +45,7 @@ export default function IngredientItem({
           <span>&bull;</span>
           <input
             className="ra-input value-field"
-            placeholder="quantity"
+            placeholder="amt."
             type="number"
             value={ingredient.value}
             size={ingredient.value.length}
@@ -64,12 +67,25 @@ export default function IngredientItem({
             <option value="oz" />
             <option value="fl oz" />
           </datalist>
-          <ContentEditable
+
+          <input
+            className="ingredient-field ra-input"
             placeholder="ingredient"
-            className="ingredient-field"
+            list="ingredient-options"
             value={ingredient.ingredient}
-            onChange={(v) => setIngredientValue("ingredient", v)}
+            onChange={(v) => setIngredientValue("ingredient", v.target.value)}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                addIngredient(ingredient.ingredient);
+              }
+            }}
           />
+          <datalist id="ingredient-options">
+            {ingredients?.map((i) => (
+              <option key={i} value={i} />
+            ))}
+          </datalist>
+
           <div
             onPointerDown={(e) => controls.start(e)}
             style={{ touchAction: "none" }}

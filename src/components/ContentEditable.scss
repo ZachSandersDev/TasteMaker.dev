@@ -21,3 +21,10 @@
     font-size: 1.25em;
   }
 }
+
+.content-editable {
+  &:empty::before {
+    content: attr(placeholder);
+    color: var(--color-placeholder);
+  }
+}
