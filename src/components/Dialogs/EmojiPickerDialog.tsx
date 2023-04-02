@@ -1,5 +1,6 @@
-import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
-import { useState } from "react";
+// import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
+import { createElement, useEffect, useRef, useState } from "react";
+import "emoji-picker-element";
 
 import "./EmojiPickerDialog.scss";
 
@@ -14,9 +15,9 @@ export default function EmojiPickerDialog({
 }: EmojiPickerDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const setIcon = (e: EmojiClickData) => {
+  const setIcon = (emoji: string) => {
     setIsOpen(false);
-    onEmojiChange(e.emoji);
+    onEmojiChange(emoji);
   };
 
   return (
@@ -28,13 +29,7 @@ export default function EmojiPickerDialog({
       {isOpen && (
         <>
           <div className="ra-dialog">
-            <EmojiPicker
-              autoFocusSearch
-              theme={Theme.AUTO}
-              onEmojiClick={setIcon}
-              previewConfig={{ showPreview: false }}
-              lazyLoadEmojis
-            />
+            <EmojiPicker onEmojiClick={setIcon} />
           </div>
           <div
             className="ra-dialog-cover"
@@ -44,4 +39,26 @@ export default function EmojiPickerDialog({
       )}
     </>
   );
+}
+
+interface EmojiPickerProps {
+  onEmojiClick: (emoji: string) => void;
+}
+
+function EmojiPicker({ onEmojiClick }: EmojiPickerProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const listener: any = (event: {
+      detail: { emoji: { unicode: string } };
+    }) => {
+      onEmojiClick(event.detail.emoji.unicode);
+    };
+
+    ref.current?.addEventListener("emoji-click", listener);
+    return () => ref.current?.removeEventListener("emoji-click", listener);
+  }, []);
+
+  return createElement("emoji-picker", { ref });
 }

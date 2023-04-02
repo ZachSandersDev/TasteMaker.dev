@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@minoru/react-dnd-treeview": "^3.4.4",
-    "emoji-picker-react": "^4.4.8",
+    "emoji-picker-element": "^1.16.0",
     "firebase": "^9.18.0",
     "framer-motion": "^10.9.1",
     "lodash": "^4.17.21",
