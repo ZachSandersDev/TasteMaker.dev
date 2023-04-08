@@ -94,31 +94,33 @@ export default function RecipeView() {
   return (
     <div className="ra-view">
       <AppHeader subView>
-        <ContentEditable
-          className="app-title"
-          value={recipe.name || "Untitled Recipe"}
-          onChange={(v) => setRecipeField("name", v)}
-          naked
-        />
-
-        <DropMenu
-          icon="more_vert"
-          options={[
-            {
-              icon: "delete",
-              value: "DELETE",
-              text: "Delete Recipe",
-              color: "var(--color-danger)",
-            },
-          ]}
-          onSelect={handleMenu}
-        />
+        <div className="ra-actions">
+          <DropMenu
+            icon="more_vert"
+            options={[
+              {
+                icon: "delete",
+                value: "DELETE",
+                text: "Delete Recipe",
+                color: "var(--color-danger)",
+              },
+            ]}
+            onSelect={handleMenu}
+          />
+        </div>
       </AppHeader>
 
       <section className="ra-list">
         <EmojiPickerDialog
           value={recipe.icon || "🗒️"}
           onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+        />
+
+        <ContentEditable
+          className="ra-title"
+          value={recipe.name || "Untitled Recipe"}
+          onChange={(v) => setRecipeField("name", v)}
+          naked
         />
 
         <input

@@ -1,0 +1,31 @@
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  min-height: 60px;
+  width: 100%;
+
+  background-color: var(--color-input-background);
+}
+
+.app-link {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: calc(var(--spacing) * .5);
+
+  color: inherit;
+  width: 60px;
+  text-decoration: none;
+
+  font-size: .9rem;
+
+  i {
+    font-size: 1.7rem;
+  }
+}
+
+.app-link.active {
+  color: var(--color-active);
+}

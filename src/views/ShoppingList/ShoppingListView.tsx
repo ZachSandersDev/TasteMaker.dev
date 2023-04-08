@@ -127,26 +127,28 @@ export function ShoppingListView() {
   return (
     <div className="ra-view shopping-list-view">
       <AppHeader subView>
-        <ContentEditable
-          className="app-title"
-          value={list.name || "Untitled List"}
-          onChange={(v) => setListName(v)}
-          naked
-        />
-
-        <DropMenu
-          icon="more_vert"
-          options={[
-            {
-              icon: "delete",
-              value: "DELETE",
-              text: "Delete Shopping List",
-              color: "var(--color-danger)",
-            },
-          ]}
-          onSelect={handleMenu}
-        />
+        <div className="ra-actions">
+          <DropMenu
+            icon="more_vert"
+            options={[
+              {
+                icon: "delete",
+                value: "DELETE",
+                text: "Delete Shopping List",
+                color: "var(--color-danger)",
+              },
+            ]}
+            onSelect={handleMenu}
+          />
+        </div>
       </AppHeader>
+
+      <ContentEditable
+        className="ra-title"
+        value={list.name || "Untitled List"}
+        onChange={(v) => setListName(v)}
+        naked
+      />
 
       <header className="ra-header">
         <h3>Recipes</h3>

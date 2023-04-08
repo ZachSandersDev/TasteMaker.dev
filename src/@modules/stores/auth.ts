@@ -5,6 +5,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
   User
 } from "firebase/auth";
 
@@ -25,7 +26,7 @@ export function listenForAuth() {
     if (user) {
       setRecoil(authStore, state => ({ ...state, loading: false, user }));
     } else {
-      setRecoil(authStore, state => ({ ...state, loading: false }));
+      setRecoil(authStore, state => ({ ...state, loading: false, user: undefined }));
     }
   }, 200));
 }
@@ -38,4 +39,9 @@ export async function doLogin(email: string, password: string) {
 export async function createAccount(email: string, password: string) {
   const auth = getAuth(app);
   await createUserWithEmailAndPassword(auth, email, password)
+}
+
+export async function doLogout() {
+  const auth = getAuth(app);
+  return signOut(auth);
 }
