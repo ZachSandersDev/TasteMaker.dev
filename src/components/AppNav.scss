@@ -3,10 +3,20 @@
   align-items: center;
   justify-content: space-evenly;
 
-  min-height: 60px;
+  height: 90px;
+  padding-bottom: 30px;
   width: 100%;
 
   background-color: var(--color-input-background);
+}
+
+.blocker {
+  position: fixed;
+  top: -60px;
+  left: 0;
+  height: 60px;
+  width: 100%;
+  background-color: var(--color-background);
 }
 
 .app-link {
