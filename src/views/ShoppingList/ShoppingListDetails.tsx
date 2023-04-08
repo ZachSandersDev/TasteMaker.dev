@@ -109,42 +109,45 @@ export default function ShoppingListDetailsView() {
         </div>
       </AppHeader>
 
-      <ContentEditable
-        className="ra-title"
-        value={list.name || "Untitled List"}
-        onChange={(v) => setListName(v)}
-        naked
-      />
+      <div className="ra-view-content">
 
-      <header className="ra-header">
-        <h3>Recipes</h3>
-        <button className="chip-button" onClick={addRecipe}>
-          <i className="material-symbols-rounded">add</i>
+        <ContentEditable
+          className="ra-title"
+          value={list.name || "Untitled List"}
+          onChange={(v) => setListName(v)}
+          naked
+        />
+
+        <header className="ra-header">
+          <h3>Recipes</h3>
+          <button className="chip-button" onClick={addRecipe}>
+            <i className="material-symbols-rounded">add</i>
           Add Recipe
-        </button>
-      </header>
+          </button>
+        </header>
 
-      <div className="ra-dense-list">
-        {list.recipeIds.map((recipeId, i) => (
-          <SwipeToDelete
-            key={recipeId}
-            onDelete={() => removeRecipe(i)}
-            onClick={() => navigate(`/recipe/${recipeId}`)}
-          >
-            <RecipeItem recipeId={recipeId} />
-          </SwipeToDelete>
-        ))}
+        <div className="ra-dense-list">
+          {list.recipeIds.map((recipeId, i) => (
+            <SwipeToDelete
+              key={recipeId}
+              onDelete={() => removeRecipe(i)}
+              onClick={() => navigate(`/recipe/${recipeId}`)}
+            >
+              <RecipeItem recipeId={recipeId} />
+            </SwipeToDelete>
+          ))}
+        </div>
+
+        <ShoppingIngredientList
+          list={list}
+          onNew={addNewIngredient}
+          onUpdate={(newIngredient, i) =>
+            updateList((r) => r.ingredients.splice(i, 1, newIngredient))
+          }
+          onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
+          onReorder={reorderIngredients}
+        />
       </div>
-
-      <ShoppingIngredientList
-        list={list}
-        onNew={addNewIngredient}
-        onUpdate={(newIngredient, i) =>
-          updateList((r) => r.ingredients.splice(i, 1, newIngredient))
-        }
-        onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
-        onReorder={reorderIngredients}
-      />
     </div>
   );
 }

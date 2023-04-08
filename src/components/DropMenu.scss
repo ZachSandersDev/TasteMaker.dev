@@ -11,6 +11,9 @@
   padding: 0;
   overflow: hidden;
   z-index: 2;
+
+  transform-origin: top center;
+  animation: drop 0.5s;
 }
 
 .drop-menu-cover {
@@ -22,12 +25,13 @@
 
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
+  animation: fade 0.5s;
 }
 
 .drop-menu-item {
   outline: none;
   border: none;
-  background-color: inherit;
+  background-color: var(--color-background);
   color: inherit;
 
   display: flex;
@@ -54,5 +58,27 @@
 
   &:focus {
     background-color: var(--color-input-focus);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes drop {
+  0% {
+    transform: scaleY(0%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scaleY(100%);
+    opacity: 1;
   }
 }

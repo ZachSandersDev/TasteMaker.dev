@@ -15,7 +15,6 @@ export default function AppHeader({
 
   return (
     <header className="app-header">
-      <div className="blocker"></div>
 
       {subView && (
         <button

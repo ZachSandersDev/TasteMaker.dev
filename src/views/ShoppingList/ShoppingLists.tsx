@@ -28,17 +28,19 @@ export default function ShoppingListsView() {
         </div>
       </AppHeader>
 
-      <h2 className="ra-title">Shopping Lists</h2>
+      <div className="ra-view-content">
+        <h2 className="ra-title">Shopping Lists</h2>
 
-      {lists.length ? (
-        <div className="ra-list">
-          {lists.map((l) => (
-            <ShoppingListItem key={l._id} shoppingList={l} />
-          ))}
-        </div>
-      ) : (
-        <span>No shopping lists yet!</span>
-      )}
+        {lists.length ? (
+          <div className="ra-list">
+            {lists.map((l) => (
+              <ShoppingListItem key={l._id} shoppingList={l} />
+            ))}
+          </div>
+        ) : (
+          <span>No shopping lists yet!</span>
+        )}
+      </div>
     </div>
   );
 }

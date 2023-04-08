@@ -95,89 +95,94 @@ export default function RecipeDetailsView() {
         </div>
       </AppHeader>
 
-      <section className="ra-list">
-        <EmojiPickerDialog
-          value={recipe.icon || "🗒️"}
-          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
-        />
+      <div className="ra-view-content">
+        <section className="ra-list">
+          <div className="ra-row">
 
-        <ContentEditable
-          className="ra-title"
-          value={recipe.name || "Untitled Recipe"}
-          onChange={(v) => setRecipeField("name", v)}
-          naked
-        />
+            <EmojiPickerDialog
+              value={recipe.icon || "🗒️"}
+              onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+            />
 
-        <input
-          className="ra-input"
-          placeholder="Prep Time"
-          value={recipe.prepTime}
-          onChange={(e) => setRecipeField("prepTime", e.target.value)}
-        />
-        <input
-          className="ra-input"
-          placeholder="Serving Size"
-          value={recipe.servingSize}
-          onChange={(e) => setRecipeField("servingSize", e.target.value)}
-        />
-      </section>
+            <ContentEditable
+              className="ra-title"
+              value={recipe.name || "Untitled Recipe"}
+              onChange={(v) => setRecipeField("name", v)}
+              naked
+            />
+          </div>
 
-      <section className="ra-list">
-        <header className="ra-header">
-          <h3>Ingredients</h3>
-          <button className="chip-button" onClick={addNewIngredient}>
-            <i className="material-symbols-rounded">add</i>
+          <input
+            className="ra-input"
+            placeholder="Prep Time"
+            value={recipe.prepTime}
+            onChange={(e) => setRecipeField("prepTime", e.target.value)}
+          />
+          <input
+            className="ra-input"
+            placeholder="Serving Size"
+            value={recipe.servingSize}
+            onChange={(e) => setRecipeField("servingSize", e.target.value)}
+          />
+        </section>
+
+        <section className="ra-list">
+          <header className="ra-header">
+            <h3>Ingredients</h3>
+            <button className="chip-button" onClick={addNewIngredient}>
+              <i className="material-symbols-rounded">add</i>
             New Ingredient
-          </button>
-        </header>
+            </button>
+          </header>
 
-        <Reorder.Group
-          className="ra-dense-list"
-          axis="y"
-          as="div"
-          values={recipe.ingredients}
-          onReorder={reorderIngredients}
-        >
-          {recipe.ingredients.map((ingredient, i) => (
-            <IngredientItem
-              ingredient={ingredient}
-              key={ingredient._id}
-              updateIngredient={(newIngredient) =>
-                updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
-              }
-              deleteIngredient={() =>
-                updateRecipe((r) => r.ingredients.splice(i, 1))
-              }
-            />
-          ))}
-        </Reorder.Group>
-      </section>
+          <Reorder.Group
+            className="ra-dense-list"
+            axis="y"
+            as="div"
+            values={recipe.ingredients}
+            onReorder={reorderIngredients}
+          >
+            {recipe.ingredients.map((ingredient, i) => (
+              <IngredientItem
+                ingredient={ingredient}
+                key={ingredient._id}
+                updateIngredient={(newIngredient) =>
+                  updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
+                }
+                deleteIngredient={() =>
+                  updateRecipe((r) => r.ingredients.splice(i, 1))
+                }
+              />
+            ))}
+          </Reorder.Group>
+        </section>
 
-      <section className="ra-list">
-        <header className="ra-header">
-          <h3>Steps</h3>
-          <button className="chip-button" onClick={addNewStep}>
-            <i className="material-symbols-rounded">add</i>
+        <section className="ra-list">
+          <header className="ra-header">
+            <h3>Steps</h3>
+            <button className="chip-button" onClick={addNewStep}>
+              <i className="material-symbols-rounded">add</i>
             New Step
-          </button>
-        </header>
+            </button>
+          </header>
 
-        <Reorder.Group
-          axis="y"
-          values={recipe.steps}
-          onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-          className="ra-dense-list"
-        >
-          {recipe.steps.map((step, i) => (
-            <StepItem
-              step={step}
-              key={step._id}
-              index={i}
-              updateRecipe={updateRecipe}
-            />
-          ))}
-        </Reorder.Group>
-      </section>
+          <Reorder.Group
+            axis="y"
+            values={recipe.steps}
+            onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
+            className="ra-dense-list"
+          >
+            {recipe.steps.map((step, i) => (
+              <StepItem
+                step={step}
+                key={step._id}
+                index={i}
+                updateRecipe={updateRecipe}
+              />
+            ))}
+          </Reorder.Group>
+        </section>
+      </div>
     </div>
   );
 }

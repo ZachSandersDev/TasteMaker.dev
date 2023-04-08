@@ -20,7 +20,7 @@ export default function EmojiPickerDialog({
 
   return (
     <>
-      <button className="icon-button" onClick={() => setIsOpen(true)}>
+      <button className="icon-button" style={{fontSize: "1.5em"}} onClick={() => setIsOpen(true)}>
         {value}
       </button>
 

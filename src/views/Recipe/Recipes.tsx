@@ -50,10 +50,11 @@ export default function RecipesView() {
           </button>
         </div>
       </AppHeader>
-
-      <h2 className="ra-title">My Recipes</h2>
       
-      <RecipeTree />
+      <div className="ra-view-content">
+        <h2 className="ra-title">My Recipes</h2>      
+        <RecipeTree />
+      </div>
     </div>
   );
 }
