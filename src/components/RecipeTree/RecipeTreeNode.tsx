@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { NodeModel, useDragOver } from "@minoru/react-dnd-treeview";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { TreeNode } from "../../@modules/types/treeNode";
+
 import { RecipeItem } from "../RecipeItem";
 
 import "./RecipeTreeNode.scss";
-import { useNavigate } from "react-router-dom";
 
 export type RecipeNodeProps = {
   className?: string;

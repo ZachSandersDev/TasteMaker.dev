@@ -1,17 +1,13 @@
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
 
-import { setRecipeDefaults } from "../@modules/types/recipes";
-import { newRecipe } from "../@modules/api/recipes";
-import { treeStore } from "../@modules/stores/tree";
+import { newRecipe } from "../../@modules/api/recipes";
+import { saveTree } from "../../@modules/api/tree";
+import { treeStore } from "../../@modules/stores/tree";
+import { setRecipeDefaults } from "../../@modules/types/recipes";
 
-import AppHeader from "../components/AppHeader";
-import RecipeTree from "../components/RecipeTree/RecipeTree";
-import { saveTree } from "../@modules/api/tree";
-
-import { newList } from "../@modules/api/shoppingLists";
-import { listStore } from "../@modules/stores/shoppingLists";
-import { ShoppingListItem } from "../components/ShoppingListItem";
+import AppHeader from "../../components/AppHeader";
+import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
   const { tree } = useRecoilValue(treeStore);

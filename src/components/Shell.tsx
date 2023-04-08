@@ -2,16 +2,15 @@ import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { authStore, listenForAuth } from "../@modules/stores/auth";
-import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
-import { listenForTree, treeStore } from "../@modules/stores/tree";
-import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
-
 import router from "../@modules/router";
+import { authStore, listenForAuth } from "../@modules/stores/auth";
+import { listenForIngredients } from "../@modules/stores/ingredients";
+import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
+import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
+import { listenForTree, treeStore } from "../@modules/stores/tree";
 
 import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
 import Loading from "./Loading";
-import { listenForIngredients } from "../@modules/stores/ingredients";
 
 export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
@@ -40,14 +39,14 @@ export default function Shell() {
 
   return (!userLoading && !user) ||
     (user && !recipesLoading && !listsLoading && !treeLoading) ? (
-    <>
-      <main>
-        <RouterProvider router={router} />
-      </main>
+      <>
+        <main>
+          <RouterProvider router={router} />
+        </main>
 
-      <RecipeSelectorDialog />
-    </>
-  ) : (
-    <Loading />
-  );
+        <RecipeSelectorDialog />
+      </>
+    ) : (
+      <Loading />
+    );
 }

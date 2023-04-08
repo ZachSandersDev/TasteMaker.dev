@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
+
 import { recipeStore } from "../../@modules/stores/recipes";
 
 import { Recipe } from "../../@modules/types/recipes";
@@ -11,10 +11,10 @@ import "./RecipeSelectorDialog.scss";
 const recipeSelectorDialog = atom<{
   resolve?: (r?: Recipe) => void;
   reject?: (e: Error) => void;
-}>({
-  key: "recipeSelectorDialog",
-  default: {},
-});
+    }>({
+      key: "recipeSelectorDialog",
+      default: {},
+    });
 
 export function selectRecipe() {
   return new Promise<Recipe | undefined>((resolve, reject) => {

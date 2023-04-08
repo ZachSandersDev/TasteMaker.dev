@@ -3,62 +3,28 @@ import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import { deleteList, saveList } from "../../@modules/api/shoppingLists";
-import { Ingredient, Recipe } from "../../@modules/types/recipes";
+import { useList } from "../../@modules/stores/shoppingLists";
+import { Ingredient } from "../../@modules/types/recipes";
 import { ShoppingList } from "../../@modules/types/shoppingLists";
+import mergeIngredients from "../../@modules/utils/mergeIngredients";
+import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
-
-import "./ShoppingListView.scss";
-
-import { useList } from "../../@modules/stores/shoppingLists";
-import { RecipeItem } from "../../components/RecipeItem";
-import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
-import { ShoppingIngredientList } from "./ShoppingIngredientList";
 import ContentEditable from "../../components/ContentEditable";
+import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import DropMenu from "../../components/DropMenu";
+import { RecipeItem } from "../../components/RecipeItem";
 import SwipeToDelete from "../../components/SwipeToDelete";
 
-function useNullishUpdater<T>(
-  value: T | undefined | null,
-  setValue: (newVal: T) => void
-) {
-  return function (update: (currentVal: T) => unknown) {
-    if (value === undefined || value === null) {
-      throw "Original value has not been loaded yet";
-    }
+import { ShoppingIngredientList } from "./ShoppingIngredientList";
 
-    const newValue = structuredClone(value);
-    update(newValue);
-    setValue(newValue);
-  };
-}
-
-function mergeIngredients(recipe: Recipe, list: ShoppingList) {
-  for (const recipeIngredient of recipe.ingredients) {
-    let listIngredient = list.ingredients.find(
-      (li) =>
-        li.ingredient === recipeIngredient.ingredient &&
-        li.units === recipeIngredient.units
-    );
-
-    if (listIngredient) {
-      listIngredient.value = (
-        Number(listIngredient.value) + Number(recipeIngredient.value)
-      ).toString();
-    } else {
-      listIngredient = recipeIngredient;
-      list.ingredients.push(listIngredient);
-    }
-  }
-}
-
-export function ShoppingListView() {
+export default function ShoppingListDetailsView() {
   const { listId } = useParams();
   const navigate = useNavigate();
 
   const originalList = useList(listId as string);
   const [list, setList] = useState<ShoppingList | undefined>(originalList);
-  const updateList = useNullishUpdater<ShoppingList>(list, (l) => {
+  const updateList = useUpdater<ShoppingList>(list, (l) => {
     setList(l);
     saveList(l);
   });

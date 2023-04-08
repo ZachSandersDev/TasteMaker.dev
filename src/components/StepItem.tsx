@@ -1,10 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
-import SwipeToDelete from "./SwipeToDelete";
 
 import { Recipe, Step } from "../@modules/types/recipes";
 
-import "./StepItem.scss";
 import ContentEditable from "./ContentEditable";
+import SwipeToDelete from "./SwipeToDelete";
+
+import "./StepItem.scss";
 
 export interface StepItemProps {
   step: Step;

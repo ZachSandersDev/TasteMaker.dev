@@ -1,13 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import Home from "../views/RecipesView";
 import LoginView from "../views/Login";
-import RecipeView from "../views/RecipeView";
-import { ShoppingListView } from "../views/ShoppingList";
-import RootView from "../views/RootView";
-import ShoppingListsView from "../views/ShoppingLists";
-import RecipesView from "../views/RecipesView";
 import ProfileView from "../views/ProfileView";
+import RecipeDetailsView from "../views/Recipe/RecipeDetails";
+import RecipesView from "../views/Recipe/Recipes";
+import RootView from "../views/RootView";
+import ShoppingListDetailsView from "../views/ShoppingList/ShoppingListDetails";
+import ShoppingListsView from "../views/ShoppingList/ShoppingLists";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: "recipe/:recipeId",
-        element: <RecipeView />,
+        element: <RecipeDetailsView />,
       },
       {
         path: "shopping-lists",
@@ -29,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: "shopping-list/:listId",
-        element: <ShoppingListView />,
+        element: <ShoppingListDetailsView />,
       },
       {
         path: "profile",

@@ -1,19 +1,19 @@
-import { DndProvider } from "react-dnd";
-import { useRecoilValue } from "recoil";
 import {
   Tree,
   MultiBackend,
   getBackendOptions,
 } from "@minoru/react-dnd-treeview";
+import { DndProvider } from "react-dnd";
+import { useRecoilValue } from "recoil";
 
 import { saveTree } from "../../@modules/api/tree";
 import { setLocalTree, treeStore } from "../../@modules/stores/tree";
+import { TreeNode } from "../../@modules/types/treeNode";
 
 import { RecipeNode } from "./RecipeTreeNode";
 
 import "./RecipeTree.scss";
-import { TreeNode } from "../../@modules/types/treeNode";
-import { motion } from "framer-motion";
+
 
 export default function RecipeTree() {
   const { tree } = useRecoilValue(treeStore);

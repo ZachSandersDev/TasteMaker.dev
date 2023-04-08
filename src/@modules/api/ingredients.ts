@@ -1,8 +1,9 @@
-import { getRecoil } from "recoil-nexus";
 import { child, ref, getDatabase, onValue, remove, update } from "firebase/database";
+import { getRecoil } from "recoil-nexus";
+
+import { authStore } from "../stores/auth";
 
 import { app } from "./firebase";
-import { authStore } from "../stores/auth";
 
 function getIngredientRef() {
   const { user } = getRecoil(authStore);
@@ -15,7 +16,7 @@ function getIngredientRef() {
 
 export function getIngredientsLive(callback: (ingredients: Record<string, true>) => void) {
   return onValue(getIngredientRef(), (snapshot) => {
-    callback(snapshot.val() || {})
+    callback(snapshot.val() || {});
   });
 }
 

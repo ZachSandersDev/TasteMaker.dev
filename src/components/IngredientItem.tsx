@@ -1,13 +1,13 @@
 import { Reorder, useDragControls } from "framer-motion";
+import { useRecoilValue } from "recoil";
+
+import { addIngredient } from "../@modules/api/ingredients";
+import { ingredientStore } from "../@modules/stores/ingredients";
+import { Ingredient } from "../@modules/types/recipes";
+
 import SwipeToDelete from "./SwipeToDelete";
 
-import { Ingredient } from "../@modules/types/recipes";
-import ContentEditable from "./ContentEditable";
-
 import "./IngredientItem.scss";
-import { useRecoilValue } from "recoil";
-import { ingredientStore } from "../@modules/stores/ingredients";
-import { addIngredient } from "../@modules/api/ingredients";
 
 export interface IngredientItemProps {
   ingredient: Ingredient;

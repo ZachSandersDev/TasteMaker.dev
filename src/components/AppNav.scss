@@ -2,12 +2,16 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  position: relative;
+  z-index: 1;
 
   height: 90px;
   padding-bottom: 30px;
   width: 100%;
 
   background-color: var(--color-input-background);
+  flex-shrink: 0;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .blocker {
@@ -23,13 +27,13 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: calc(var(--spacing) * .5);
+  gap: calc(var(--spacing) * 0.5);
 
   color: inherit;
   width: 60px;
   text-decoration: none;
 
-  font-size: .9rem;
+  font-size: 0.9rem;
 
   i {
     font-size: 1.7rem;

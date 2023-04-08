@@ -40,7 +40,7 @@ body {
 
 body,
 #root,
-#root>main {
+#root > main {
   height: 100vh;
 
   @supports (-webkit-touch-callout: none) {
@@ -48,7 +48,7 @@ body,
   }
 }
 
-#root>main {
+#root > main {
   display: flex;
   flex-direction: column;
 }
@@ -90,13 +90,13 @@ h5 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  overflow:auto;
+  overflow: auto;
 
   width: 100vw;
   height: 100%;
   flex: 1;
-  padding: 0 calc(var(--spacing) * 1.5) calc(var(--spacing) * 3) calc(var(--spacing) * 1.5);
-  gap: var(--spacing);
+  padding: 0 calc(var(--spacing) * 1.5) calc(var(--spacing) * 3)
+    calc(var(--spacing) * 1.5);
 
   @media (min-width: 1000px) {
     width: 700px;
@@ -121,8 +121,7 @@ h5 {
     font-size: 0.7em;
   }
 
-  font-family: "Noto Sans",
-  sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: 400;
 
   transition: box-shadow 0.25s;
@@ -174,7 +173,7 @@ h5 {
 .ra-title {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: calc(var(--spacing) * 2)
+  margin-bottom: calc(var(--spacing) * 2);
 }
 
 .ra-dialog {

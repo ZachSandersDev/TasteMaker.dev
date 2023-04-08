@@ -1,42 +1,27 @@
+import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
-import { Reorder } from "framer-motion";
+import { deleteRecipe, saveRecipe } from "../../@modules/api/recipes";
+import { useRecipe } from "../../@modules/stores/recipes";
+import { Ingredient, Recipe } from "../../@modules/types/recipes";
+import useUpdater from "../../@modules/utils/useUpdater";
 
-import { deleteRecipe, saveRecipe } from "../@modules/api/recipes";
-import { useRecipe } from "../@modules/stores/recipes";
-import { Ingredient, Recipe } from "../@modules/types/recipes";
+import AppHeader from "../../components/AppHeader";
+import ContentEditable from "../../components/ContentEditable";
+import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
+import DropMenu from "../../components/DropMenu";
+import IngredientItem from "../../components/IngredientItem";
+import StepItem from "../../components/StepItem";
 
-import AppHeader from "../components/AppHeader";
-import EmojiPickerDialog from "../components/Dialogs/EmojiPickerDialog";
-import IngredientItem from "../components/IngredientItem";
-import StepItem from "../components/StepItem";
-import ContentEditable from "../components/ContentEditable";
-import DropMenu from "../components/DropMenu";
-
-function useNullishUpdater<T>(
-  value: T | undefined | null,
-  setValue: (newVal: T) => void
-) {
-  return function (update: (currentVal: T) => unknown) {
-    if (value === undefined || value === null) {
-      throw "Original value has not been loaded yet";
-    }
-
-    const newValue = structuredClone(value);
-    update(newValue);
-    setValue(newValue);
-  };
-}
-
-export default function RecipeView() {
+export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
 
   const originalRecipe = useRecipe(recipeId as string);
   const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
-  const updateRecipe = useNullishUpdater<Recipe>(recipe, (r) => {
+  const updateRecipe = useUpdater<Recipe>(recipe, (r) => {
     setRecipe(r);
     saveRecipe(r);
   });

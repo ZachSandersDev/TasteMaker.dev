@@ -1,5 +1,3 @@
-import { atom } from "recoil";
-import debounce from "lodash/debounce"
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -8,12 +6,15 @@ import {
   signOut,
   User
 } from "firebase/auth";
+import debounce from "lodash/debounce";
+import { atom } from "recoil";
 
-import { app } from "../api/firebase";
 import { setRecoil } from "recoil-nexus";
 
+import { app } from "../api/firebase";
+
 export const authStore = atom<{ loading: boolean, user?: User }>({
-  key: 'authStore',
+  key: "authStore",
   default: { loading: true, user: undefined }
 });
 
@@ -33,12 +34,12 @@ export function listenForAuth() {
 
 export async function doLogin(email: string, password: string) {
   const auth = getAuth(app);
-  await signInWithEmailAndPassword(auth, email, password)
+  await signInWithEmailAndPassword(auth, email, password);
 }
 
 export async function createAccount(email: string, password: string) {
   const auth = getAuth(app);
-  await createUserWithEmailAndPassword(auth, email, password)
+  await createUserWithEmailAndPassword(auth, email, password);
 }
 
 export async function doLogout() {

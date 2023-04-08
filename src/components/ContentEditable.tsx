@@ -1,5 +1,5 @@
-import sanitize from "sanitize-html";
 import { default as ReactContentEditable } from "react-contenteditable";
+import sanitize from "sanitize-html";
 
 import "./ContentEditable.scss";
 

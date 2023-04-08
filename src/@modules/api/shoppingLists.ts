@@ -1,11 +1,12 @@
-import { getRecoil } from "recoil-nexus";
-import debounce from "lodash/debounce";
 import { child, ref, getDatabase, push, onValue, get, set, remove } from "firebase/database";
+import debounce from "lodash/debounce";
+import { getRecoil } from "recoil-nexus";
 
-import { app } from "./firebase";
 import { authStore } from "../stores/auth";
 
 import { setListDefaults, ShoppingList } from "../types/shoppingLists";
+
+import { app } from "./firebase";
 import { addItemID, addListIDs, stripItemID } from "./utils";
 
 function getListRef() {

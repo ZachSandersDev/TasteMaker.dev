@@ -1,10 +1,11 @@
-import { getRecoil } from "recoil-nexus";
 import { child, ref, getDatabase, onValue, get, set } from "firebase/database";
+import { getRecoil } from "recoil-nexus";
 
-import { app } from "./firebase";
 import { authStore } from "../stores/auth";
 
 import { TreeNode } from "../types/treeNode";
+
+import { app } from "./firebase";
 import { formatTreeSnap, stripItemIDTree } from "./utils";
 
 function getTreeRef() {

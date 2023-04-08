@@ -1,9 +1,10 @@
 import { useRecoilValue } from "recoil";
 
-import { newList } from "../@modules/api/shoppingLists";
-import { listStore } from "../@modules/stores/shoppingLists";
-import { ShoppingListItem } from "../components/ShoppingListItem";
-import AppHeader from "../components/AppHeader";
+import { newList } from "../../@modules/api/shoppingLists";
+import { listStore } from "../../@modules/stores/shoppingLists";
+
+import AppHeader from "../../components/AppHeader";
+import { ShoppingListItem } from "../../components/ShoppingListItem";
 
 export default function ShoppingListsView() {
   const { lists } = useRecoilValue(listStore);

@@ -17,7 +17,7 @@ export function setListDefaults(list: Partial<ShoppingList>) {
     name: list.name || "",
     recipeIds: list.recipeIds || [],
     ingredients: list.ingredients || [],
-  }
+  };
 
-  return defaultedShoppingList
+  return defaultedShoppingList;
 }

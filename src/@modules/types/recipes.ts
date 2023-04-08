@@ -33,7 +33,7 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
 
     steps: recipie.steps || [],
     ingredients: recipie.ingredients || [],
-  }
+  };
 
-  return defaultedRecipe
+  return defaultedRecipe;
 }

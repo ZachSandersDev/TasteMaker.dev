@@ -1,8 +1,6 @@
-// import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { createElement, useEffect, useRef, useState } from "react";
-import "emoji-picker-element";
 
-import "./EmojiPickerDialog.scss";
+import "emoji-picker-element";
 
 export interface EmojiPickerDialogProps {
   value: string;
