@@ -1,13 +1,12 @@
-import { Reorder } from "framer-motion";
-import { useState } from "react";
 
 import { Ingredient } from "../../@modules/types/recipes";
 import {
   ShoppingList,
   ShoppingListIngredient,
 } from "../../@modules/types/shoppingLists";
+import ContentEditable from "../../components/ContentEditable";
+import SwipeToDelete from "../../components/SwipeToDelete";
 
-import IngredientItem from "../../components/IngredientItem";
 
 import "./ShoppingIngredientList.scss";
 
@@ -24,10 +23,7 @@ export function ShoppingIngredientList({
   onNew,
   onUpdate,
   onDelete,
-  onReorder,
 }: ShoppingIngredientListProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
   const setComplete = (
     ingredient: ShoppingListIngredient,
     index: number,
@@ -43,45 +39,18 @@ export function ShoppingIngredientList({
       <header className="ra-header">
         <h3>List</h3>
         <div className="ra-actions">
-          <button
-            className="chip-button"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <i className="material-symbols-rounded">
-              {isEditing ? "save" : "edit"}
-            </i>
-            {isEditing ? "Save List" : "Edit list"}
-          </button>
           <button className="chip-button" onClick={onNew}>
             <i className="material-symbols-rounded">add</i>
             New Item
           </button>
         </div>
       </header>
-
-      {isEditing ? (
-        <Reorder.Group
-          className="ra-list"
-          axis="y"
-          as="div"
-          values={list.ingredients}
-          onReorder={onReorder}
-        >
-          {list.ingredients.map((ingredient, i) => (
-            <IngredientItem
-              ingredient={ingredient}
-              key={ingredient._id}
-              updateIngredient={(n) => onUpdate(n, i)}
-              deleteIngredient={() => onDelete(i)}
-            />
-          ))}
-        </Reorder.Group>
-      ) : (
-        <div className="ra-list">
-          {list.ingredients.map((ingredient, i) => (
+     
+      <div className="ra-list">
+        {list.ingredients.map((ingredient, i) => (
+          <SwipeToDelete key={ingredient._id} onDelete={() => onDelete(i)}>
             <div
               className="sil-ingredient-line"
-              key={ingredient._id}
               style={{
                 opacity: ingredient.complete ? ".4" : "1",
               }}
@@ -102,15 +71,23 @@ export function ShoppingIngredientList({
                 >
                   {ingredient.complete ? "check" : ""}
                 </span>
-                {ingredient.complete && <div className="sil-strikethrough" />}
-                {ingredient.value &&
-                  parseFloat(ingredient.value).toString()}{" "}
-                {ingredient.units} {ingredient.ingredient}
               </label>
+
+              {ingredient.complete && <div className="sil-strikethrough" />}
+              <ContentEditable
+                value={ingredient.ingredient}
+                onChange={(v) => {
+                  const newIngredient = structuredClone(ingredient);
+                  newIngredient.ingredient = v;
+                  onUpdate(newIngredient, i);
+                }}
+                disabled={ingredient.complete}
+                naked
+              />
             </div>
-          ))}
-        </div>
-      )}
+          </SwipeToDelete>
+        ))}
+      </div>
     </>
   );
 }

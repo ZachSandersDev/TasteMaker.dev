@@ -3,9 +3,10 @@
   gap: var(--spacing);
   padding: 0 calc(var(--spacing) * 0.5);
   margin: var(--spacing) 0;
+  position: relative;
+  width: fit-content;
 
   label {
-    position: relative;
     display: flex;
     align-items: center;
     gap: calc(var(--spacing) * 2);
@@ -15,6 +16,10 @@
     > input {
       display: none;
     }
+  }
+
+  .content-editable-naked {
+    width: fit-content;
   }
 }
 

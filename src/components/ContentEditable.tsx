@@ -8,6 +8,7 @@ export interface ContentEditableProps {
   value: string;
   placeholder?: string;
   onChange: (newValue: string) => void;
+  disabled?: boolean;
   naked?: boolean;
 }
 
@@ -16,6 +17,7 @@ export default function ContentEditable({
   value,
   placeholder,
   onChange,
+  disabled,
   naked,
 }: ContentEditableProps) {
   return (
@@ -24,12 +26,14 @@ export default function ContentEditable({
       className={[
         "content-editable",
         naked ? "content-editable-naked" : "ra-input",
+        disabled ? "disabled" : "",
         className,
       ]
         .filter((s) => !!s)
         .join(" ")}
       html={sanitize(value)}
       onChange={(e) => onChange(sanitize(e.target.value))}
+      disabled={disabled}
     />
   );
 }

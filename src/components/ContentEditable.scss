@@ -5,11 +5,11 @@
 
   transition: box-shadow 0.25s;
 
-  &:hover {
+  &:not(.disabled):hover {
     box-shadow: 0 3px 0 var(--color-input-hover);
   }
 
-  &:focus {
+  &:not(.disabled):focus {
     box-shadow: 0 3px 0 var(--color-input-focus);
   }
 }
