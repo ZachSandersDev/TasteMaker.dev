@@ -1,21 +1,6 @@
 .recipe-tree {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
   width: 100%;
-
-  & ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0 0 0 calc(var(--spacing) * 3);
-  }
-}
-
-.recipe-tree-drop-target {
-  border-radius: var(--spacing);
-  background-color: var(--color-input-focus);
-}
-
-.recipe-tree-dragging {
-  opacity: 0.5;
 }

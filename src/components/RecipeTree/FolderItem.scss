@@ -1,0 +1,23 @@
+.folder-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  width: 100%;
+
+  padding: calc(var(--spacing) * 0.5) var(--spacing);
+  border-radius: calc(var(--spacing));
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.25s;
+  &:hover {
+    background-color: var(--color-input-hover);
+  }
+
+  .material-symbols-rounded {
+    font-size: 1.5em;
+    width: 30px;
+    text-align: center;
+  }
+}

@@ -97,7 +97,7 @@ export default function RecipeDetailsView() {
 
       <div className="ra-view-content">
         <section className="ra-list">
-          <div className="ra-row">
+          <div className="ra-row" style={{alignItems: "center"}}>
 
             <EmojiPickerDialog
               value={recipe.icon || "🗒️"}
@@ -126,62 +126,58 @@ export default function RecipeDetailsView() {
           />
         </section>
 
-        <section className="ra-list">
-          <header className="ra-header">
-            <h3>Ingredients</h3>
-            <button className="chip-button" onClick={addNewIngredient}>
-              <i className="material-symbols-rounded">add</i>
+        <header className="ra-header">
+          <h3>Ingredients</h3>
+          <button className="chip-button" onClick={addNewIngredient}>
+            <i className="material-symbols-rounded">add</i>
             New Ingredient
-            </button>
-          </header>
+          </button>
+        </header>
 
-          <Reorder.Group
-            className="ra-dense-list"
-            axis="y"
-            as="div"
-            values={recipe.ingredients}
-            onReorder={reorderIngredients}
-          >
-            {recipe.ingredients.map((ingredient, i) => (
-              <IngredientItem
-                ingredient={ingredient}
-                key={ingredient._id}
-                updateIngredient={(newIngredient) =>
-                  updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
-                }
-                deleteIngredient={() =>
-                  updateRecipe((r) => r.ingredients.splice(i, 1))
-                }
-              />
-            ))}
-          </Reorder.Group>
-        </section>
+        <Reorder.Group
+          className="ra-dense-list"
+          axis="y"
+          as="div"
+          values={recipe.ingredients}
+          onReorder={reorderIngredients}
+        >
+          {recipe.ingredients.map((ingredient, i) => (
+            <IngredientItem
+              ingredient={ingredient}
+              key={ingredient._id}
+              updateIngredient={(newIngredient) =>
+                updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
+              }
+              deleteIngredient={() =>
+                updateRecipe((r) => r.ingredients.splice(i, 1))
+              }
+            />
+          ))}
+        </Reorder.Group>
 
-        <section className="ra-list">
-          <header className="ra-header">
-            <h3>Steps</h3>
-            <button className="chip-button" onClick={addNewStep}>
-              <i className="material-symbols-rounded">add</i>
+        <header className="ra-header">
+          <h3>Steps</h3>
+          <button className="chip-button" onClick={addNewStep}>
+            <i className="material-symbols-rounded">add</i>
             New Step
-            </button>
-          </header>
+          </button>
+        </header>
 
-          <Reorder.Group
-            axis="y"
-            values={recipe.steps}
-            onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-            className="ra-dense-list"
-          >
-            {recipe.steps.map((step, i) => (
-              <StepItem
-                step={step}
-                key={step._id}
-                index={i}
-                updateRecipe={updateRecipe}
-              />
-            ))}
-          </Reorder.Group>
-        </section>
+        <Reorder.Group
+          axis="y"
+          values={recipe.steps}
+          onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
+          className="ra-dense-list"
+        >
+          {recipe.steps.map((step, i) => (
+            <StepItem
+              step={step}
+              key={step._id}
+              index={i}
+              updateRecipe={updateRecipe}
+            />
+          ))}
+        </Reorder.Group>
       </div>
     </div>
   );

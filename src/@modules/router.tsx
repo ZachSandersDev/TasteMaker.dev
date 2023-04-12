@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         path: "profile",
         element: <ProfileView />,
       },
+      {
+        path: "/folder/:folderId",
+        element: <RecipesView />,
+      },
     ]
   },
   {

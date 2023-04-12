@@ -1,36 +1,33 @@
-import {
-  Tree,
-  MultiBackend,
-  getBackendOptions,
-} from "@minoru/react-dnd-treeview";
-import { DndProvider } from "react-dnd";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { saveTree } from "../../@modules/api/tree";
-import { setLocalTree, treeStore } from "../../@modules/stores/tree";
-import { TreeNode } from "../../@modules/types/treeNode";
+import { treeStore } from "../../@modules/stores/tree";
 
-import { RecipeNode } from "./RecipeTreeNode";
+import { RecipeItem } from "../RecipeItem";
+import SwipeToDelete from "../SwipeToDelete";
+
+import { FolderItem } from "./FolderItem";
 
 import "./RecipeTree.scss";
 
+export interface RecipeTreeProps {
+  folderId?: string | number,
+  onFolderDelete: (id: string | number) => void
+}
 
-export default function RecipeTree() {
+export default function RecipeTree({folderId, onFolderDelete}: RecipeTreeProps) {
+  const navigate = useNavigate();
   const { tree } = useRecoilValue(treeStore);
 
-  const onDrop = (newTree: TreeNode[]) => {
-    setLocalTree(newTree);
-    saveTree(newTree);
-  };
+  const handleNavigate = (id: string | number | undefined, isRecipe: boolean) => {
+    console.log({id, isRecipe});
+    if(id === undefined) throw new Error("No ID passed to handleNavigate");
 
-  const onTextChange = (id: number, text: string) => {
-    const newTree = structuredClone(tree);
-    const node = newTree.find((tn) => tn.id === id);
-    if (!node) throw "Could not find node " + id;
-
-    node.text = text;
-    setLocalTree(newTree);
-    saveTree(newTree);
+    if(isRecipe) {
+      navigate(`/recipe/${id}`);
+    } else {
+      navigate(`/folder/${id}`);
+    }
   };
 
   if (!tree.length) {
@@ -38,42 +35,27 @@ export default function RecipeTree() {
   }
 
   return (
-    <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-      <Tree
-        tree={tree}
-        rootId={-1}
-        render={(node, { isOpen, onToggle }) => (
-          <RecipeNode
-            node={node}
-            isOpen={isOpen}
-            onToggle={onToggle}
-            onTextChange={onTextChange}
-          />
+    <div className="recipe-tree">
+      {tree
+        .filter(n => folderId !== undefined ? n.parent === folderId : n.parent === -1)
+        .map(node => 
+          node.data ? 
+            <RecipeItem
+              key={node.id}
+              recipeId={node.data}
+              onClick={() => handleNavigate(node.data, true)}
+            />
+            : 
+            <SwipeToDelete
+              key={node.id}
+              onDelete={() => onFolderDelete(node.id)}
+            >
+              <FolderItem
+                node={node}
+                onClick={() => handleNavigate(node.id, false)}
+              />
+            </SwipeToDelete>
         )}
-        onDrop={onDrop}
-        classes={{
-          root: "recipe-tree",
-          dropTarget: "recipe-tree-drop-target",
-        }}
-        sort={false}
-        enableAnimateExpand={true}
-        insertDroppableFirst={false}
-        canDrop={(tree, { dragSource, dropTargetId }) => {
-          if (dragSource?.parent === dropTargetId) {
-            return true;
-          }
-        }}
-        dropTargetOffset={0}
-        placeholderRender={(node) => (
-          <RecipeNode
-            className={"recipe-tree-dragging"}
-            node={node}
-            isOpen={false}
-            onToggle={() => undefined}
-            onTextChange={() => undefined}
-          />
-        )}
-      />
-    </DndProvider>
+    </div>
   );
 }
