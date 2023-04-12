@@ -9,34 +9,42 @@
   font-family: -apple-system, BlinkMacSystemFont, "Raleway", sans-serif;
   --spacing: 8px;
 
-  --color-nav-background: hsl(82, 17%, 28%);
-  --color-background: hsl(34, 46%, 84%);
-  --color-nav-active: #9c95dc;
+  --app-header-height: 50px;
+  --app-nav-height: 60px;
 
-  --color-input-background: #fff;
-  --color-input-hover: #7d7a61;
-  --color-input-focus: #4b543b;
-  --color-input-color: white;
+  --color-nav-background: #f9fbf2;
+  --color-nav-color: rgb(176, 176, 176);
+  --color-nav-active: #214383;
 
+  --color-background: #f9fbf2;
   --color-color: hsl(82, 3%, 20%);
-  --color-border: hsl(82, 10%, 50%);
+
+  --color-input-background: #ebfcff;
+  --color-input-hover: #a9c3dc;
+  --color-input-focus: #90a8d3;
+  --color-input-color: black;
+
+  --color-border: #3b78e9;
   --color-placeholder: #a7a7a7;
 
   --color-danger: rgb(235, 40, 86);
   --color-danger-color: white;
 
   @media (prefers-color-scheme: dark) {
-    --color-nav-background: hsl(90, 39%, 15%);
-    --color-background: hsl(90, 5%, 12%);
-    --color-nav-active: #9c95dc;
+    --color-nav-background: hsl(214, 31%, 10%);
+    --color-nav-color: rgb(125, 125, 125);
+    --color-nav-active: #3974e1;
 
-    --color-input-background: hsl(90, 4%, 24%);
-    --color-input-hover: #75835d;
-    --color-input-focus: #7d9c59;
-    --color-color: hsl(82, 18%, 88%);
+    --color-background: var(--color-nav-background);
+    --color-color: hsl(165, 3%, 90%);
 
-    --color-border: hsl(82, 10%, 20%);
-    --color-placeholder: #8c8b8b;
+    --color-input-background: #244856;
+    --color-input-hover: #4d5970;
+    --color-input-focus: #7889aa;
+    --color-input-color: white;
+
+    --color-border: #27519e;
+    --color-placeholder: #a7a7a7;
   }
 }
 
@@ -44,7 +52,7 @@ body {
   margin: 0;
   font-size: 1.2rem;
 
-  background-color: var(--color-nav-background);
+  background-color: var(--color-background);
   color: var(--color-color);
 }
 
@@ -111,12 +119,14 @@ h5 {
   overscroll-behavior: none;
 
   flex: 1;
-  padding-top: 60px;
-  // padding: calc(60px + var(--spacing) * 2) calc(var(--spacing) * 1.5)
-  //   calc(var(--spacing) * 3) calc(var(--spacing) * 1.5);
+  margin-top: var(--app-header-height);
 
   background-color: var(--color-background);
   color: var(--color-color);
+
+  @media (min-width: 1000px) {
+    margin-top: 0;
+  }
 }
 
 .ra-view-content {
@@ -128,7 +138,7 @@ h5 {
   width: 100vw;
   height: 100%;
   flex: 1;
-  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 1.5)
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 1.5)
     calc(var(--spacing) * 3) calc(var(--spacing) * 1.5);
 
   background-color: var(--color-background);
@@ -137,6 +147,7 @@ h5 {
   @media (min-width: 1000px) {
     width: 700px;
     margin: 0 auto;
+    padding-top: calc(var(--spacing) * 2);
   }
 }
 
@@ -162,13 +173,14 @@ h5 {
 
   transition: box-shadow 0.25s;
 
+  -webkit-appearance: none;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 
-  &:hover {
+  &:not(:disabled):hover {
     box-shadow: 0 0 0 1px var(--color-input-hover);
   }
 
-  &:focus {
+  &:not(:disabled):focus {
     box-shadow: 0 0 0 2px var(--color-input-focus);
   }
 
@@ -196,14 +208,18 @@ h5 {
   justify-content: space-between;
   width: 100%;
 
-  padding: var(--spacing) 0;
+  padding: calc(var(--spacing) * 3) 0 calc(var(--spacing) * 2) 0;
 }
 
 .ra-actions {
   display: flex;
   justify-content: flex-end;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--spacing) * 3);
   flex: 1;
+
+  @media (min-width: 1000px) {
+    gap: calc(var(--spacing));
+  }
 }
 
 .ra-title {
@@ -273,8 +289,8 @@ h5 {
   align-items: center;
   justify-content: center;
 
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
 
   border-radius: calc(var(--spacing) * 0.5);
   padding: 0;

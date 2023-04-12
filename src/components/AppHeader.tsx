@@ -15,13 +15,12 @@ export default function AppHeader({
 
   return (
     <header className="app-header">
-
       {subView && (
         <button
           className="icon-button material-symbols-rounded"
           onClick={() => navigate(-1)}
         >
-          arrow_back
+          chevron_left
         </button>
       )}
       {children}
