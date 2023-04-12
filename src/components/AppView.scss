@@ -1,0 +1,51 @@
+.ra-view {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: auto;
+  overscroll-behavior: none;
+
+  flex: 1;
+  margin-top: var(--app-header-height);
+  margin-bottom: var(--app-nav-size);
+
+  background-color: var(--color-background);
+  color: var(--color-color);
+
+  @media (min-width: 1000px) {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: var(--app-nav-size);
+  }
+}
+
+.ra-view-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: auto;
+
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 1.5)
+    calc(var(--spacing) * 3) calc(var(--spacing) * 1.5);
+
+  background-color: var(--color-background);
+  color: var(--color-color);
+
+  @media (min-width: 1000px) {
+    width: 700px;
+    margin: 0 auto;
+    padding-top: calc(var(--spacing) * 2);
+  }
+
+  .top-observer,
+  .bottom-observer {
+    width: 100%;
+    height: 1px;
+  }
+}

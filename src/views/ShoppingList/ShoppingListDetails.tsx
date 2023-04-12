@@ -10,11 +10,10 @@ import mergeIngredients from "../../@modules/utils/mergeIngredients";
 import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
+import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import DropMenu from "../../components/DropMenu";
-import { RecipeItem } from "../../components/RecipeItem";
-import SwipeToDelete from "../../components/SwipeToDelete";
 
 import { ShoppingIngredientList } from "./ShoppingIngredientList";
 
@@ -49,9 +48,9 @@ export default function ShoppingListDetailsView() {
     }
   };
 
-  const removeRecipe = async (index: number) => {
-    updateList((l) => l.recipeIds.splice(index, 1));
-  };
+  // const removeRecipe = async (index: number) => {
+  //   updateList((l) => l.recipeIds.splice(index, 1));
+  // };
 
   const setListName = (value: string) => {
     updateList((l) => (l.name = value));
@@ -84,6 +83,10 @@ export default function ShoppingListDetailsView() {
         navigate(-1);
       }
     }
+
+    if (option === "IMPORT_INGREDIENTS") {
+      addRecipe();
+    }
   };
 
   if (!list) {
@@ -91,63 +94,47 @@ export default function ShoppingListDetailsView() {
   }
 
   return (
-    <div className="ra-view shopping-list-view">
-      <AppHeader subView>
-        <div className="ra-actions">
-          <DropMenu
-            icon="more_vert"
-            options={[
-              {
-                icon: "delete",
-                value: "DELETE",
-                text: "Delete Shopping List",
-                color: "var(--color-danger)",
-              },
-            ]}
-            onSelect={handleMenu}
-          />
-        </div>
-      </AppHeader>
+    <AppView
+      header={
+        <AppHeader subView>
+          <div className="ra-actions">
+            <DropMenu
+              icon="more_vert"
+              options={[
+                {
+                  icon: "add",
+                  value: "IMPORT_INGREDIENTS",
+                  text: "Import Recipe Ingredients",
+                },
+                {
+                  icon: "delete",
+                  value: "DELETE",
+                  text: "Delete Shopping List",
+                  color: "var(--color-danger)",
+                },
+              ]}
+              onSelect={handleMenu}
+            />
+          </div>
+        </AppHeader>
+      }
+    >
+      <ContentEditable
+        className="ra-title"
+        value={list.name || "Untitled List"}
+        onChange={(v) => setListName(v)}
+        naked
+      />
 
-      <div className="ra-view-content">
-
-        <ContentEditable
-          className="ra-title"
-          value={list.name || "Untitled List"}
-          onChange={(v) => setListName(v)}
-          naked
-        />
-
-        <header className="ra-header">
-          <h3>Recipes</h3>
-          <button className="chip-button" onClick={addRecipe}>
-            <i className="material-symbols-rounded">add</i>
-          Add Recipe
-          </button>
-        </header>
-
-        <div className="ra-dense-list">
-          {list.recipeIds.map((recipeId, i) => (
-            <SwipeToDelete
-              key={recipeId}
-              onDelete={() => removeRecipe(i)}
-              onClick={() => navigate(`/recipe/${recipeId}`)}
-            >
-              <RecipeItem recipeId={recipeId} />
-            </SwipeToDelete>
-          ))}
-        </div>
-
-        <ShoppingIngredientList
-          list={list}
-          onNew={addNewIngredient}
-          onUpdate={(newIngredient, i) =>
-            updateList((r) => r.ingredients.splice(i, 1, newIngredient))
-          }
-          onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
-          onReorder={reorderIngredients}
-        />
-      </div>
-    </div>
+      <ShoppingIngredientList
+        list={list}
+        onNew={addNewIngredient}
+        onUpdate={(newIngredient, i) =>
+          updateList((r) => r.ingredients.splice(i, 1, newIngredient))
+        }
+        onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
+        onReorder={reorderIngredients}
+      />
+    </AppView>
   );
 }

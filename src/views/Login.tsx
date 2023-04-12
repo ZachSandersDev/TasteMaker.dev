@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { createAccount, doLogin } from "../@modules/stores/auth";
 
 import AppHeader from "../components/AppHeader";
+import AppView from "../components/AppView";
 
 import "./Login.scss";
 
@@ -35,39 +36,38 @@ export default function LoginView() {
   };
 
   return (
-    <div className="ra-view">
-      <AppHeader>
-        <h1 className="login-title">EasyPea</h1>
-      </AppHeader>
-      
-      <div className="ra-view-content">
-
-        <form onSubmit={login} className="login-form">
-          <h2 className="ra-title">Login</h2>
-          <input
-            className="ra-input"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            className="ra-input"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <header className="ra-actions">
-            <button className="chip-button" onClick={signUp}>
+    <AppView
+      header={
+        <AppHeader>
+          <h1 className="login-title">EasyPea</h1>
+        </AppHeader>
+      }
+    >
+      <form onSubmit={login} className="login-form">
+        <h2 className="ra-title">Login</h2>
+        <input
+          className="ra-input"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          className="ra-input"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <header className="ra-actions">
+          <button className="chip-button" onClick={signUp}>
             Sign up
-            </button>
-            <button className="chip-button" formMethod="submit">
+          </button>
+          <button className="chip-button" formMethod="submit">
             Login
-            </button>
-          </header>
-          <span className="ra-error-message">{error}</span>
-        </form>
-      </div>
-    </div>
+          </button>
+        </header>
+        <span className="ra-error-message">{error}</span>
+      </form>
+    </AppView>
   );
 }

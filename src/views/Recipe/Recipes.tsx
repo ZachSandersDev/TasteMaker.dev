@@ -8,14 +8,15 @@ import { treeStore } from "../../@modules/stores/tree";
 import { setRecipeDefaults } from "../../@modules/types/recipes";
 
 import AppHeader from "../../components/AppHeader";
+import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
 import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
-  const {folderId = ""} = useParams();
+  const { folderId = "" } = useParams();
   const { tree } = useRecoilValue(treeStore);
 
-  const folder = tree.find(n => String(n.id) === folderId);
+  const folder = tree.find((n) => String(n.id) === folderId);
 
   const makeNewRecipe = async () => {
     const id = await newRecipe(setRecipeDefaults({}));
@@ -51,13 +52,15 @@ export default function RecipesView() {
 
     const newTree = structuredClone(tree);
     // Rehome everything to root
-    const stuffUnderFolder = newTree.filter(n => String(n.parent) === String(id));
-    for(const node of stuffUnderFolder){ 
+    const stuffUnderFolder = newTree.filter(
+      (n) => String(n.parent) === String(id)
+    );
+    for (const node of stuffUnderFolder) {
       node.parent = -1;
     }
 
-    const folderIndex = newTree.findIndex(n => String(n.id) === String(id));
-    if(folderIndex > -1) {
+    const folderIndex = newTree.findIndex((n) => String(n.id) === String(id));
+    if (folderIndex > -1) {
       newTree.splice(folderIndex, 1);
     }
 
@@ -74,33 +77,40 @@ export default function RecipesView() {
   };
 
   return (
-    <div className="ra-view">
-      <AppHeader subView={folder?.id !== undefined}>
-        <div className="ra-actions">
-          <button className="icon-button material-symbols-rounded" onClick={makeNewFolder} title="New Folder">
-            create_new_folder
-          </button>
-          <button className="icon-button material-symbols-rounded" onClick={makeNewRecipe} title="New Recipe">
-            add
-          </button>
-        </div>
-      </AppHeader>
-      
-      <div className="ra-view-content">
-        {
-          folder ? 
-            <ContentEditable
-              className="ra-title"
-              value={folder.text || "Untitled Folder"}
-              onChange={renameFolder}
-              naked
-            />
-            :
-            <h2 className="ra-title">All Recipes</h2>      
-        }
+    <AppView
+      header={
+        <AppHeader subView={folder?.id !== undefined}>
+          <div className="ra-actions">
+            <button
+              className="icon-button material-symbols-rounded"
+              onClick={makeNewFolder}
+              title="New Folder"
+            >
+              create_new_folder
+            </button>
+            <button
+              className="icon-button material-symbols-rounded"
+              onClick={makeNewRecipe}
+              title="New Recipe"
+            >
+              add
+            </button>
+          </div>
+        </AppHeader>
+      }
+    >
+      {folder ? (
+        <ContentEditable
+          className="ra-title"
+          value={folder.text || "Untitled Folder"}
+          onChange={renameFolder}
+          naked
+        />
+      ) : (
+        <h2 className="ra-title">All Recipes</h2>
+      )}
 
-        <RecipeTree folderId={folder?.id} onFolderDelete={deleteFolder}/>
-      </div>
-    </div>
+      <RecipeTree folderId={folder?.id} onFolderDelete={deleteFolder} />
+    </AppView>
   );
 }

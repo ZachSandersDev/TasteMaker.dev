@@ -1,11 +1,11 @@
 import { doLogout } from "../@modules/stores/auth";
+import AppView from "../components/AppView";
 
 import "./ProfileView.scss";
 
 export default function ProfileView() {
   return (
-    <div className="ra-view">
-      {/* <AppHeader/> */}
+    <AppView>
       <div className="ra-view-content">
         <h2 className="ra-title">Profile</h2>
 
@@ -13,8 +13,10 @@ export default function ProfileView() {
           className="menu-button"
           style={{ color: "var(--color-danger)" }}
           onClick={doLogout}
-        >Log out</button>
+        >
+          Log out
+        </button>
       </div>
-    </div>
+    </AppView>
   );
 }

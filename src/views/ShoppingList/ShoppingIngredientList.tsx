@@ -1,4 +1,3 @@
-
 import { Ingredient } from "../../@modules/types/recipes";
 import {
   ShoppingList,
@@ -6,7 +5,6 @@ import {
 } from "../../@modules/types/shoppingLists";
 import ContentEditable from "../../components/ContentEditable";
 import SwipeToDelete from "../../components/SwipeToDelete";
-
 
 import "./ShoppingIngredientList.scss";
 
@@ -36,16 +34,6 @@ export function ShoppingIngredientList({
 
   return (
     <>
-      <header className="ra-header">
-        <h3>List</h3>
-        <div className="ra-actions">
-          <button className="chip-button" onClick={onNew}>
-            <i className="material-symbols-rounded">add</i>
-            New Item
-          </button>
-        </div>
-      </header>
-     
       <div className="ra-list">
         {list.ingredients.map((ingredient, i) => (
           <SwipeToDelete key={ingredient._id} onDelete={() => onDelete(i)}>
@@ -87,6 +75,10 @@ export function ShoppingIngredientList({
             </div>
           </SwipeToDelete>
         ))}
+        <button className="chip-button" onClick={onNew}>
+          <i className="material-symbols-rounded">add</i>
+          New Item
+        </button>
       </div>
     </>
   );
