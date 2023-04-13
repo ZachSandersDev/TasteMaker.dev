@@ -14,14 +14,14 @@
 
   --color-nav-background: hsl(73, 53%, 90%);
   --color-nav-color: rgb(176, 176, 176);
-  --color-nav-active: #214383;
+  --color-nav-active: hsl(199, 49%, 45%);
 
   --color-background: #f9fbf2;
   --color-color: hsl(82, 3%, 20%);
 
   --color-input-background: #ebfcff;
   --color-input-hover: #a9c3dc;
-  --color-input-focus: #90a8d3;
+  --color-input-focus: hsl(219, 43%, 70%);
   --color-input-color: black;
 
   --color-border: #3b78e9;
@@ -41,7 +41,7 @@
     --color-input-background: #244856;
     --color-input-hover: #4d5970;
     --color-input-focus: #7889aa;
-    --color-input-color: white;
+    --color-input-color: black;
 
     --color-border: #7889aa;
     --color-placeholder: #a7a7a7;
@@ -54,7 +54,7 @@
 
 body {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
 
   background-color: var(--color-background);
   color: var(--color-color);
@@ -135,14 +135,14 @@ h5 {
   transition: box-shadow 0.25s;
 
   -webkit-appearance: none;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
   &:not(:disabled):hover {
-    box-shadow: 0 0 0 1px var(--color-input-hover);
+    box-shadow: inset 0 0 0 1px var(--color-input-hover);
   }
 
   &:not(:disabled):focus {
-    box-shadow: 0 0 0 2px var(--color-input-focus);
+    box-shadow: inset 0 0 0 2px var(--color-input-focus);
   }
 
   &::placeholder {
@@ -172,10 +172,19 @@ h5 {
   padding: calc(var(--spacing) * 3) 0 calc(var(--spacing) * 2) 0;
 }
 
+.ra-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  padding: var(--spacing) 0;
+}
+
 .ra-actions {
   display: flex;
   justify-content: flex-end;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--spacing) * 1);
   flex: 1;
 
   @media (min-width: 1000px) {
@@ -202,9 +211,21 @@ h1.ra-title {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
+  max-width: 90%;
 
   animation: center-scale 0.35s;
   transform-origin: center center;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8) !important;
+
+  .ra-input {
+    padding: calc(var(--spacing));
+  }
+
+  > .ra-actions {
+    flex: initial;
+    width: 100%;
+  }
 }
 
 .ra-dialog-cover {
@@ -213,9 +234,13 @@ h1.ra-title {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
   animation: fade 0.35s;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
 }
 
 @keyframes scale {
@@ -270,6 +295,7 @@ h1.ra-title {
   width: 100%;
   margin: 0;
   padding: 0;
+  gap: calc(var(--spacing) * 0.75);
 }
 
 .ra-error-message {
@@ -283,7 +309,8 @@ h1.ra-title {
   font-weight: 400;
 }
 
-.icon-button {
+.icon-button,
+.icon-button-sm {
   color: inherit;
   outline: none;
   border: none;
@@ -314,14 +341,20 @@ h1.ra-title {
   }
 }
 
-.chip-button {
+.icon-button-sm {
+  width: 20px;
+  height: 20px;
+}
+
+.chip-button,
+.chip-button-naked {
   display: flex;
   align-items: center;
 
   gap: calc(var(--spacing) * 0.5);
   padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
 
-  background-color: var(--color-input-hover);
+  background-color: var(--color-input-focus);
   color: var(--color-input-color);
   border-radius: calc(var(--spacing) * 2);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -330,20 +363,27 @@ h1.ra-title {
   cursor: pointer;
   user-select: none;
 
-  font-size: 0.75em;
-
   i {
     font-size: 1.25em;
   }
 
   &:hover {
-    background-color: var(--color-input-focus);
+    background-color: var(--color-input-hover);
   }
 
   @media (max-width: 500px) {
     align-self: center;
     margin: 0;
     font-size: 0.8em;
+  }
+}
+
+.chip-button-naked {
+  background-color: inherit;
+  color: var(--color-input-focus);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
   }
 }
 
