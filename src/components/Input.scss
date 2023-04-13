@@ -1,0 +1,13 @@
+.input-wrapper {
+  display: flex;
+}
+
+.input-naked {
+  flex: 1;
+  padding: 0;
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+  outline: none;
+  border: none;
+}

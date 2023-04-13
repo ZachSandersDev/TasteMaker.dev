@@ -9,6 +9,7 @@ import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
 import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
 import { listenForTree, treeStore } from "../@modules/stores/tree";
 
+import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
 import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
 import Loading from "./Loading";
 
@@ -39,14 +40,15 @@ export default function Shell() {
 
   return (!userLoading && !user) ||
     (user && !recipesLoading && !listsLoading && !treeLoading) ? (
-      <>
-        <main>
-          <RouterProvider router={router} />
-        </main>
+    <>
+      <main>
+        <RouterProvider router={router} />
+      </main>
 
-        <RecipeSelectorDialog />
-      </>
-    ) : (
-      <Loading />
-    );
+      <RecipeSelectorDialog />
+      <EditIngredientDialog />
+    </>
+  ) : (
+    <Loading />
+  );
 }
