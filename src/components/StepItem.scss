@@ -3,9 +3,12 @@
   align-items: center;
   flex: 1;
   gap: var(--spacing);
-
-  padding: 3px 0;
   background-color: var(--color-background);
+}
+
+.step-number {
+  font-size: 0.8em;
+  width: 1.5ch;
 }
 
 .step-input {

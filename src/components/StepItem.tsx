@@ -36,7 +36,7 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
         onDelete={deleteStep}
       >
         <div className="step-item">
-          <span>{index + 1}.</span>
+          <span className="step-number">{index + 1}.</span>
           <ContentEditable
             className="step-input"
             value={step.text}
