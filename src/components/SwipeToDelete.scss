@@ -1,6 +1,7 @@
 .swipe-to-delete-container {
   width: 100%;
   overflow-x: scroll;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   display: flex;
 
@@ -19,7 +20,6 @@
   outline: none;
   border: none;
   font-family: inherit;
-  padding: var(--spacing) calc(var(--spacing) * 2);
   background-color: var(--color-danger);
   color: var(--color-danger-color);
 
