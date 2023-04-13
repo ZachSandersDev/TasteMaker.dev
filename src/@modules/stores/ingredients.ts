@@ -13,7 +13,7 @@ export const ingredientStore = atom<{
 
 export function listenForIngredients() {
   const listener = getIngredientsLive((ingredients) => {
-    setRecoil(ingredientStore, (state) => ({ ...state, ingredients: Object.keys(ingredients), loading: false }));
+    setRecoil(ingredientStore, (state) => ({ ...state, ingredients: Object.keys(ingredients).sort(), loading: false }));
   });
 
   setRecoil(ingredientStore, (state) => ({ ...state, loading: true, listener }));
