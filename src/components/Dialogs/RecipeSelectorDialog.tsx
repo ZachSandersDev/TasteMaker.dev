@@ -11,8 +11,9 @@ import RecipeTree from "../RecipeTree/RecipeTree";
 import "./RecipeSelectorDialog.scss";
 
 const recipeSelectorDialog = atom<{
-  resolve?: (r?: Recipe) => void;
+  resolve?: (r?: Recipe | string) => void;
   reject?: (e: Error) => void;
+  folderOnly?: boolean;
 }>({
   key: "recipeSelectorDialog",
   default: {},
@@ -20,7 +21,15 @@ const recipeSelectorDialog = atom<{
 
 export function selectRecipe() {
   return new Promise<Recipe | undefined>((resolve, reject) => {
-    setRecoil(recipeSelectorDialog, { resolve, reject });
+    // @ts-expect-error Since this can return a recipe or a folder id
+    setRecoil(recipeSelectorDialog, { resolve, reject, folderOnly: false });
+  });
+}
+
+export function selectFolder() {
+  return new Promise<string | undefined>((resolve, reject) => {
+    // @ts-expect-error Since this can return a recipe or a folder id
+    setRecoil(recipeSelectorDialog, { resolve, reject, folderOnly: true });
   });
 }
 
@@ -28,10 +37,10 @@ export default function RecipeSelectorDialog() {
   const [folderStack, setFolderStack] = useState<string[]>([]);
   const { tree } = useRecoilValue(treeStore);
   const { recipes } = useRecoilValue(recipeStore);
-  const [{ resolve, reject }, setDialogState] =
+  const [{ resolve, reject, folderOnly }, setDialogState] =
     useRecoilState(recipeSelectorDialog);
 
-  const res = (r?: Recipe) => {
+  const res = (r?: Recipe | string) => {
     if (resolve) {
       resolve(r);
       setDialogState({});
@@ -67,11 +76,30 @@ export default function RecipeSelectorDialog() {
               chevron_left
             </button>
           )}
-          <h3>{currentFolder ? currentFolder.text : "Select Recipe"}</h3>
+          <h3>
+            {currentFolder
+              ? currentFolder.text
+              : folderOnly
+              ? "Select Folder"
+              : "Select Recipe"}
+          </h3>
         </header>
 
         <div className="ra-list">
-          <RecipeTree folderId={folderStack.at(-1)} onClick={handleClick} />
+          <RecipeTree
+            folderOnly={folderOnly}
+            folderId={folderStack.at(-1)}
+            onClick={handleClick}
+          />
+        </div>
+
+        <div className="ra-actions">
+          <button
+            className="chip-button"
+            onClick={() => res(String(currentFolder?.id || -1))}
+          >
+            Select this folder
+          </button>
         </div>
       </div>
       <div className="ra-dialog-cover" onClick={() => res(undefined)}></div>

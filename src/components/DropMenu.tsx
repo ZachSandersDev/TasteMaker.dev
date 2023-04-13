@@ -40,7 +40,7 @@ export default function DropMenu({ icon, options, onSelect }: DropMenuProps) {
         )}
       </div>
       {isOpen && (
-        <div className="drop-menu-cover" onClick={() => setIsOpen(false)}></div>
+        <div className="ra-dialog-cover" onClick={() => setIsOpen(false)}></div>
       )}
     </>
   );

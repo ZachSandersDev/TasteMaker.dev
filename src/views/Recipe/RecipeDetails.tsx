@@ -1,10 +1,13 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
 import { deleteRecipe, saveRecipe } from "../../@modules/api/recipes";
+import { saveTree } from "../../@modules/api/tree";
 import { useRecipe } from "../../@modules/stores/recipes";
+import { treeStore } from "../../@modules/stores/tree";
 import { Ingredient, Recipe } from "../../@modules/types/recipes";
 import useUpdater from "../../@modules/utils/useUpdater";
 
@@ -12,6 +15,7 @@ import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
 import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
+import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import DropMenu from "../../components/DropMenu";
 import IngredientItem from "../../components/IngredientItem";
 import StepItem from "../../components/StepItem";
@@ -59,8 +63,21 @@ export default function RecipeDetailsView() {
     updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
-  const handleMenu = (option: string) => {
+  const handleMenu = async (option: string) => {
     if (!recipe) throw "Recipe not loaded";
+
+    if (option === "MOVE") {
+      const newParent = await selectFolder();
+      if (newParent) {
+        const { tree } = getRecoil(treeStore);
+        const newTree = structuredClone(tree);
+        const thisNode = newTree.find((n) => n.data === recipe._id);
+        if (thisNode) {
+          thisNode.parent = parseInt(newParent);
+          saveTree(newTree);
+        }
+      }
+    }
 
     if (option === "DELETE") {
       const confirmed = window.confirm(
@@ -85,6 +102,11 @@ export default function RecipeDetailsView() {
             <DropMenu
               icon="more_vert"
               options={[
+                {
+                  icon: "drive_file_move",
+                  value: "MOVE",
+                  text: "Move",
+                },
                 {
                   icon: "delete",
                   value: "DELETE",
