@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import LoginView from "../views/Login";
-import ProfileView from "../views/ProfileView";
 import RecipeDetailsView from "../views/Recipe/RecipeDetails";
 import RecipesView from "../views/Recipe/Recipes";
 import RootView from "../views/RootView";
+import SettingsView from "../views/SettingsView";
 import ShoppingListDetailsView from "../views/ShoppingList/ShoppingListDetails";
 import ShoppingListsView from "../views/ShoppingList/ShoppingLists";
 
@@ -31,14 +31,14 @@ const router = createBrowserRouter([
         element: <ShoppingListDetailsView />,
       },
       {
-        path: "profile",
-        element: <ProfileView />,
+        path: "settings",
+        element: <SettingsView />,
       },
       {
         path: "/folder/:folderId",
         element: <RecipesView />,
       },
-    ]
+    ],
   },
   {
     path: "/login",
