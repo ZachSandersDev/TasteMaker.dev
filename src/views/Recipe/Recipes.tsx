@@ -20,7 +20,7 @@ export default function RecipesView() {
   const folder = tree.find((n) => String(n.id) === folderId);
 
   const makeNewRecipe = async () => {
-    const id = await newRecipe(setRecipeDefaults({}));
+    const id = await newRecipe(setRecipeDefaults({ name: "Untitled Recipe" }));
     if (!id) return;
 
     saveTree([
