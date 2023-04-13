@@ -2,13 +2,20 @@ import { PropsWithChildren, ReactElement, useEffect, useRef } from "react";
 import { getRecoil, setRecoil } from "recoil-nexus";
 
 import { navStore } from "../@modules/stores/nav";
+import classNames from "../@modules/utils/classNames";
 
 import "./AppView.scss";
+
+export interface AppViewProps {
+  header?: ReactElement;
+  className?: string;
+}
 
 export default function AppView({
   header,
   children,
-}: PropsWithChildren<{ header?: ReactElement }>) {
+  className,
+}: PropsWithChildren<AppViewProps>) {
   const topObserver = useRef<HTMLDivElement>(null);
   const bottomObserver = useRef<HTMLDivElement>(null);
 
@@ -18,7 +25,6 @@ export default function AppView({
       for (const entry of entries) {
         if (entry.target === topObserver.current) {
           newState.topShadow = !entry.isIntersecting;
-          console.log("Top observer is", entry.isIntersecting);
         }
         if (entry.target === bottomObserver.current) {
           newState.bottomShadow = !entry.isIntersecting;
@@ -43,7 +49,7 @@ export default function AppView({
   }, []);
 
   return (
-    <div className="ra-view">
+    <div className={classNames("ra-view", className)}>
       {header}
       <div className="ra-view-content">
         <div className="top-observer" ref={topObserver}></div>

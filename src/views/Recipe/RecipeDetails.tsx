@@ -115,12 +115,14 @@ export default function RecipeDetailsView() {
 
         <input
           className="ra-input"
+          style={{ width: "100%" }}
           placeholder="Prep Time"
           value={recipe.prepTime}
           onChange={(e) => setRecipeField("prepTime", e.target.value)}
         />
         <input
           className="ra-input"
+          style={{ width: "100%" }}
           placeholder="Serving Size"
           value={recipe.servingSize}
           onChange={(e) => setRecipeField("servingSize", e.target.value)}

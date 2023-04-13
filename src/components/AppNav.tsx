@@ -12,6 +12,8 @@ export default function AppNav() {
 
   return (
     <nav className={classNames("app-nav", bottomShadow && "shadow")}>
+      <h1 className="ra-title">Easy Pea</h1>
+
       <Link
         to="/"
         className={[
@@ -41,9 +43,9 @@ export default function AppNav() {
         <i className="material-symbols-rounded">checklist</i>
         Shopping
       </Link>
-      <NavLink to="/profile" className="app-link">
-        <i className="material-symbols-rounded">account_circle</i>
-        Me
+      <NavLink to="/settings" className="app-link">
+        <i className="material-symbols-rounded">settings</i>
+        Settings
       </NavLink>
     </nav>
   );

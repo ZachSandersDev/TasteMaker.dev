@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
 
@@ -14,6 +14,7 @@ import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
   const { folderId = "" } = useParams();
+  const navigate = useNavigate();
   const { tree } = useRecoilValue(treeStore);
 
   const folder = tree.find((n) => String(n.id) === folderId);
@@ -42,6 +43,16 @@ export default function RecipesView() {
         text: "New Folder",
       },
     ]);
+  };
+
+  const handleClick = (id: string | number | undefined, isRecipe: boolean) => {
+    if (id === undefined) throw new Error("No ID passed to handleNavigate");
+
+    if (isRecipe) {
+      navigate(`/recipe/${id}`);
+    } else {
+      navigate(`/folder/${id}`);
+    }
   };
 
   const deleteFolder = async (id: string | number) => {
@@ -110,7 +121,11 @@ export default function RecipesView() {
         <h2 className="ra-title">All Recipes</h2>
       )}
 
-      <RecipeTree folderId={folder?.id} onFolderDelete={deleteFolder} />
+      <RecipeTree
+        folderId={folder?.id}
+        onClick={handleClick}
+        onFolderDelete={deleteFolder}
+      />
     </AppView>
   );
 }

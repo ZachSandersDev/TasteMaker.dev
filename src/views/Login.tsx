@@ -37,9 +37,10 @@ export default function LoginView() {
 
   return (
     <AppView
+      className="login-view"
       header={
         <AppHeader>
-          <h1 className="login-title">EasyPea</h1>
+          <h1 className="ra-title login-title">EasyPea</h1>
         </AppHeader>
       }
     >
