@@ -10,6 +10,7 @@ import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
 import { listenForTree, treeStore } from "../@modules/stores/tree";
 
 import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
+import ImportRecipeDialog from "./Dialogs/ImportRecipeDialog";
 import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
 import Loading from "./Loading";
 
@@ -47,6 +48,7 @@ export default function Shell() {
 
       <RecipeSelectorDialog />
       <EditIngredientDialog />
+      <ImportRecipeDialog />
     </>
   ) : (
     <Loading />

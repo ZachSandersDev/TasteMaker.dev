@@ -52,8 +52,8 @@ export default function EditIngredientDialog() {
   const res = (i?: string) => {
     if (resolve) {
       resolve(i);
-      setDialogState({});
     }
+    setDialogState({});
   };
 
   const handleSaveIngredient = (i?: string) => {

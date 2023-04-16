@@ -41,6 +41,7 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
             className="step-input"
             value={step.text}
             onChange={(v) => setStepText(v)}
+            plaintext
           />
           <div
             onPointerDown={(e) => controls.start(e)}

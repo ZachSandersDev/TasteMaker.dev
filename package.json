@@ -14,6 +14,7 @@
     "firebase": "^9.18.0",
     "framer-motion": "^10.9.1",
     "lodash": "^4.17.21",
+    "parse-ingredient": "^0.6.0",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.7",
     "react-dnd": "^16.0.1",

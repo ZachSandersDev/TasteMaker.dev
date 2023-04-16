@@ -43,8 +43,8 @@ export default function RecipeSelectorDialog() {
   const res = (r?: Recipe | string) => {
     if (resolve) {
       resolve(r);
-      setDialogState({});
     }
+    setDialogState({});
   };
 
   const handleClick = (id: string | number, isRecipe: boolean) => {

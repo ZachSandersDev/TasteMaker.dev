@@ -15,6 +15,7 @@ import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
 import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
+import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import DropMenu from "../../components/DropMenu";
 import IngredientItem from "../../components/IngredientItem";
@@ -79,6 +80,13 @@ export default function RecipeDetailsView() {
       }
     }
 
+    if (option === "IMPORT") {
+      const newRecipe = await importRecipe(recipe);
+      if (newRecipe) {
+        updateRecipe((r) => Object.assign(r, newRecipe));
+      }
+    }
+
     if (option === "DELETE") {
       const confirmed = window.confirm(
         "Are you sure you want to delete this recipe?"
@@ -106,6 +114,11 @@ export default function RecipeDetailsView() {
                   icon: "drive_file_move",
                   value: "MOVE",
                   text: "Move",
+                },
+                {
+                  icon: "download",
+                  value: "IMPORT",
+                  text: "Import recipe data",
                 },
                 {
                   icon: "delete",
