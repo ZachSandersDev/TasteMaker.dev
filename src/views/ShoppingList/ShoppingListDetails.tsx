@@ -119,12 +119,14 @@ export default function ShoppingListDetailsView() {
         </AppHeader>
       }
     >
-      <ContentEditable
-        className="ra-title"
-        value={list.name || "Untitled List"}
-        onChange={(v) => setListName(v)}
-        naked
-      />
+      <div className="ra-view-header">
+        <ContentEditable
+          className="ra-title"
+          value={list.name || "Untitled List"}
+          onChange={(v) => setListName(v)}
+          naked
+        />
+      </div>
 
       <ShoppingIngredientList
         list={list}

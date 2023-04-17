@@ -133,21 +133,22 @@ export default function RecipeDetailsView() {
         </AppHeader>
       }
     >
+      <div className="ra-view-header">
+        <EmojiPickerDialog
+          value={recipe.icon || "🗒️"}
+          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+        />
+
+        <ContentEditable
+          className="ra-title"
+          value={recipe.name || "Untitled Recipe"}
+          onChange={(v) => setRecipeField("name", v)}
+          naked
+          plaintext
+        />
+      </div>
+
       <section className="ra-list">
-        <div className="ra-row" style={{ alignItems: "center" }}>
-          <EmojiPickerDialog
-            value={recipe.icon || "🗒️"}
-            onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
-          />
-
-          <ContentEditable
-            className="ra-title"
-            value={recipe.name || "Untitled Recipe"}
-            onChange={(v) => setRecipeField("name", v)}
-            naked
-          />
-        </div>
-
         <input
           className="ra-input"
           style={{ width: "100%" }}
