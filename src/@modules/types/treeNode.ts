@@ -1,5 +1,8 @@
-import {
-  NodeModel,
-} from "@minoru/react-dnd-treeview";
-
-export type TreeNode = NodeModel<string>;
+export interface TreeNode {
+  id: number | string;
+  parent: number | string;
+  text: string;
+  icon?: string;
+  droppable?: boolean;
+  data?: string;
+}
