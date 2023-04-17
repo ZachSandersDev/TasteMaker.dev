@@ -3,8 +3,6 @@ import sanitize from "sanitize-html";
 
 import { ShoppingList } from "../@modules/types/shoppingLists";
 
-import "./RecipeTree/RecipeTreeNode.scss";
-
 export type ShoppingListItemProps = {
   shoppingList: ShoppingList;
 };
@@ -18,8 +16,8 @@ export const ShoppingListItem = ({ shoppingList }: ShoppingListItemProps) => {
   };
 
   return (
-    <div className="recipe-item" onClick={handleClick}>
-      <span className="recipe-item-icon">🗒️</span>
+    <div className="ra-option" onClick={handleClick}>
+      <span className="ra-option-icon">🗒️</span>
       <span
         dangerouslySetInnerHTML={{
           __html: sanitize(shoppingList.name) || "Untitled List",

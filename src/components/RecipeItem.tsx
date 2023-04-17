@@ -2,8 +2,6 @@ import sanitize from "sanitize-html";
 
 import { useRecipe } from "../@modules/stores/recipes";
 
-import "./RecipeItem.scss";
-
 export type RecipeItemProps = {
   onClick?: (e: React.MouseEvent) => void;
   recipeId: string;
@@ -21,8 +19,8 @@ export const RecipeItem = ({ onClick, recipeId }: RecipeItemProps) => {
   }
 
   return (
-    <div className="recipe-item" onClick={handleClick}>
-      <span className="recipe-item-icon">{recipe.icon || "🗒️"}</span>
+    <div className="ra-option" onClick={handleClick}>
+      <span className="ra-option-icon">{recipe.icon || "🗒️"}</span>
       <span
         dangerouslySetInnerHTML={{
           __html: sanitize(recipe.name) || "Untitled Recipe",

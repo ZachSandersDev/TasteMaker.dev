@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 
 import { TreeNode } from "../../@modules/types/treeNode";
 
-import "./FolderItem.scss";
-
 export type FolderItemProps = {
   className?: string;
   node: TreeNode;
@@ -12,18 +10,20 @@ export type FolderItemProps = {
 
 export const FolderItem = ({
   className,
-  node: { text, data },
+  node: { text, icon, data },
   onClick,
 }: FolderItemProps) => {
   return (
     <motion.div
       layout="position"
-      className={[data ? "" : "folder-item", className]
+      className={[data ? "" : "ra-option", className]
         .filter((s) => !!s)
         .join(" ")}
       onClick={onClick}
     >
-      <span className="material-symbols-rounded">folder</span>
+      <span className="ra-option-icon">
+        {icon || <i className="material-symbols-rounded">folder</i>}
+      </span>
       <span>{text}</span>
     </motion.div>
   );

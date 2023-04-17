@@ -34,10 +34,12 @@ export default function ShoppingListsView() {
         </AppHeader>
       }
     >
-      <h2 className="ra-title">Shopping Lists</h2>
+      <header className="ra-view-header">
+        <h2 className="ra-title">Shopping Lists</h2>
+      </header>
 
       {lists.length ? (
-        <div className="ra-list">
+        <div className="ra-option-list">
           {lists.map((l) => (
             <ShoppingListItem key={l._id} shoppingList={l} />
           ))}

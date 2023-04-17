@@ -9,8 +9,6 @@ import SwipeToDelete from "../SwipeToDelete";
 
 import { FolderItem } from "./FolderItem";
 
-import "./RecipeTree.scss";
-
 export interface RecipeTreeProps {
   folderId?: string | number;
   folderOnly?: boolean;
@@ -32,7 +30,7 @@ export default function RecipeTree({
   }
 
   return (
-    <div className="recipe-tree">
+    <div className="ra-option-list">
       {tree
         .filter(
           (n) =>

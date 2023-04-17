@@ -6,7 +6,9 @@ import "./SettingsView.scss";
 export default function SettingsView() {
   return (
     <AppView>
-      <h2 className="ra-title">Settings</h2>
+      <div className="ra-view-header">
+        <h2 className="ra-title">Settings</h2>
+      </div>
 
       <button
         className="menu-button"
