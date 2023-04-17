@@ -4,18 +4,22 @@ import { v4 as uuid } from "uuid";
 
 import { newRecipe } from "../../@modules/api/recipes";
 import { saveTree } from "../../@modules/api/tree";
-import { treeStore } from "../../@modules/stores/tree";
+import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
 import { setRecipeDefaults } from "../../@modules/types/recipes";
+import useMediaQuery from "../../@modules/utils/useMediaQuery";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
+import Breadcrumbs from "../../components/Breadcrumbs";
 import ContentEditable from "../../components/ContentEditable";
+import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
 import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
   const { folderId = "" } = useParams();
   const navigate = useNavigate();
   const { tree } = useRecoilValue(treeStore);
+  const isMobile = useMediaQuery("(max-width: 999px)");
 
   const folder = tree.find((n) => String(n.id) === folderId);
 
@@ -87,10 +91,35 @@ export default function RecipesView() {
     saveTree(newTree);
   };
 
+  const changeFolderIcon = (icon: string) => {
+    const newTree = structuredClone(tree);
+    const node = newTree.find((tn) => String(tn.id) === folderId);
+    if (!node) throw "Could not find node " + folderId;
+
+    node.icon = icon;
+    saveTree(newTree);
+  };
+
   return (
     <AppView
       header={
-        <AppHeader subView={folder?.id !== undefined}>
+        <AppHeader
+          subView={folder?.id !== undefined}
+          before={
+            !isMobile &&
+            folder && (
+              <Breadcrumbs
+                links={[
+                  { text: "All Recipes", href: "/" },
+                  ...getBreadcrumbs(folder.id).map((n) => ({
+                    text: n.text,
+                    href: "/folder/" + n.id,
+                  })),
+                ]}
+              />
+            )
+          }
+        >
           <div className="ra-actions">
             <button
               className="icon-button material-symbols-rounded"
@@ -110,16 +139,25 @@ export default function RecipesView() {
         </AppHeader>
       }
     >
-      {folder ? (
-        <ContentEditable
-          className="ra-title"
-          value={folder.text || "Untitled Folder"}
-          onChange={renameFolder}
-          naked
-        />
-      ) : (
-        <h2 className="ra-title">All Recipes</h2>
-      )}
+      <div className="ra-view-header">
+        {folder ? (
+          <>
+            <EmojiPickerDialog
+              value={folder.icon || ""}
+              placeholder="folder"
+              onEmojiChange={changeFolderIcon}
+            />
+            <ContentEditable
+              className="ra-title"
+              value={folder.text || "Untitled Folder"}
+              onChange={renameFolder}
+              naked
+            />
+          </>
+        ) : (
+          <h2 className="ra-title">All Recipes</h2>
+        )}
+      </div>
 
       <RecipeTree
         folderId={folder?.id}

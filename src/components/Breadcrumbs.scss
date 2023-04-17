@@ -1,0 +1,21 @@
+.breadcrumbs {
+  display: flex;
+  gap: var(--spacing);
+  padding: 0 var(--spacing);
+  font-size: 0.8em;
+}
+
+.breadcrumb-link {
+  color: var(--color-input-focus);
+  text-decoration: none;
+}
+
+span.breadcrumb-link {
+  color: var(--color-color);
+}
+
+.breadcrumb-divider {
+  &:last-child {
+    display: none;
+  }
+}
