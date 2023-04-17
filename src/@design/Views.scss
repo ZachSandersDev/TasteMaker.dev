@@ -1,0 +1,51 @@
+.ra-view-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing);
+  margin-bottom: calc(var(--spacing) * 2);
+}
+
+.ra-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  padding: calc(var(--spacing) * 3) 0 calc(var(--spacing) * 2) 0;
+}
+
+.ra-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(var(--spacing) * 1);
+  flex: 1;
+
+  @media (min-width: 1000px) {
+    gap: calc(var(--spacing));
+  }
+}
+
+.ra-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-color);
+}
+
+h1.ra-title {
+  width: 100%;
+  text-align: center;
+  font-family: "Kalam", sans-serif;
+  font-size: 2.5rem;
+}
+
+.ra-error-message {
+  position: fixed;
+  top: 100px;
+  width: 100%;
+  text-align: center;
+
+  color: var(--color-danger);
+  font-size: 1.5em;
+  font-weight: 400;
+}

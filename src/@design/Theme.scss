@@ -1,0 +1,53 @@
+:root {
+  /* color-scheme: light dark; */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Raleway", sans-serif;
+  --spacing: 8px;
+
+  --app-header-height: 50px;
+  --app-nav-size: 90px;
+
+  --color-nav-background: hsl(73, 53%, 90%);
+  --color-nav-color: rgb(176, 176, 176);
+  --color-nav-active: hsl(199, 49%, 45%);
+
+  --color-background: #f9fbf2;
+  --color-color: hsl(82, 3%, 20%);
+
+  --color-input-background: #ebfcff;
+  --color-input-hover: #a9c3dc;
+  --color-input-focus: hsl(219, 43%, 70%);
+  --color-input-color: black;
+
+  --color-border: #3b78e9;
+  --color-placeholder: #a7a7a7;
+
+  --color-danger: rgb(235, 40, 86);
+  --color-danger-color: white;
+
+  @media (prefers-color-scheme: dark) {
+    --color-nav-background: hsl(214, 31%, 20%);
+    --color-nav-color: rgb(125, 125, 125);
+    --color-nav-active: #9bb2e0;
+
+    --color-background: hsl(214, 31%, 10%);
+    --color-color: hsl(165, 3%, 90%);
+
+    --color-input-background: #244856;
+    --color-input-hover: #4d5970;
+    --color-input-focus: #7889aa;
+    --color-input-color: black;
+
+    --color-border: #7889aa;
+    --color-placeholder: #a7a7a7;
+  }
+
+  @media (min-width: 1000px) {
+    --app-nav-size: 250px;
+  }
+}
