@@ -50,6 +50,10 @@
   width: 40px;
   font-size: 2rem;
 
+  @media (min-width: 1000px) {
+    font-size: 1.5rem;
+  }
+
   border-radius: calc(var(--spacing) * 0.5);
   padding: 0;
 
@@ -79,7 +83,7 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   transition: background-color 0.25s;
 
-  font-size: 1em;
+  font-size: 0.8em;
 
   cursor: pointer;
   user-select: none;
