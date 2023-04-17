@@ -65,7 +65,7 @@ export default function RecipeSelectorDialog() {
     <>
       <div className="ra-dialog ra-card recipe-selector-dialog">
         <header
-          className="ra-header"
+          className="ra-card-header"
           style={{ justifyContent: "flex-start", gap: "var(--spacing)" }}
         >
           {currentFolder && (
@@ -88,7 +88,7 @@ export default function RecipeSelectorDialog() {
         <div className="ra-list">
           <RecipeTree
             folderOnly={folderOnly}
-            folderId={folderStack.at(-1)}
+            folderId={currentFolder?.id}
             onClick={handleClick}
           />
         </div>

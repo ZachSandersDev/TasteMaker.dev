@@ -1,14 +1,17 @@
 import { createElement, useEffect, useRef, useState } from "react";
 
 import "emoji-picker-element";
+import "./EmojiPickerDialog.scss";
 
 export interface EmojiPickerDialogProps {
   value: string;
+  placeholder?: string;
   onEmojiChange: (emoji: string) => void;
 }
 
 export default function EmojiPickerDialog({
   value,
+  placeholder,
   onEmojiChange,
 }: EmojiPickerDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,8 +23,11 @@ export default function EmojiPickerDialog({
 
   return (
     <>
-      <button className="icon-button" style={{fontSize: "1.5em", marginBottom: "calc(var(--spacing) * 2)"}} onClick={() => setIsOpen(true)}>
-        {value}
+      <button
+        className="emoji-picker-button icon-button"
+        onClick={() => setIsOpen(true)}
+      >
+        {value || <i className="material-symbols-rounded">{placeholder}</i>}
       </button>
 
       {isOpen && (
