@@ -15,11 +15,14 @@
   &.shadow {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-color: var(--color-nav-background);
+    backdrop-filter: blur(5px);
   }
 
   @media (min-width: 1000px) {
-    position: initial;
     height: var(--app-header-height);
+    left: var(--app-nav-size);
+    left: var(--app-nav-size);
+    width: calc(100% - var(--app-nav-size));
   }
 }
 

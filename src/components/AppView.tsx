@@ -20,19 +20,24 @@ export default function AppView({
   const bottomObserver = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const newState = structuredClone(getRecoil(navStore));
-      for (const entry of entries) {
-        if (entry.target === topObserver.current) {
-          newState.topShadow = !entry.isIntersecting;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const newState = structuredClone(getRecoil(navStore));
+        for (const entry of entries) {
+          if (entry.target === topObserver.current) {
+            newState.topShadow = !entry.isIntersecting;
+          }
+          if (entry.target === bottomObserver.current) {
+            newState.bottomShadow = !entry.isIntersecting;
+          }
         }
-        if (entry.target === bottomObserver.current) {
-          newState.bottomShadow = !entry.isIntersecting;
-        }
-      }
 
-      setRecoil(navStore, newState);
-    });
+        setRecoil(navStore, newState);
+      },
+      {
+        rootMargin: "-50px 0px -90px 0px",
+      }
+    );
 
     if (topObserver.current && bottomObserver.current) {
       observer.observe(topObserver.current);
