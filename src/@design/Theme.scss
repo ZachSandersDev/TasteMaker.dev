@@ -32,7 +32,8 @@
   --color-danger-color: white;
 
   @media (prefers-color-scheme: dark) {
-    --color-nav-background: hsl(214, 31%, 20%);
+    --color-nav-background: rgba(18, 24, 33, 0.6);
+
     --color-nav-color: rgb(125, 125, 125);
     --color-nav-active: #9bb2e0;
 

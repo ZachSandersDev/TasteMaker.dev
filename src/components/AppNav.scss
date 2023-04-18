@@ -66,6 +66,9 @@
   transition: all 0.25s;
 
   text-shadow: 0 0 2px white;
+  @media (prefers-color-scheme: dark) {
+    text-shadow: 0 1px 4px #000000;
+  }
 
   i {
     font-size: 1.75em;
@@ -85,8 +88,4 @@
 
 .app-link.active {
   color: var(--color-nav-active);
-  // text-shadow: 0 0 1px black;
-  @media (prefers-color-scheme: dark) {
-    text-shadow: 0 1px 4px #000000;
-  }
 }
