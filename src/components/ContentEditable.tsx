@@ -16,6 +16,8 @@ export interface ContentEditableProps {
   disabled?: boolean;
   naked?: boolean;
   plaintext?: boolean;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyUp?: (e: React.KeyboardEvent) => void;
 }
 
 // https://stephenhaney.com/2020/get-contenteditable-plaintext-with-correct-linebreaks/
@@ -64,6 +66,8 @@ export default function ContentEditable({
   value,
   placeholder,
   onChange,
+  onKeyDown,
+  onKeyUp,
   disabled,
   naked,
   plaintext,
@@ -94,6 +98,8 @@ export default function ContentEditable({
       )}
       html={sanitize(value).replaceAll("\n", "<br/>")}
       onChange={handleChange}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
       disabled={disabled}
     />
   );

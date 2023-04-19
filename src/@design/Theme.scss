@@ -12,17 +12,16 @@
   --app-header-height: 50px;
   --app-nav-size: 90px;
 
-  --color-nav-background: rgba(249, 251, 242, 0.5);
-  // --color-nav-background: hsl(73, 53%, 90%);
-  --color-nav-color: rgb(176, 176, 176);
-  --color-nav-active: hsl(199, 49%, 45%);
+  --color-nav-background: rgba(249, 250, 244, 0.5);
+  --color-nav-color: hsl(219, 0%, 69%);
+  --color-nav-active: hsl(219, 36%, 54%);
 
-  --color-background: rgb(249, 251, 242);
+  --color-background: hsl(70, 37%, 97%);
   --color-color: hsl(82, 3%, 20%);
 
-  --color-input-background: #ebfcff;
-  --color-input-hover: #a9c3dc;
-  --color-input-focus: hsl(219, 43%, 70%);
+  --color-input-background: hsl(219, 10%, 95%);
+  --color-interface-base: hsl(219, 40%, 80%);
+  --color-interface-active: hsl(219, 40%, 70%);
   --color-input-color: black;
 
   --color-border: #3b78e9;
@@ -33,17 +32,16 @@
 
   @media (prefers-color-scheme: dark) {
     --color-nav-background: rgba(18, 24, 33, 0.6);
-
     --color-nav-color: rgb(125, 125, 125);
-    --color-nav-active: #9bb2e0;
+    --color-nav-active: hsl(220, 30%, 70%);
 
     --color-background: hsl(214, 31%, 10%);
     --color-color: hsl(165, 3%, 90%);
 
-    --color-input-background: #244856;
-    --color-input-hover: #4d5970;
-    --color-input-focus: #7889aa;
-    --color-input-color: black;
+    --color-input-background: #2a3642;
+    --color-interface-base: hsl(220, 30%, 40%);
+    --color-interface-active: hsl(220, 30%, 50%);
+    --color-input-color: white;
 
     --color-border: #7889aa;
     --color-placeholder: #a7a7a7;

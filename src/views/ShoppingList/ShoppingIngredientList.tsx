@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { Ingredient } from "../../@modules/types/recipes";
 import {
   ShoppingList,
@@ -10,7 +12,7 @@ import "./ShoppingIngredientList.scss";
 
 export interface ShoppingIngredientListProps {
   list: ShoppingList;
-  onNew: () => void;
+  onNew: (at?: number) => void;
   onUpdate: (ingredient: Ingredient, index: number) => void;
   onDelete: (index: number) => void;
   onReorder: (ingredients: Ingredient[]) => void;
@@ -35,7 +37,18 @@ export function ShoppingIngredientList({
   return (
     <>
       <div className="ra-list">
-        {list.ingredients.map((ingredient, i) => (
+        {(list.ingredients.length
+          ? list.ingredients
+          : [
+              {
+                _id: uuid(),
+                complete: false,
+                value: "",
+                units: "",
+                ingredient: "",
+              },
+            ]
+        ).map((ingredient, i) => (
           <SwipeToDelete key={ingredient._id} onDelete={() => onDelete(i)}>
             <div
               className="sil-ingredient-line"
@@ -63,11 +76,18 @@ export function ShoppingIngredientList({
 
               {ingredient.complete && <div className="sil-strikethrough" />}
               <ContentEditable
+                className="sil-item-text"
                 value={ingredient.ingredient}
                 onChange={(v) => {
                   const newIngredient = structuredClone(ingredient);
                   newIngredient.ingredient = v;
                   onUpdate(newIngredient, i);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    onNew(i + 1);
+                  }
                 }}
                 disabled={ingredient.complete}
                 naked
@@ -75,10 +95,6 @@ export function ShoppingIngredientList({
             </div>
           </SwipeToDelete>
         ))}
-        <button className="chip-button" onClick={onNew}>
-          <i className="material-symbols-rounded">add</i>
-          New Item
-        </button>
       </div>
     </>
   );

@@ -56,9 +56,9 @@ export default function ShoppingListDetailsView() {
     updateList((l) => (l.name = value));
   };
 
-  const addNewIngredient = () => {
+  const addNewIngredient = (at?: number) => {
     updateList((l) =>
-      l.ingredients.push({
+      l.ingredients.splice(at ?? l.ingredients.length, 0, {
         value: "",
         units: "",
         ingredient: "",

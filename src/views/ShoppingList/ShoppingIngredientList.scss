@@ -34,11 +34,11 @@
 
   background-color: var(--color-input-background);
   border-radius: calc(var(--spacing) * 0.5);
-  box-shadow: 0 0 2px 0 var(--color-input-focus);
+  box-shadow: 0 0 2px 0 var(--color-interface-active);
 }
 
 .sil-checkbox-checked {
-  background-color: var(--color-input-focus);
+  background-color: var(--color-interface-active);
 }
 
 .sil-strikethrough {
@@ -47,4 +47,8 @@
   left: calc(25px + var(--spacing));
   width: calc(100% - 25px - var(--spacing));
   border-bottom: 2px solid var(--color-color);
+}
+
+.sil-item-text {
+  min-width: 6ch;
 }

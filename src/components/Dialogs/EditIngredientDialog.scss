@@ -2,23 +2,8 @@
   height: 60%;
 
   .ra-option {
-    background-color: var(--color-input-focus);
+    background-color: var(--color-interface-active);
     color: var(--color-input-color);
-    height: fit-content;
-    outline: none;
-    border: none;
-    padding: var(--spacing);
-    width: 100%;
-    text-align: left;
-    font-size: 1rem;
-    transition: background-color 0.25s;
-
-    cursor: pointer;
-    user-select: none;
-
-    &:hover {
-      background-color: var(--color-input-hover);
-    }
   }
 }
 

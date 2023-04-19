@@ -102,7 +102,7 @@ export default function EditIngredientDialog() {
           }
         />
 
-        <div className="edit-ingredient-dialog-content">
+        <div className="edit-ingredient-dialog-content ra-option-list">
           {ingredients
             .sort()
             .filter((i) =>

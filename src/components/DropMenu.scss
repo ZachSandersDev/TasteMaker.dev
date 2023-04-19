@@ -58,11 +58,11 @@
   transition: all 0.25s;
 
   &:hover {
-    background-color: var(--color-input-hover);
+    background-color: var(--color-interface-base);
   }
 
   &:focus {
-    background-color: var(--color-input-focus);
+    background-color: var(--color-interface-active);
   }
 
   &:not(:last-child) {

@@ -16,33 +16,31 @@ export default function AppNav() {
 
       <Link
         to="/"
-        className={[
+        className={classNames(
           "app-link",
           (pathname.startsWith("/folder") ||
             pathname.startsWith("/recipe") ||
             pathname === "/") &&
-            "active",
-        ]
-          .filter((s) => !!s)
-          .join(" ")}
+            "active"
+        )}
       >
         <i className="material-symbols-rounded">description</i>
         Recipes
       </Link>
+
       <Link
         to="/shopping-lists"
-        className={[
+        className={classNames(
           "app-link",
           (pathname.startsWith("/shopping-list/") ||
             pathname === "/shopping-lists") &&
-            "active",
-        ]
-          .filter((s) => !!s)
-          .join(" ")}
+            "active"
+        )}
       >
         <i className="material-symbols-rounded">checklist</i>
         Shopping
       </Link>
+
       <NavLink to="/settings" className="app-link">
         <i className="material-symbols-rounded">settings</i>
         Settings

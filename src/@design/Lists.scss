@@ -41,9 +41,13 @@
     cursor: pointer;
     user-select: none;
 
+    outline: none;
+    border: none;
+
     transition: background-color 0.25s;
     &:hover {
-      background-color: var(--color-input-hover);
+      background-color: var(--color-interface-active);
+      color: var(--color-input-color);
     }
   }
 

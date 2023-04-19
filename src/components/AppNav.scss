@@ -10,7 +10,9 @@
 
   transition: background-color 0.25s, box-shadow 0.25s;
 
-  background-color: var(--color-background);
+  background-color: var(--color-nav-background);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   color: var(--color-nav-color);
 
   position: fixed;
@@ -26,8 +28,6 @@
   @media (max-width: 999px) {
     &.shadow {
       box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-      background-color: var(--color-nav-background);
-      backdrop-filter: blur(5px);
     }
   }
 
@@ -40,7 +40,7 @@
     width: var(--app-nav-size);
     left: 0;
     padding: calc(var(--spacing) * 2);
-    gap: calc(var(--spacing) * 4);
+    gap: calc(var(--spacing) * 1);
     z-index: 2;
     box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
     background-color: var(--color-nav-background);
@@ -77,12 +77,9 @@
   @media (min-width: 1000px) {
     flex-direction: row;
     justify-content: flex-start;
+    padding: calc(var(--spacing) * 2);
     gap: calc(var(--spacing) * 3);
     font-size: 1rem;
-
-    i {
-      font-size: 1.5em;
-    }
   }
 }
 

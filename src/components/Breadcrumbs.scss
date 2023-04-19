@@ -6,11 +6,12 @@
 }
 
 .breadcrumb-link {
-  color: var(--color-input-focus);
+  color: var(--color-nav-active);
   text-decoration: none;
 }
 
 span.breadcrumb-link {
+  font-weight: 700;
   color: var(--color-color);
 }
 
