@@ -15,6 +15,7 @@ export interface ContentEditableProps {
   onChange: (newValue: string) => void;
   disabled?: boolean;
   naked?: boolean;
+  noborder?: boolean;
   plaintext?: boolean;
   onKeyDown?: (e: React.KeyboardEvent) => void;
   onKeyUp?: (e: React.KeyboardEvent) => void;
@@ -70,13 +71,14 @@ export default function ContentEditable({
   onKeyUp,
   disabled,
   naked,
+  noborder,
   plaintext,
 }: ContentEditableProps) {
   const handleChange = (e: ContentEditableEvent) => {
     if (plaintext) {
-      console.log(parseHTMLIntoPlainText(e.target.value).trim());
+      console.log(parseHTMLIntoPlainText(e.target.value));
       onChange(
-        sanitize(parseHTMLIntoPlainText(e.target.value).trim(), {
+        sanitize(parseHTMLIntoPlainText(e.target.value), {
           allowedTags: ["br"],
           allowedAttributes: {},
         })
@@ -94,6 +96,7 @@ export default function ContentEditable({
         naked ? "content-editable-naked" : "ra-input",
         disabled && "disabled",
         plaintext && "plain",
+        noborder && "noborder",
         className
       )}
       html={sanitize(value).replaceAll("\n", "<br/>")}

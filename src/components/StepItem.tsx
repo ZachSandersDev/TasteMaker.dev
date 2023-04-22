@@ -26,7 +26,7 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
 
   return (
     <Reorder.Item
-      className="step-item"
+      className="step-item-wrapper"
       value={step}
       dragListener={false}
       dragControls={controls}
@@ -36,13 +36,7 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
         onDelete={deleteStep}
       >
         <div className="step-item">
-          <span className="step-number">{index + 1}.</span>
-          <ContentEditable
-            className="step-input"
-            value={step.text}
-            onChange={(v) => setStepText(v)}
-            plaintext
-          />
+          {/* <span className="step-number">{index + 1}.</span> */}
           <div
             onPointerDown={(e) => controls.start(e)}
             style={{ touchAction: "none" }}
@@ -50,6 +44,14 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
           >
             drag_indicator
           </div>
+          <ContentEditable
+            className="step-input"
+            value={step.text}
+            onChange={(v) => setStepText(v)}
+            plaintext
+            naked
+            noborder
+          />
         </div>
       </SwipeToDelete>
     </Reorder.Item>

@@ -14,10 +14,10 @@ import useUpdater from "../../@modules/utils/useUpdater";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenuButton";
 import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
 import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
-import DropMenu from "../../components/DropMenu";
 import IngredientItem from "../../components/IngredientItem";
 import StepItem from "../../components/StepItem";
 
@@ -174,7 +174,7 @@ export default function RecipeDetailsView() {
       </header>
 
       <Reorder.Group
-        className="ra-dense-list"
+        className="ra-list"
         axis="y"
         as="div"
         values={recipe.ingredients}

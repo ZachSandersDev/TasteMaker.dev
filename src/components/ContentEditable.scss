@@ -1,8 +1,6 @@
 .content-editable-naked {
   outline: none;
   border: none;
-  // width: 100%;
-  // min-width: 5ch;
 
   transition: box-shadow 0.25s;
 
@@ -13,6 +11,10 @@
   &:not(.disabled):focus {
     box-shadow: 0 3px 0 var(--color-interface-active);
   }
+}
+
+.content-editable.noborder {
+  box-shadow: none !important;
 }
 
 .content-editable {

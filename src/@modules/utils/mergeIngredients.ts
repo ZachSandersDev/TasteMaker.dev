@@ -5,8 +5,7 @@ export default function mergeIngredients(recipe: Recipe, list: ShoppingList) {
   for (const recipeIngredient of recipe.ingredients) {
     let listIngredient = list.ingredients.find(
       (li) =>
-        li.ingredient === recipeIngredient.ingredient &&
-        li.units === recipeIngredient.units
+        li.ingredient === recipeIngredient.ingredient
     );
 
     if (listIngredient) {

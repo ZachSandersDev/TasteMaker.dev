@@ -24,7 +24,7 @@
   --color-interface-active: hsl(219, 40%, 70%);
   --color-input-color: black;
 
-  --color-border: #3b78e9;
+  --color-border: hsl(219, 20%, 70%);
   --color-placeholder: #a7a7a7;
 
   --color-danger: rgb(235, 40, 86);
@@ -43,8 +43,8 @@
     --color-interface-active: hsl(220, 30%, 50%);
     --color-input-color: white;
 
-    --color-border: #7889aa;
-    --color-placeholder: #a7a7a7;
+    --color-border: hsl(220, 10%, 30%);
+    --color-placeholder: #757575;
   }
 
   @media (min-width: 1000px) {

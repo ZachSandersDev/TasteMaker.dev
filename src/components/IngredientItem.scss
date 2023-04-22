@@ -30,15 +30,14 @@
 }
 
 .value-field {
-  // max-width: 6ch;
+  min-width: 4ch;
   text-align: right;
-}
-
-.unit-field {
-  // max-width: 9ch;
 }
 
 .ingredient-field {
   text-align: left;
-  // flex: 3;
+
+  .placeholder {
+    color: var(--color-placeholder);
+  }
 }

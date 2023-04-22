@@ -32,8 +32,7 @@ function parseIngredients(iText: string): Ingredient[] {
         if (description) {
           return {
             _id: uuid(),
-            value: String(quantity || ""),
-            units: getShortUnit(unitOfMeasureID) || unitOfMeasure || "",
+            value: `${quantity || ""} ${getShortUnit(unitOfMeasureID) || unitOfMeasure || ""}`,
             ingredient: description.replace(/\*+/g, "")
           };
         }

@@ -1,12 +1,10 @@
+import { Reorder } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
 import { Ingredient } from "../../@modules/types/recipes";
-import {
-  ShoppingList,
-  ShoppingListIngredient,
-} from "../../@modules/types/shoppingLists";
-import ContentEditable from "../../components/ContentEditable";
-import SwipeToDelete from "../../components/SwipeToDelete";
+import { ShoppingList } from "../../@modules/types/shoppingLists";
+
+import ShoppingIngredientItem from "./ShoppingIngredientItem";
 
 import "./ShoppingIngredientList.scss";
 
@@ -18,25 +16,15 @@ export interface ShoppingIngredientListProps {
   onReorder: (ingredients: Ingredient[]) => void;
 }
 
-export function ShoppingIngredientList({
-  list,
-  onNew,
-  onUpdate,
-  onDelete,
-}: ShoppingIngredientListProps) {
-  const setComplete = (
-    ingredient: ShoppingListIngredient,
-    index: number,
-    complete?: boolean
-  ) => {
-    const newIngredient = structuredClone(ingredient);
-    newIngredient.complete = complete;
-    onUpdate(newIngredient, index);
-  };
-
+export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
+  const { list, onReorder } = props;
   return (
     <>
-      <div className="ra-list">
+      <Reorder.Group
+        className="ra-list"
+        values={list.ingredients}
+        onReorder={onReorder}
+      >
         {(list.ingredients.length
           ? list.ingredients
           : [
@@ -48,54 +36,15 @@ export function ShoppingIngredientList({
                 ingredient: "",
               },
             ]
-        ).map((ingredient, i) => (
-          <SwipeToDelete key={ingredient._id} onDelete={() => onDelete(i)}>
-            <div
-              className="sil-ingredient-line"
-              style={{
-                opacity: ingredient.complete ? ".4" : "1",
-              }}
-            >
-              <label>
-                <input
-                  type="checkbox"
-                  checked={!!ingredient.complete}
-                  onChange={(e) => setComplete(ingredient, i, e.target.checked)}
-                />
-                <span
-                  className={[
-                    "sil-checkbox material-symbols-rounded",
-                    ingredient.complete ? "sil-checkbox-checked" : "",
-                  ]
-                    .filter((c) => !!c)
-                    .join(" ")}
-                >
-                  {ingredient.complete ? "check" : ""}
-                </span>
-              </label>
-
-              {ingredient.complete && <div className="sil-strikethrough" />}
-              <ContentEditable
-                className="sil-item-text"
-                value={ingredient.ingredient}
-                onChange={(v) => {
-                  const newIngredient = structuredClone(ingredient);
-                  newIngredient.ingredient = v;
-                  onUpdate(newIngredient, i);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    onNew(i + 1);
-                  }
-                }}
-                disabled={ingredient.complete}
-                naked
-              />
-            </div>
-          </SwipeToDelete>
+        ).map((ingredient, index) => (
+          <ShoppingIngredientItem
+            key={ingredient._id}
+            ingredient={ingredient}
+            index={index}
+            {...props}
+          />
         ))}
-      </div>
+      </Reorder.Group>
     </>
   );
 }

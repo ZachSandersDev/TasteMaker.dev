@@ -12,8 +12,8 @@ import useUpdater from "../../@modules/utils/useUpdater";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenuButton";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
-import DropMenu from "../../components/DropMenu";
 
 import { ShoppingIngredientList } from "./ShoppingIngredientList";
 
@@ -126,6 +126,12 @@ export default function ShoppingListDetailsView() {
           onChange={(v) => setListName(v)}
           naked
         />
+        <div className="ra-actions">
+          <button className="chip-button" onClick={() => addNewIngredient()}>
+            <i className="material-symbols-rounded">add</i>
+            New Item
+          </button>
+        </div>
       </div>
 
       <ShoppingIngredientList
