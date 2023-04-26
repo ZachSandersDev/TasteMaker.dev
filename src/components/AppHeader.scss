@@ -34,8 +34,7 @@
   padding: 0 calc(var(--spacing) * 1.5) 0 calc(var(--spacing) * 1.5);
   gap: var(--spacing);
 
-  @media (min-width: 1000px) {
-    width: 700px;
-    margin: 0 auto;
-  }
+  width: 100%;
+  max-width: var(--app-view-max-size);
+  margin: 0 auto;
 }

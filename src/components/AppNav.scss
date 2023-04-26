@@ -71,15 +71,19 @@
   }
 
   i {
-    font-size: 1.75em;
+    font-size: 1.35rem;
   }
 
   @media (min-width: 1000px) {
     flex-direction: row;
     justify-content: flex-start;
-    padding: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 1);
     gap: calc(var(--spacing) * 3);
     font-size: 1rem;
+
+    i {
+      font-size: 1.75rem;
+    }
   }
 }
 

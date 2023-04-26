@@ -11,6 +11,7 @@
 
   --app-header-height: 50px;
   --app-nav-size: 90px;
+  --app-view-max-size: 700px;
 
   --color-nav-background: rgba(249, 250, 244, 0.5);
   --color-nav-color: hsl(219, 0%, 69%);
@@ -50,5 +51,17 @@
 
   @media (min-width: 1000px) {
     --app-nav-size: 250px;
+  }
+
+  @media (min-width: 1000px) and (-webkit-min-device-pixel-ratio: 2),
+    (min-width: 1000px) and (min-resolution: 192dpi) {
+    font-size: 1.2em;
+
+    --app-header-height: 60px;
+    --app-nav-size: 90px;
+    --app-view-max-size: 800px;
+
+    --app-nav-size: 300px;
+    --spacing: 10px;
   }
 }

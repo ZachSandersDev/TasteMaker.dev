@@ -24,6 +24,9 @@
   align-items: flex-start;
 
   width: 100%;
+  max-width: var(--app-view-max-size);
+  margin: 0 auto;
+
   flex: 1;
   padding: var(--spacing) calc(var(--spacing) * 1.5)
     calc(var(--app-nav-size) + var(--spacing) * 3) calc(var(--spacing) * 1.5);
@@ -32,8 +35,6 @@
   color: var(--color-color);
 
   @media (min-width: 1000px) {
-    width: 700px;
-    margin: 0 auto;
     padding-bottom: calc(var(--spacing) * 1.5);
   }
 
