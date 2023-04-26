@@ -35,7 +35,7 @@ export default function AppView({
         setRecoil(navStore, newState);
       },
       {
-        rootMargin: "-50px 0px -90px 0px",
+        rootMargin: "-49px 0px -90px 0px",
       }
     );
 
