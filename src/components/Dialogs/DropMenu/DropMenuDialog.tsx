@@ -1,45 +1,16 @@
-import { atom, useRecoilState } from "recoil";
-import { setRecoil } from "recoil-nexus";
+import { DropMenuOption } from "./DropMenu";
 
-import "./DropMenu.scss";
-
-export interface DropMenuOption {
-  color?: string;
-  icon: string;
-  text: string;
-  value: string;
+export interface DropMenuDialogProps {
+  options: DropMenuOption[];
+  onSelect: (value: string) => void;
+  onClose: () => void;
 }
 
-interface DropMenuDialogState {
-  resolve?: (o?: string) => void;
-  reject?: (e: Error) => void;
-  options?: DropMenuOption[];
-}
-
-const dropMenuDialog = atom<DropMenuDialogState>({
-  key: "DropMenuDialog",
-  default: {},
-});
-
-export function getDropMenuSelection(options: DropMenuOption[]) {
-  return new Promise<string | undefined>((resolve, reject) => {
-    setRecoil(dropMenuDialog, { resolve, reject, options });
-  });
-}
-
-export default function DropMenuDialog() {
-  const [{ resolve, reject, options }, setDialogState] =
-    useRecoilState(dropMenuDialog);
-
-  if (!resolve || !reject || !options) {
-    return null;
-  }
-
-  const res = (o?: string) => {
-    if (o) resolve(o);
-    setDialogState({});
-  };
-
+export default function DropMenuDialog({
+  options,
+  onSelect,
+  onClose,
+}: DropMenuDialogProps) {
   return (
     <>
       <div className="ra-card drop-menu">
@@ -47,7 +18,7 @@ export default function DropMenuDialog() {
           <button
             key={o.value}
             className="drop-menu-item"
-            onClick={() => res(o.value)}
+            onClick={() => onSelect(o.value)}
             style={{ color: o.color || "" }}
           >
             {o.icon && <i className="material-symbols-rounded">{o.icon}</i>}
@@ -55,7 +26,7 @@ export default function DropMenuDialog() {
           </button>
         ))}
       </div>
-      <div className="ra-dialog-cover" onClick={() => res()}></div>
+      <div className="ra-dialog-cover" onClick={onClose}></div>
     </>
   );
 }

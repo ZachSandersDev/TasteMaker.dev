@@ -12,7 +12,7 @@ import useUpdater from "../../@modules/utils/useUpdater";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import ContentEditable from "../../components/ContentEditable";
-import DropMenu from "../../components/Dialogs/DropMenu/DropMenuButton";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
 import { ShoppingIngredientList } from "./ShoppingIngredientList";

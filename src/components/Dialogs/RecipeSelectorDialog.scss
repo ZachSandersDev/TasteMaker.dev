@@ -1,4 +1,5 @@
 .recipe-selector-dialog {
+  min-height: 60vh;
   max-height: 60vh;
   width: 400px !important;
 
@@ -13,5 +14,6 @@
 
   .ra-list {
     overflow: auto;
+    flex: 1;
   }
 }
