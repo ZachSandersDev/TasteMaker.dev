@@ -32,12 +32,8 @@ export default function RecipeTree({
   return (
     <div className="ra-option-list">
       {tree
-        .filter(
-          (n) =>
-            (folderId !== undefined
-              ? n.parent === folderId
-              : n.parent === -1) &&
-            (!folderOnly || !n.data)
+        .filter((n) =>
+          folderId !== undefined ? n.parent === folderId : n.parent === -1
         )
         .sort((a, b) => {
           if (a.data && !b.data) {
@@ -65,6 +61,7 @@ export default function RecipeTree({
               key={node.id}
               recipeId={node.data}
               onClick={() => onClick(node.data || "", true)}
+              disabled={folderOnly}
             />
           ) : onFolderDelete ? (
             <SwipeToDelete
