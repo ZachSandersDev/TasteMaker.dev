@@ -48,10 +48,10 @@
 
   height: 40px;
   width: 40px;
-  font-size: 2rem;
+  font-size: 2em;
 
   @media (min-width: 1000px) {
-    font-size: 1.75rem;
+    font-size: 1.75em;
   }
 
   border-radius: calc(var(--spacing) * 0.5);
@@ -67,7 +67,7 @@
 .icon-button-sm {
   width: 20px;
   height: 20px;
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .chip-button,
