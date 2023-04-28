@@ -10,6 +10,7 @@ import { saveTree } from "../../@modules/api/tree";
 import { useRecipe } from "../../@modules/stores/recipes";
 import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
 import { Recipe } from "../../@modules/types/recipes";
+import useMediaQuery from "../../@modules/utils/useMediaQuery";
 import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
@@ -26,6 +27,7 @@ import StepItem from "../../components/StepItem";
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 999px)");
 
   const { tree } = useRecoilValue(treeStore);
   const treeNode = tree.find((n) => n.data === recipeId);
@@ -112,7 +114,7 @@ export default function RecipeDetailsView() {
           subView
           before={
             // !isMobile &&
-            // folder && (
+            !isMobile &&
             treeNode && (
               <Breadcrumbs
                 links={[
