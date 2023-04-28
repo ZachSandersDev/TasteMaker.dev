@@ -40,7 +40,7 @@
     width: var(--app-nav-size);
     left: 0;
     padding: calc(var(--spacing) * 2);
-    gap: calc(var(--spacing) * 1);
+    gap: calc(var(--spacing) * 2);
     z-index: 2;
     box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
     background-color: var(--color-nav-background);
@@ -77,12 +77,12 @@
   @media (min-width: 1000px) {
     flex-direction: row;
     justify-content: flex-start;
-    padding: calc(var(--spacing) * 1);
-    gap: calc(var(--spacing) * 3);
+    // padding: calc(var(--spacing) * 1);
+    gap: calc(var(--spacing) * 2);
     font-size: 1rem;
 
     i {
-      font-size: 1.75rem;
+      font-size: 1.25rem;
     }
   }
 }

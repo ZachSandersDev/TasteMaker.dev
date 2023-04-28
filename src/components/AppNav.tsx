@@ -12,8 +12,6 @@ export default function AppNav() {
 
   return (
     <nav className={classNames("app-nav", bottomShadow && "shadow")}>
-      <h1 className="ra-title">Easy Pea</h1>
-
       <Link
         to="/"
         className={classNames(

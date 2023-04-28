@@ -6,6 +6,7 @@ import "./EmojiPickerDialog.scss";
 export interface EmojiPickerDialogProps {
   value: string;
   placeholder?: string;
+  disabled?: boolean;
   onEmojiChange: (emoji: string) => void;
 }
 
@@ -13,6 +14,7 @@ export default function EmojiPickerDialog({
   value,
   placeholder,
   onEmojiChange,
+  disabled,
 }: EmojiPickerDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +27,12 @@ export default function EmojiPickerDialog({
     <>
       <button
         className="emoji-picker-button icon-button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (!disabled) {
+            setIsOpen(true);
+          }
+        }}
+        disabled={disabled}
       >
         {value || <i className="material-symbols-rounded">{placeholder}</i>}
       </button>

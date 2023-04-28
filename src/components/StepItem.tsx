@@ -10,10 +10,16 @@ import "./StepItem.scss";
 export interface StepItemProps {
   step: Step;
   index: number;
+  editing: boolean;
   updateRecipe: (update: (r: Recipe) => unknown) => void;
 }
 
-export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
+export default function StepItem({
+  step,
+  index,
+  editing,
+  updateRecipe,
+}: StepItemProps) {
   const controls = useDragControls();
 
   const setStepText = (value: string) => {
@@ -23,6 +29,15 @@ export default function StepItem({ step, index, updateRecipe }: StepItemProps) {
   const deleteStep = () => {
     updateRecipe((r) => r.steps.splice(index, 1));
   };
+
+  if (!editing) {
+    return (
+      <div className="step-item">
+        <span className="step-number">{index + 1}.</span>
+        <span>{step.text}</span>
+      </div>
+    );
+  }
 
   return (
     <Reorder.Item

@@ -1,29 +1,36 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useRecoilValue } from "recoil";
 import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
 import { deleteRecipe, saveRecipe } from "../../@modules/api/recipes";
 import { saveTree } from "../../@modules/api/tree";
 import { useRecipe } from "../../@modules/stores/recipes";
-import { treeStore } from "../../@modules/stores/tree";
-import { Ingredient, Recipe } from "../../@modules/types/recipes";
+import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
+import { Recipe } from "../../@modules/types/recipes";
 import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
+import Breadcrumbs from "../../components/Breadcrumbs";
 import ContentEditable from "../../components/ContentEditable";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
 import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
-import IngredientItem from "../../components/IngredientItem";
+import IngredientList from "../../components/IngredientList/IngredientList";
 import StepItem from "../../components/StepItem";
 
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
+
+  const { tree } = useRecoilValue(treeStore);
+  const treeNode = tree.find((n) => n.data === recipeId);
+
+  const [editing, setEditing] = useState<boolean>(false);
 
   const originalRecipe = useRecipe(recipeId as string);
   const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
@@ -54,10 +61,6 @@ export default function RecipeDetailsView() {
         _id: uuid(),
       })
     );
-  };
-
-  const reorderIngredients = (ingredients: Ingredient[]) => {
-    updateRecipe((r) => (r.ingredients = ingredients));
   };
 
   const addNewStep = () => {
@@ -105,8 +108,33 @@ export default function RecipeDetailsView() {
   return (
     <AppView
       header={
-        <AppHeader subView>
+        <AppHeader
+          subView
+          before={
+            // !isMobile &&
+            // folder && (
+            treeNode && (
+              <Breadcrumbs
+                links={[
+                  { text: "All Recipes", href: "/" },
+                  ...getBreadcrumbs(treeNode.id).map((n) => ({
+                    text: n.text || recipe.name || "Untitled Recipe",
+                    href: "/folder/" + n.id,
+                  })),
+                ]}
+              />
+            )
+            // )
+          }
+        >
           <div className="ra-actions">
+            <button
+              className="menu-button"
+              onClick={() => setEditing(!editing)}
+            >
+              {editing ? "Save" : "Edit"}
+            </button>
+
             <DropMenu
               icon="more_vert"
               options={[
@@ -137,69 +165,71 @@ export default function RecipeDetailsView() {
         <EmojiPickerDialog
           value={recipe.icon || "🗒️"}
           onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+          disabled={!editing}
         />
 
-        <ContentEditable
-          className="ra-title"
-          value={recipe.name || "Untitled Recipe"}
-          onChange={(v) => setRecipeField("name", v)}
-          naked
-          plaintext
-        />
+        {editing ? (
+          <ContentEditable
+            className="ra-title"
+            value={recipe.name || "Untitled Recipe"}
+            onChange={(v) => setRecipeField("name", v)}
+            naked
+            plaintext
+          />
+        ) : (
+          <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>
+        )}
       </div>
 
       <section className="ra-list">
-        <input
-          className="ra-input"
-          style={{ width: "100%" }}
-          placeholder="Prep Time"
-          value={recipe.prepTime}
-          onChange={(e) => setRecipeField("prepTime", e.target.value)}
-        />
-        <input
-          className="ra-input"
-          style={{ width: "100%" }}
-          placeholder="Serving Size"
-          value={recipe.servingSize}
-          onChange={(e) => setRecipeField("servingSize", e.target.value)}
-        />
+        {editing ? (
+          <input
+            className="ra-input"
+            style={{ width: "100%" }}
+            placeholder="Prep Time"
+            value={recipe.prepTime}
+            onChange={(e) => setRecipeField("prepTime", e.target.value)}
+          />
+        ) : (
+          recipe.prepTime && <span>{recipe.prepTime}</span>
+        )}
+        {editing ? (
+          <input
+            className="ra-input"
+            style={{ width: "100%" }}
+            placeholder="Serving Size"
+            value={recipe.servingSize}
+            onChange={(e) => setRecipeField("servingSize", e.target.value)}
+          />
+        ) : (
+          recipe.servingSize && <span>{recipe.servingSize}</span>
+        )}
       </section>
 
       <header className="ra-header">
         <h3>Ingredients</h3>
-        <button className="chip-button" onClick={addNewIngredient}>
-          <i className="material-symbols-rounded">add</i>
-          New Ingredient
-        </button>
+        {editing && (
+          <button className="chip-button" onClick={addNewIngredient}>
+            <i className="material-symbols-rounded">add</i>
+            New Ingredient
+          </button>
+        )}
       </header>
 
-      <Reorder.Group
-        className="ra-list"
-        axis="y"
-        as="div"
-        values={recipe.ingredients}
-        onReorder={reorderIngredients}
-      >
-        {recipe.ingredients.map((ingredient, i) => (
-          <IngredientItem
-            ingredient={ingredient}
-            key={ingredient._id}
-            updateIngredient={(newIngredient) =>
-              updateRecipe((r) => r.ingredients.splice(i, 1, newIngredient))
-            }
-            deleteIngredient={() =>
-              updateRecipe((r) => r.ingredients.splice(i, 1))
-            }
-          />
-        ))}
-      </Reorder.Group>
+      <IngredientList
+        ingredients={recipe.ingredients}
+        updateRecipe={updateRecipe}
+        editing={editing}
+      />
 
       <header className="ra-header">
         <h3>Steps</h3>
-        <button className="chip-button" onClick={addNewStep}>
-          <i className="material-symbols-rounded">add</i>
-          New Step
-        </button>
+        {editing && (
+          <button className="chip-button" onClick={addNewStep}>
+            <i className="material-symbols-rounded">add</i>
+            New Step
+          </button>
+        )}
       </header>
 
       <Reorder.Group
@@ -214,6 +244,7 @@ export default function RecipeDetailsView() {
             key={step._id}
             index={i}
             updateRecipe={updateRecipe}
+            editing={editing}
           />
         ))}
       </Reorder.Group>

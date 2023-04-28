@@ -11,7 +11,7 @@ export default function SettingsView() {
       </div>
 
       <button
-        className="menu-button"
+        className="settings-option"
         style={{ color: "var(--color-danger)" }}
         onClick={doLogout}
       >
