@@ -1,9 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { Ingredient } from "../../@modules/types/recipes";
+import Button from "../../../../@design/components/Button";
 
-import ContentEditable from "../ContentEditable";
-import { editIngredient } from "../Dialogs/EditIngredientDialog";
+import { Ingredient } from "../../../../@modules/types/recipes";
+
+import ContentEditable from "../../../../components/ContentEditable";
+import { editIngredient } from "../../../../components/Dialogs/EditIngredientDialog";
 
 import "./IngredientItem.scss";
 
@@ -85,13 +87,14 @@ export default function IngredientItem({
       </td>
 
       <td>
-        <button
-          className="icon-button-sm material-symbols-rounded"
+        <Button
           onClick={deleteIngredient}
-          style={{ color: "var(--color-danger)" }}
+          variant="icon"
+          size="sm"
+          color="var(--color-danger)"
         >
           clear
-        </button>
+        </Button>
       </td>
     </Reorder.Item>
   );

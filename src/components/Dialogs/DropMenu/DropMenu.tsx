@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import Button from "../../../@design/components/Button";
+
 import "./DropMenu.scss";
 import DropMenuDialog from "./DropMenuDialog";
 
@@ -34,12 +36,16 @@ export default function DropMenu({ icon, onSelect, options }: DropMenuProps) {
 
   return (
     <div className="drop-menu-container">
-      <button
+      <Button variant="icon" onClick={handleClick}>
+        {icon}
+      </Button>
+
+      {/* <button
         className="material-symbols-rounded icon-button"
         onClick={handleClick}
       >
         {icon}
-      </button>
+      </button> */}
 
       {isOpen && (
         <DropMenuDialog

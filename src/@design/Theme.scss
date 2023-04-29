@@ -8,6 +8,7 @@
 
   font-family: -apple-system, BlinkMacSystemFont, "Raleway", sans-serif;
   --spacing: 8px;
+  --radius: 5px;
 
   --app-header-height: 50px;
   --app-nav-size: 90px;
@@ -22,8 +23,8 @@
   --color-disabled: hsl(82, 3%, 60%);
 
   --color-input-background: hsl(219, 10%, 95%);
-  --color-interface-base: hsl(219, 40%, 85%);
-  --color-interface-active: hsl(219, 40%, 80%);
+  --color-interface-base: hsl(219, 40%, 75%);
+  --color-interface-active: hsl(219, 40%, 85%);
   --color-input-color: black;
 
   --color-border: hsl(219, 20%, 70%);
@@ -41,8 +42,8 @@
     --color-color: hsl(165, 3%, 90%);
 
     --color-input-background: #2a3642;
-    --color-interface-base: hsl(220, 30%, 40%);
-    --color-interface-active: hsl(220, 30%, 50%);
+    --color-interface-base: hsl(220, 35%, 30%);
+    --color-interface-active: hsl(219, 29%, 35%);
     --color-input-color: white;
 
     --color-border: hsl(220, 10%, 30%);

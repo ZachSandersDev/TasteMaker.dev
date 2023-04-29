@@ -1,5 +1,7 @@
 import { useRecoilValue } from "recoil";
 
+import Button from "../../@design/components/Button";
+
 import { newList } from "../../@modules/api/shoppingLists";
 import { listStore } from "../../@modules/stores/shoppingLists";
 
@@ -24,12 +26,9 @@ export default function ShoppingListsView() {
       header={
         <AppHeader>
           <div className="ra-actions">
-            <button
-              className="icon-button material-symbols-rounded"
-              onClick={makeNewShoppingList}
-            >
+            <Button onClick={makeNewShoppingList} variant="icon">
               add
-            </button>
+            </Button>
           </div>
         </AppHeader>
       }

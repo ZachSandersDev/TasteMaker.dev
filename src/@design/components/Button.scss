@@ -1,0 +1,69 @@
+.ra-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+
+  font-size: 1em;
+
+  background-color: inherit;
+  color: inherit;
+  outline: none;
+  border: none;
+  border-radius: var(--radius);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.25s;
+
+  &:not(:disabled):hover {
+    background-color: var(--color-interface-active);
+  }
+}
+
+.ra-button-filled {
+  background-color: var(--color-interface-base);
+  color: var(--color-interface-color);
+}
+
+.ra-button-chip {
+  background-color: var(--color-interface-base);
+  color: var(--color-interface-color);
+  border-radius: calc(var(--radius) * 4);
+}
+
+.ra-button-icon {
+  font-size: 1.5em;
+  padding: calc(var(--spacing) * 0.5);
+}
+
+//---//
+
+.ra-button-size-lg {
+  font-size: 1.5em;
+  padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+
+  &.ra-button-icon {
+    font-size: 1.75em;
+    padding: calc(var(--spacing) * 0.75);
+  }
+}
+
+.ra-button-size-sm {
+  font-size: 0.8em;
+  padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+
+  &.ra-button-icon {
+    padding: calc(var(--spacing) * 0.5);
+  }
+}
+
+//---//
+
+.ra-button-icon-before,
+.ra-button-icon-after {
+  font-size: 1.25em;
+}

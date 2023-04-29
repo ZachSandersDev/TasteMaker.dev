@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
 
+import Button from "../../@design/components/Button";
+
 import { newRecipe } from "../../@modules/api/recipes";
 import { saveTree } from "../../@modules/api/tree";
 import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
@@ -121,20 +123,12 @@ export default function RecipesView() {
           }
         >
           <div className="ra-actions">
-            <button
-              className="icon-button material-symbols-rounded"
-              onClick={makeNewFolder}
-              title="New Folder"
-            >
+            <Button onClick={makeNewFolder} title="New Folder" variant="icon">
               create_new_folder
-            </button>
-            <button
-              className="icon-button material-symbols-rounded"
-              onClick={makeNewRecipe}
-              title="New Recipe"
-            >
+            </Button>
+            <Button onClick={makeNewRecipe} title="New Recipe" variant="icon">
               add
-            </button>
+            </Button>
           </div>
         </AppHeader>
       }

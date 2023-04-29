@@ -2,6 +2,8 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 
+import Button from "../@design/components/Button";
+
 import { navStore } from "../@modules/stores/nav";
 import classNames from "../@modules/utils/classNames";
 
@@ -25,12 +27,9 @@ export default function AppHeader({
       <div className="app-header-content">
         {before}
         {!before && subView && (
-          <button
-            className="material-symbols-rounded icon-button"
-            onClick={() => navigate(-1)}
-          >
+          <Button onClick={() => navigate(-1)} variant="icon">
             chevron_left
-          </button>
+          </Button>
         )}
         {children}
       </div>

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import LoginView from "../views/Login";
-import RecipeDetailsView from "../views/Recipe/RecipeDetails";
+import RecipeDetailsView from "../views/Recipe/Details/RecipeDetails";
 import RecipesView from "../views/Recipe/Recipes";
 import RootView from "../views/RootView";
 import SettingsView from "../views/SettingsView";

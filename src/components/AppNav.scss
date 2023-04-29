@@ -18,8 +18,13 @@
   position: fixed;
   bottom: 0;
 
-  h1 {
-    display: none;
+  .app-title {
+    font-family: "Roboto Slab", serif;
+    font-weight: 300;
+    font-size: 2.5em;
+    color: var(--color-color);
+    margin-bottom: var(--spacing);
+
     @media (prefers-color-scheme: dark) {
       text-shadow: 0 1px 4px #000000;
     }
@@ -42,12 +47,9 @@
     padding: calc(var(--spacing) * 2);
     gap: calc(var(--spacing) * 2);
     z-index: 2;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
+    border-right: 2px solid var(--color-interface-active);
     background-color: var(--color-nav-background);
-
-    h1 {
-      display: initial;
-    }
   }
 }
 

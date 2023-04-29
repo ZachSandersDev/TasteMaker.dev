@@ -1,9 +1,9 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { Recipe, Step } from "../@modules/types/recipes";
+import { Recipe, Step } from "../../../../@modules/types/recipes";
 
-import ContentEditable from "./ContentEditable";
-import SwipeToDelete from "./SwipeToDelete";
+import ContentEditable from "../../../../components/ContentEditable";
+import SwipeToDelete from "../../../../components/SwipeToDelete";
 
 import "./StepItem.scss";
 
@@ -64,8 +64,6 @@ export default function StepItem({
             value={step.text}
             onChange={(v) => setStepText(v)}
             plaintext
-            naked
-            noborder
           />
         </div>
       </SwipeToDelete>

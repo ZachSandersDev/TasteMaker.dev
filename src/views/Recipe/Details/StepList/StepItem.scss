@@ -6,7 +6,7 @@
   display: flex;
   flex: 1;
   gap: calc(var(--spacing) * 2);
-  padding: calc(var(--spacing)) 0;
+  padding: calc(var(--spacing) * 0.75) 0;
   background-color: var(--color-background);
 }
 

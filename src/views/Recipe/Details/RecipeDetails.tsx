@@ -5,24 +5,27 @@ import { useRecoilValue } from "recoil";
 import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
-import { deleteRecipe, saveRecipe } from "../../@modules/api/recipes";
-import { saveTree } from "../../@modules/api/tree";
-import { useRecipe } from "../../@modules/stores/recipes";
-import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
-import { Recipe } from "../../@modules/types/recipes";
-import useMediaQuery from "../../@modules/utils/useMediaQuery";
-import useUpdater from "../../@modules/utils/useUpdater";
+import Button from "../../../@design/components/Button";
 
-import AppHeader from "../../components/AppHeader";
-import AppView from "../../components/AppView";
-import Breadcrumbs from "../../components/Breadcrumbs";
-import ContentEditable from "../../components/ContentEditable";
-import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
-import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
-import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
-import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
-import IngredientList from "../../components/IngredientList/IngredientList";
-import StepItem from "../../components/StepItem";
+import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
+import { saveTree } from "../../../@modules/api/tree";
+import { useRecipe } from "../../../@modules/stores/recipes";
+import { getBreadcrumbs, treeStore } from "../../../@modules/stores/tree";
+import { Recipe } from "../../../@modules/types/recipes";
+import useMediaQuery from "../../../@modules/utils/useMediaQuery";
+import useUpdater from "../../../@modules/utils/useUpdater";
+
+import AppHeader from "../../../components/AppHeader";
+import AppView from "../../../components/AppView";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import ContentEditable from "../../../components/ContentEditable";
+import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
+import EmojiPickerDialog from "../../../components/Dialogs/EmojiPickerDialog";
+import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
+import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
+
+import IngredientList from "./IngredientList/IngredientList";
+import StepItem from "./StepList/StepItem";
 
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
@@ -113,7 +116,6 @@ export default function RecipeDetailsView() {
         <AppHeader
           subView
           before={
-            // !isMobile &&
             !isMobile &&
             treeNode && (
               <Breadcrumbs
@@ -126,16 +128,12 @@ export default function RecipeDetailsView() {
                 ]}
               />
             )
-            // )
           }
         >
           <div className="ra-actions">
-            <button
-              className="menu-button"
-              onClick={() => setEditing(!editing)}
-            >
+            <Button onClick={() => setEditing(!editing)} variant="naked">
               {editing ? "Save" : "Edit"}
-            </button>
+            </Button>
 
             <DropMenu
               icon="more_vert"
@@ -211,10 +209,9 @@ export default function RecipeDetailsView() {
       <header className="ra-header">
         <h3>Ingredients</h3>
         {editing && (
-          <button className="chip-button" onClick={addNewIngredient}>
-            <i className="material-symbols-rounded">add</i>
+          <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
             New Ingredient
-          </button>
+          </Button>
         )}
       </header>
 
@@ -227,10 +224,9 @@ export default function RecipeDetailsView() {
       <header className="ra-header">
         <h3>Steps</h3>
         {editing && (
-          <button className="chip-button" onClick={addNewStep}>
-            <i className="material-symbols-rounded">add</i>
+          <Button iconBefore="add" size="sm" onClick={addNewStep}>
             New Step
-          </button>
+          </Button>
         )}
       </header>
 

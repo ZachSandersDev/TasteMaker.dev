@@ -2,6 +2,7 @@ import { createElement, useEffect, useRef, useState } from "react";
 
 import "emoji-picker-element";
 import "./EmojiPickerDialog.scss";
+import Button from "../../@design/components/Button";
 
 export interface EmojiPickerDialogProps {
   value: string;
@@ -25,17 +26,18 @@ export default function EmojiPickerDialog({
 
   return (
     <>
-      <button
-        className="emoji-picker-button icon-button"
+      <Button
         onClick={() => {
           if (!disabled) {
             setIsOpen(true);
           }
         }}
         disabled={disabled}
+        variant="naked"
+        size="lg"
       >
         {value || <i className="material-symbols-rounded">{placeholder}</i>}
-      </button>
+      </Button>
 
       {isOpen && (
         <>
