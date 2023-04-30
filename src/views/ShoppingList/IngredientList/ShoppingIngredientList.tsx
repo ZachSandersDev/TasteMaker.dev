@@ -1,8 +1,8 @@
 import { Reorder } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
-import { Ingredient } from "../../@modules/types/recipes";
-import { ShoppingList } from "../../@modules/types/shoppingLists";
+import { Ingredient } from "../../../@modules/types/recipes";
+import { ShoppingList } from "../../../@modules/types/shoppingLists";
 
 import ShoppingIngredientItem from "./ShoppingIngredientItem";
 
