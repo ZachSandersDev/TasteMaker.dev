@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
+import Button from "../../@design/components/Button";
+
+import { RecipeSelectorDialogAtom } from "../../@modules/stores/dialogs";
 import { recipeStore } from "../../@modules/stores/recipes";
 import { treeStore } from "../../@modules/stores/tree";
 
@@ -10,26 +13,17 @@ import RecipeTree from "../RecipeTree/RecipeTree";
 
 import "./RecipeSelectorDialog.scss";
 
-const recipeSelectorDialog = atom<{
-  resolve?: (r?: Recipe | string) => void;
-  reject?: (e: Error) => void;
-  folderOnly?: boolean;
-}>({
-  key: "recipeSelectorDialog",
-  default: {},
-});
-
 export function selectRecipe() {
   return new Promise<Recipe | undefined>((resolve, reject) => {
-    // @ts-expect-error Since this can return a recipe or a folder id
-    setRecoil(recipeSelectorDialog, { resolve, reject, folderOnly: false });
+    // @ts-expect-error We're coercing this dialog into returning a string or recipe
+    setRecoil(RecipeSelectorDialogAtom, { resolve, reject, folderOnly: false });
   });
 }
 
 export function selectFolder() {
   return new Promise<string | undefined>((resolve, reject) => {
-    // @ts-expect-error Since this can return a recipe or a folder id
-    setRecoil(recipeSelectorDialog, { resolve, reject, folderOnly: true });
+    // @ts-expect-error We're coercing this dialog into returning a string or recipe
+    setRecoil(RecipeSelectorDialogAtom, { resolve, reject, folderOnly: true });
   });
 }
 
@@ -37,8 +31,10 @@ export default function RecipeSelectorDialog() {
   const [folderStack, setFolderStack] = useState<string[]>([]);
   const { tree } = useRecoilValue(treeStore);
   const { recipes } = useRecoilValue(recipeStore);
-  const [{ resolve, reject, folderOnly }, setDialogState] =
-    useRecoilState(recipeSelectorDialog);
+  const [
+    { resolve, reject, payload: { folderOnly = false } = {} },
+    setDialogState,
+  ] = useRecoilState(RecipeSelectorDialogAtom);
 
   const res = (r?: Recipe | string) => {
     if (resolve) {
@@ -69,12 +65,12 @@ export default function RecipeSelectorDialog() {
           style={{ justifyContent: "flex-start", gap: "var(--spacing)" }}
         >
           {currentFolder && (
-            <button
-              className="material-symbols-rounded icon-button"
+            <Button
               onClick={() => setFolderStack((f) => f.slice(0, f.length - 1))}
+              variant="icon"
             >
               chevron_left
-            </button>
+            </Button>
           )}
           <h3>
             {currentFolder
@@ -94,12 +90,12 @@ export default function RecipeSelectorDialog() {
         </div>
 
         <div className="ra-actions">
-          <button
-            className="chip-button"
+          <Button
             onClick={() => res(String(currentFolder?.id || -1))}
+            size="sm"
           >
             Select this folder
-          </button>
+          </Button>
         </div>
       </div>
       <div className="ra-dialog-cover" onClick={() => res(undefined)}></div>

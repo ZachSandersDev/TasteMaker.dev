@@ -1,8 +1,9 @@
 .login-view {
   padding: 0 !important;
 
-  .app-header {
-    padding-top: calc(var(--spacing) * 4);
+  .ra-app-title {
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -14,5 +15,5 @@
   margin: auto;
   max-width: 30ch;
 
-  gap: var(--spacing);
+  gap: calc(var(--spacing) * 2);
 }

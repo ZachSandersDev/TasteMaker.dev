@@ -1,11 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { ShoppingListIngredient } from "../../@modules/types/shoppingLists";
-import ContentEditable from "../../components/ContentEditable";
+import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
+import ContentEditable from "../../../components/ContentEditable";
 
-import SwipeToDelete from "../../components/SwipeToDelete";
+import SwipeToDelete from "../../../components/SwipeToDelete";
 
-import { ShoppingIngredientListProps } from "./ShoppingIngredientList";
+import { ShoppingIngredientListProps } from "../IngredientList/ShoppingIngredientList";
 
 export interface ShoppingIngredientItemProp
   extends ShoppingIngredientListProps {

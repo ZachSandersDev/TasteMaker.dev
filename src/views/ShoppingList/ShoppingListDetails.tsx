@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
+import Button from "../../@design/components/Button";
+
 import { deleteList, saveList } from "../../@modules/api/shoppingLists";
 import { useList } from "../../@modules/stores/shoppingLists";
 import { Ingredient } from "../../@modules/types/recipes";
@@ -15,7 +17,7 @@ import ContentEditable from "../../components/ContentEditable";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
-import { ShoppingIngredientList } from "./ShoppingIngredientList";
+import { ShoppingIngredientList } from "./IngredientList/ShoppingIngredientList";
 
 export default function ShoppingListDetailsView() {
   const { listId } = useParams();
@@ -127,10 +129,14 @@ export default function ShoppingListDetailsView() {
           naked
         />
         <div className="ra-actions">
-          <button className="chip-button" onClick={() => addNewIngredient()}>
-            <i className="material-symbols-rounded">add</i>
+          <Button
+            onClick={() => addNewIngredient()}
+            iconBefore="add"
+            variant="filled"
+            size="sm"
+          >
             New Item
-          </button>
+          </Button>
         </div>
       </div>
 

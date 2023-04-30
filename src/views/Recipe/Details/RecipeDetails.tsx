@@ -27,6 +27,8 @@ import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
 import IngredientList from "./IngredientList/IngredientList";
 import StepItem from "./StepList/StepItem";
 
+import "./RecipeDetails.scss";
+
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
@@ -181,71 +183,83 @@ export default function RecipeDetailsView() {
         )}
       </div>
 
-      <section className="ra-list">
-        {editing ? (
-          <input
-            className="ra-input"
-            style={{ width: "100%" }}
-            placeholder="Prep Time"
-            value={recipe.prepTime}
-            onChange={(e) => setRecipeField("prepTime", e.target.value)}
-          />
-        ) : (
-          recipe.prepTime && <span>{recipe.prepTime}</span>
+      <div className="recipe-details-container">
+        {(editing || recipe.prepTime || recipe.servingSize) && (
+          <section className="ra-list">
+            {editing ? (
+              <input
+                className="ra-input"
+                style={{ width: "100%" }}
+                placeholder="Prep Time"
+                value={recipe.prepTime}
+                onChange={(e) => setRecipeField("prepTime", e.target.value)}
+              />
+            ) : (
+              recipe.prepTime && <span>{recipe.prepTime}</span>
+            )}
+            {editing ? (
+              <input
+                className="ra-input"
+                style={{ width: "100%" }}
+                placeholder="Serving Size"
+                value={recipe.servingSize}
+                onChange={(e) => setRecipeField("servingSize", e.target.value)}
+              />
+            ) : (
+              recipe.servingSize && <span>{recipe.servingSize}</span>
+            )}
+          </section>
         )}
-        {editing ? (
-          <input
-            className="ra-input"
-            style={{ width: "100%" }}
-            placeholder="Serving Size"
-            value={recipe.servingSize}
-            onChange={(e) => setRecipeField("servingSize", e.target.value)}
-          />
-        ) : (
-          recipe.servingSize && <span>{recipe.servingSize}</span>
-        )}
-      </section>
 
-      <header className="ra-header">
-        <h3>Ingredients</h3>
-        {editing && (
-          <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
-            New Ingredient
-          </Button>
-        )}
-      </header>
+        <div>
+          {(recipe.ingredients.length || editing) && (
+            <header className="ra-header">
+              <h3>Ingredients</h3>
+              {editing && (
+                <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
+                  New Ingredient
+                </Button>
+              )}
+            </header>
+          )}
 
-      <IngredientList
-        ingredients={recipe.ingredients}
-        updateRecipe={updateRecipe}
-        editing={editing}
-      />
-
-      <header className="ra-header">
-        <h3>Steps</h3>
-        {editing && (
-          <Button iconBefore="add" size="sm" onClick={addNewStep}>
-            New Step
-          </Button>
-        )}
-      </header>
-
-      <Reorder.Group
-        axis="y"
-        values={recipe.steps}
-        onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-        className="ra-dense-list"
-      >
-        {recipe.steps.map((step, i) => (
-          <StepItem
-            step={step}
-            key={step._id}
-            index={i}
+          <IngredientList
+            ingredients={recipe.ingredients}
             updateRecipe={updateRecipe}
             editing={editing}
           />
-        ))}
-      </Reorder.Group>
+        </div>
+
+        <div>
+          {(recipe.steps.length || editing) && (
+            <header className="ra-header">
+              <h3>Steps</h3>
+              {editing && (
+                <Button iconBefore="add" size="sm" onClick={addNewStep}>
+                  New Step
+                </Button>
+              )}
+            </header>
+          )}
+
+          <Reorder.Group
+            axis="y"
+            values={recipe.steps}
+            onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
+            className="ra-dense-list"
+          >
+            {recipe.steps.map((step, i) => (
+              <StepItem
+                step={step}
+                key={step._id}
+                index={i}
+                updateRecipe={updateRecipe}
+                editing={editing}
+              />
+            ))}
+          </Reorder.Group>
+        </div>
+      </div>
     </AppView>
   );
 }

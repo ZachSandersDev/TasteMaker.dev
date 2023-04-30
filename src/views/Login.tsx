@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Button from "../@design/components/Button";
+
 import { createAccount, doLogin } from "../@modules/stores/auth";
 
-import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 
 import "./Login.scss";
@@ -36,14 +37,8 @@ export default function LoginView() {
   };
 
   return (
-    <AppView
-      className="login-view"
-      header={
-        <AppHeader>
-          <h1 className="ra-title login-title">EasyPea</h1>
-        </AppHeader>
-      }
-    >
+    <AppView className="login-view">
+      <h1 className="ra-app-title">Easy Pea</h1>
       <form onSubmit={login} className="login-form">
         <h2 className="ra-title">Login</h2>
         <input
@@ -60,12 +55,12 @@ export default function LoginView() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <header className="ra-actions">
-          <button className="chip-button" onClick={signUp}>
+          <Button variant="naked" onClick={signUp}>
             Sign up
-          </button>
-          <button className="chip-button" formMethod="submit">
+          </Button>
+          <Button variant="filled" formMethod="submit">
             Login
-          </button>
+          </Button>
         </header>
         <span className="ra-error-message">{error}</span>
       </form>

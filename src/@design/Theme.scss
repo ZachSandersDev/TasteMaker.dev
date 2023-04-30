@@ -15,8 +15,10 @@
   --app-view-max-size: 700px;
 
   --color-nav-background: rgba(249, 250, 244, 0.5);
-  --color-nav-color: hsl(219, 0%, 69%);
-  --color-nav-active: hsl(219, 36%, 54%);
+  --color-nav-color: hsl(0, 0%, 71%);
+  --color-nav-active: black;
+
+  --color-link: hsl(219, 84%, 63%);
 
   --color-background: hsl(70, 37%, 97%);
   --color-color: hsl(82, 3%, 20%);
@@ -36,7 +38,7 @@
   @media (prefers-color-scheme: dark) {
     --color-nav-background: rgba(18, 24, 33, 0.6);
     --color-nav-color: rgb(125, 125, 125);
-    --color-nav-active: hsl(220, 30%, 70%);
+    --color-nav-active: white;
 
     --color-background: hsl(214, 31%, 10%);
     --color-color: hsl(165, 3%, 90%);

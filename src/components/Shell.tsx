@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { User } from "firebase/auth";
+import { useEffect, useRef } from "react";
 import { RouterProvider } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -20,17 +21,22 @@ export default function Shell() {
   const { loading: listsLoading } = useRecoilValue(listStore);
   const { loading: treeLoading } = useRecoilValue(treeStore);
 
+  const prevUser = useRef<User | undefined>(undefined);
+
   useEffect(() => {
     listenForAuth();
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && prevUser.current?.uid !== user.uid) {
+      console.log("Listeners firing!");
       listenForRecipes();
       listenForTree();
       listenForLists();
       listenForIngredients();
     }
+
+    prevUser.current = user;
   }, [user]);
 
   useEffect(() => {
@@ -39,8 +45,13 @@ export default function Shell() {
     }
   }, [userLoading, user]);
 
-  return (!userLoading && !user) ||
-    (user && !recipesLoading && !listsLoading && !treeLoading) ? (
+  console.log({ user, recipesLoading, listsLoading, treeLoading });
+
+  if ((!user && userLoading) || recipesLoading || listsLoading || treeLoading) {
+    return <Loading />;
+  }
+
+  return (
     <>
       <main>
         <RouterProvider router={router} />
@@ -50,7 +61,5 @@ export default function Shell() {
       <EditIngredientDialog />
       <ImportRecipeDialog />
     </>
-  ) : (
-    <Loading />
   );
 }

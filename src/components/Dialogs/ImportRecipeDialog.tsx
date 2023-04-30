@@ -2,6 +2,8 @@ import { useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
+import Button from "../../@design/components/Button";
+
 import parseRecipe from "../../@modules/parsers/textParser";
 
 import { Recipe } from "../../@modules/types/recipes";
@@ -72,13 +74,17 @@ export default function ImportRecipeDialog() {
         />
 
         <div className="ra-actions">
-          <button className="chip-button-naked" onClick={() => res(undefined)}>
+          <Button onClick={() => res(undefined)} variant="naked" size="sm">
             Cancel
-          </button>
-          <button className="chip-button" onClick={() => handleSave()}>
-            <i className="material-symbols-rounded">save</i>
+          </Button>
+          <Button
+            onClick={() => handleSave()}
+            iconBefore="save"
+            variant="filled"
+            size="sm"
+          >
             Save
-          </button>
+          </Button>
         </div>
       </div>
       <div className="ra-dialog-cover" onClick={() => res(undefined)}></div>

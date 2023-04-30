@@ -40,13 +40,6 @@ export default function DropMenu({ icon, onSelect, options }: DropMenuProps) {
         {icon}
       </Button>
 
-      {/* <button
-        className="material-symbols-rounded icon-button"
-        onClick={handleClick}
-      >
-        {icon}
-      </button> */}
-
       {isOpen && (
         <DropMenuDialog
           options={options}

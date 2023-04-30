@@ -11,8 +11,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
-  padding: calc(var(--spacing) * 3) 0 calc(var(--spacing) * 2) 0;
+  padding-bottom: calc(var(--spacing) * 2);
 }
 
 .ra-actions {
@@ -32,6 +31,18 @@
   color: var(--color-color);
 
   font-family: "Roboto Slab", serif;
+}
+
+.ra-app-title {
+  font-family: "Roboto Slab", serif;
+  font-weight: 300;
+  font-size: 2.5em;
+  color: var(--color-color);
+  margin-bottom: var(--spacing);
+
+  @media (prefers-color-scheme: dark) {
+    text-shadow: 0 1px 4px #000000;
+  }
 }
 
 h1.ra-title {
