@@ -1,11 +1,10 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import Button from "../../../../@design/components/Button";
-
+import ContentEditable from "../../../../@design/components/ContentEditable/ContentEditable";
 import { Ingredient } from "../../../../@modules/types/recipes";
 
-import ContentEditable from "../../../../components/ContentEditable";
 import { editIngredient } from "../../../../components/Dialogs/EditIngredientDialog";
+import SwipeToDelete from "../../../../components/SwipeToDelete";
 
 import "./IngredientItem.scss";
 
@@ -43,59 +42,45 @@ export default function IngredientItem({
 
   return (
     <Reorder.Item
-      className="ingredient-item editing"
       value={ingredient}
       dragListener={false}
       dragControls={controls}
-      as="tr"
+      as="div"
     >
-      <td>
-        <span
-          onPointerDown={(e) => controls.start(e)}
-          style={{ touchAction: "none" }}
-          className="material-symbols-rounded drag-handle"
-        >
-          drag_indicator
-        </span>
-      </td>
+      <SwipeToDelete onDelete={deleteIngredient}>
+        <div className="ingredient-row">
+          <span
+            onPointerDown={(e) => controls.start(e)}
+            style={{ touchAction: "none" }}
+            className="material-symbols-rounded drag-handle"
+          >
+            drag_indicator
+          </span>
 
-      <td>
-        <ContentEditable
-          className="value-field"
-          placeholder="amt."
-          value={ingredient.value}
-          onChange={(e) => setIngredientValue("value", e)}
-          naked
-          plaintext
-        />
-      </td>
+          <ContentEditable
+            className="value-field"
+            placeholder="amount"
+            value={ingredient.value}
+            onChange={(e) => setIngredientValue("value", e)}
+            naked
+            plaintext
+          />
 
-      <td className="ingredient-field">
-        <button
-          className="ingredient-field ra-input"
-          onClick={async () => {
-            const newIngredient = await editIngredient(ingredient.ingredient);
-            if (newIngredient) {
-              setIngredientValue("ingredient", newIngredient);
-            }
-          }}
-        >
-          {ingredient.ingredient || (
-            <span className="placeholder">ingredient</span>
-          )}
-        </button>
-      </td>
-
-      <td>
-        <Button
-          onClick={deleteIngredient}
-          variant="icon"
-          size="sm"
-          color="var(--color-danger)"
-        >
-          clear
-        </Button>
-      </td>
+          <button
+            className="ingredient-field ra-input"
+            onClick={async () => {
+              const newIngredient = await editIngredient(ingredient.ingredient);
+              if (newIngredient) {
+                setIngredientValue("ingredient", newIngredient);
+              }
+            }}
+          >
+            {ingredient.ingredient || (
+              <span className="placeholder">ingredient</span>
+            )}
+          </button>
+        </div>
+      </SwipeToDelete>
     </Reorder.Item>
   );
 }

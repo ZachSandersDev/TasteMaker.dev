@@ -9,15 +9,6 @@
   gap: var(--spacing);
 }
 
-.ra-dense-list {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 .ra-option-list {
   display: flex;
   flex-direction: column;
@@ -27,38 +18,41 @@
   margin: 0;
   padding: 0;
   gap: calc(var(--spacing) * 0.5);
+}
 
-  .ra-option {
-    display: flex;
-    align-items: center;
+.ra-option {
+  display: flex;
+  align-items: center;
 
-    gap: calc(var(--spacing) * 1);
-    padding: var(--spacing);
-    border-radius: calc(var(--spacing));
-    width: 100%;
+  gap: calc(var(--spacing) * 1);
+  padding: var(--spacing);
+  border-radius: calc(var(--spacing));
+  width: 100%;
 
-    font-size: 1em;
-    cursor: pointer;
-    user-select: none;
+  background-color: inherit;
+  color: inherit;
 
-    outline: none;
-    border: none;
+  font-size: 1em;
+  cursor: pointer;
+  user-select: none;
 
-    transition: background-color 0.25s;
-    &:hover:not(.disabled) {
-      background-color: var(--color-interface-active);
-      color: var(--color-input-color);
-    }
+  outline: none;
+  border: none;
 
-    &.disabled {
-      color: var(--color-disabled);
-      cursor: initial;
-    }
+  transition: background-color 0.25s;
+  &:hover:not(.disabled) {
+    background-color: var(--color-interface-active);
+    color: var(--color-input-color);
   }
 
-  .ra-option-icon {
-    font-size: 1em;
-    width: 30px;
-    text-align: center;
+  &.disabled {
+    color: var(--color-disabled);
+    cursor: initial;
   }
+}
+
+.ra-option-icon {
+  font-size: 1em;
+  width: 30px;
+  text-align: center;
 }

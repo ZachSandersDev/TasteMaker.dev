@@ -1,8 +1,8 @@
 import { Reorder, useDragControls } from "framer-motion";
 
+import ContentEditable from "../../../../@design/components/ContentEditable/ContentEditable";
 import { Recipe, Step } from "../../../../@modules/types/recipes";
 
-import ContentEditable from "../../../../components/ContentEditable";
 import SwipeToDelete from "../../../../components/SwipeToDelete";
 
 import "./StepItem.scss";

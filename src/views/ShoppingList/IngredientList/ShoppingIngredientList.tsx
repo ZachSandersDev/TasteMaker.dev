@@ -2,7 +2,10 @@ import { Reorder } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
 import { Ingredient } from "../../../@modules/types/recipes";
-import { ShoppingList } from "../../../@modules/types/shoppingLists";
+import {
+  ShoppingList,
+  ShoppingListIngredient,
+} from "../../../@modules/types/shoppingLists";
 
 import ShoppingIngredientItem from "./ShoppingIngredientItem";
 
@@ -16,6 +19,14 @@ export interface ShoppingIngredientListProps {
   onReorder: (ingredients: Ingredient[]) => void;
 }
 
+const DEFAULT_ITEM: ShoppingListIngredient = {
+  _id: uuid(),
+  complete: false,
+  value: "",
+  units: "",
+  ingredient: "",
+};
+
 export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
   const { list, onReorder } = props;
   return (
@@ -27,15 +38,7 @@ export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
       >
         {(list.ingredients.length
           ? list.ingredients
-          : [
-              {
-                _id: uuid(),
-                complete: false,
-                value: "",
-                units: "",
-                ingredient: "",
-              },
-            ]
+          : [structuredClone(DEFAULT_ITEM)]
         ).map((ingredient, index) => (
           <ShoppingIngredientItem
             key={ingredient._id}

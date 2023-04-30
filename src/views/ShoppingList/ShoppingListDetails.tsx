@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
-import Button from "../../@design/components/Button";
+import Button from "../../@design/components/Button/Button";
 
+import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
 import { deleteList, saveList } from "../../@modules/api/shoppingLists";
 import { useList } from "../../@modules/stores/shoppingLists";
 import { Ingredient } from "../../@modules/types/recipes";
@@ -13,7 +14,6 @@ import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
-import ContentEditable from "../../components/ContentEditable";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 

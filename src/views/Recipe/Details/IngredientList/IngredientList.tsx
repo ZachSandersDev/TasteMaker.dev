@@ -45,10 +45,9 @@ export default function IngredientList({
 
   return (
     <Reorder.Group
-      // className="ra-list"
-      className="ingredient-list"
+      className="ingredient-list editing"
       axis="y"
-      as="table"
+      as="div"
       values={ingredients}
       onReorder={reorderIngredients}
     >

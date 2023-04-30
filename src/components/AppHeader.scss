@@ -4,8 +4,8 @@
   flex-shrink: 0;
 
   background-color: var(--color-nav-background);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   color: var(--color-color);
 
   position: sticky;
@@ -16,12 +16,20 @@
   transition: all 0.25s;
 
   &.shadow {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+
+    &.shadow {
+      box-shadow: 0 0 5px 2px black;
+    }
   }
 
   @media (min-width: 1000px) {
     height: var(--app-header-height);
-    // left: var(--app-nav-size);
     width: 100%;
   }
 }

@@ -1,7 +1,7 @@
 import { Reorder, useDragControls } from "framer-motion";
 
+import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
 import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
-import ContentEditable from "../../../components/ContentEditable";
 
 import SwipeToDelete from "../../../components/SwipeToDelete";
 

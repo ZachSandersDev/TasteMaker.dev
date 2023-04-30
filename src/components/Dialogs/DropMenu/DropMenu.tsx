@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Button from "../../../@design/components/Button";
+import Button from "../../../@design/components/Button/Button";
 
 import "./DropMenu.scss";
 import DropMenuDialog from "./DropMenuDialog";

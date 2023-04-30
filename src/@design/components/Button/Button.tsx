@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-import classNames from "../../@modules/utils/classNames";
+import classNames from "../../../@modules/utils/classNames";
 
 import "./Button.scss";
 
@@ -23,6 +23,7 @@ export default function Button({
   iconAfter,
   color,
   children,
+  className,
   ...rest
 }: PropsWithChildren<ButtonProps>) {
   return (
@@ -31,7 +32,7 @@ export default function Button({
         "ra-button",
         `ra-button-size-${size}`,
         `ra-button-${variant}`,
-        variant === "icon" && "material-symbols-rounded"
+        className
       )}
       style={{ color }}
       {...rest}
@@ -41,7 +42,13 @@ export default function Button({
           {iconBefore}
         </i>
       )}
-      {children}
+
+      {variant === "icon" ? (
+        <i className="material-symbols-rounded">{children}</i>
+      ) : (
+        children
+      )}
+
       {iconAfter && (
         <i className="material-symbols-rounded ra-button-icon-after">
           {iconAfter}

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../@design/components/Button";
+import Button from "../@design/components/Button/Button";
+import Input from "../@design/components/Input/Input";
 
 import { createAccount, doLogin } from "../@modules/stores/auth";
 
@@ -41,15 +42,13 @@ export default function LoginView() {
       <h1 className="ra-app-title">Easy Pea</h1>
       <form onSubmit={login} className="login-form">
         <h2 className="ra-title">Login</h2>
-        <input
-          className="ra-input"
+        <Input
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <Input
           type="password"
-          className="ra-input"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

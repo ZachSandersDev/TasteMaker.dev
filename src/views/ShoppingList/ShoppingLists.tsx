@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 
-import Button from "../../@design/components/Button";
+import Button from "../../@design/components/Button/Button";
 
 import { newList } from "../../@modules/api/shoppingLists";
 import { listStore } from "../../@modules/stores/shoppingLists";

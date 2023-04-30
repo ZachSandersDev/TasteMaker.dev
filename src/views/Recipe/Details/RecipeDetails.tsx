@@ -5,8 +5,11 @@ import { useRecoilValue } from "recoil";
 import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
-import Button from "../../../@design/components/Button";
+import Breadcrumbs from "../../../@design/components/Breadcrumbs/Breadcrumbs";
+import Button from "../../../@design/components/Button/Button";
 
+import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
+import Input from "../../../@design/components/Input/Input";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { saveTree } from "../../../@modules/api/tree";
 import { useRecipe } from "../../../@modules/stores/recipes";
@@ -17,8 +20,6 @@ import useUpdater from "../../../@modules/utils/useUpdater";
 
 import AppHeader from "../../../components/AppHeader";
 import AppView from "../../../components/AppView";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import ContentEditable from "../../../components/ContentEditable";
 import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import EmojiPickerDialog from "../../../components/Dialogs/EmojiPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
@@ -187,8 +188,7 @@ export default function RecipeDetailsView() {
         {(editing || recipe.prepTime || recipe.servingSize) && (
           <section className="ra-list">
             {editing ? (
-              <input
-                className="ra-input"
+              <Input
                 style={{ width: "100%" }}
                 placeholder="Prep Time"
                 value={recipe.prepTime}
@@ -198,8 +198,7 @@ export default function RecipeDetailsView() {
               recipe.prepTime && <span>{recipe.prepTime}</span>
             )}
             {editing ? (
-              <input
-                className="ra-input"
+              <Input
                 style={{ width: "100%" }}
                 placeholder="Serving Size"
                 value={recipe.servingSize}
@@ -246,7 +245,7 @@ export default function RecipeDetailsView() {
             axis="y"
             values={recipe.steps}
             onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-            className="ra-dense-list"
+            className="ra-list"
           >
             {recipe.steps.map((step, i) => (
               <StepItem

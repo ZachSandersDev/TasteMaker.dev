@@ -2,12 +2,12 @@ import { useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
-import Button from "../../@design/components/Button";
+import Button from "../../@design/components/Button/Button";
 
+import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
 import parseRecipe from "../../@modules/parsers/textParser";
 
 import { Recipe } from "../../@modules/types/recipes";
-import ContentEditable from "../ContentEditable";
 
 import "./ImportRecipeDialog.scss";
 

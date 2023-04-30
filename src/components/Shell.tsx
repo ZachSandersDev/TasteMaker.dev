@@ -29,7 +29,6 @@ export default function Shell() {
 
   useEffect(() => {
     if (user && prevUser.current?.uid !== user.uid) {
-      console.log("Listeners firing!");
       listenForRecipes();
       listenForTree();
       listenForLists();
@@ -45,18 +44,13 @@ export default function Shell() {
     }
   }, [userLoading, user]);
 
-  console.log({ user, recipesLoading, listsLoading, treeLoading });
-
   if ((!user && userLoading) || recipesLoading || listsLoading || treeLoading) {
     return <Loading />;
   }
 
   return (
     <>
-      <main>
-        <RouterProvider router={router} />
-      </main>
-
+      <RouterProvider router={router} />
       <RecipeSelectorDialog />
       <EditIngredientDialog />
       <ImportRecipeDialog />

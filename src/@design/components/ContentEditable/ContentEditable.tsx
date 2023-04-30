@@ -4,9 +4,10 @@ import {
 } from "react-contenteditable";
 import sanitize from "sanitize-html";
 
-import classNames from "../@modules/utils/classNames";
+import classNames from "../../../@modules/utils/classNames";
 
 import "./ContentEditable.scss";
+import "../Input/Input.scss";
 
 export interface ContentEditableProps {
   className?: string;

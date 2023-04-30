@@ -2,7 +2,7 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 
-import Button from "../@design/components/Button";
+import Button from "../@design/components/Button/Button";
 
 import { navStore } from "../@modules/stores/nav";
 import classNames from "../@modules/utils/classNames";

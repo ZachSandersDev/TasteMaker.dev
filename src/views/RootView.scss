@@ -1,0 +1,15 @@
+.root-layout {
+  display: grid;
+
+  grid-template-rows: 1fr 0;
+  grid-template-columns: 1fr;
+
+  grid-template-areas: "view" "nav";
+  justify-items: center;
+
+  @media (min-width: 1000px) {
+    grid-template-columns: var(--app-nav-size) 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "nav view";
+  }
+}

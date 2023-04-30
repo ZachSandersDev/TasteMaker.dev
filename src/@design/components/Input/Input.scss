@@ -1,0 +1,47 @@
+.ra-input {
+  display: flex;
+
+  outline: none;
+  border: none;
+
+  background-color: var(--color-input-background);
+  color: var(--color-color);
+
+  min-width: 0;
+  font-size: 1em;
+  padding: calc(var(--spacing) * 0.5) var(--spacing);
+
+  border-radius: calc(var(--spacing) * 0.5);
+
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 400;
+
+  transition: box-shadow 0.25s;
+
+  -webkit-appearance: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+  &:not(:disabled):hover,
+  &:not(.disabled):hover {
+    box-shadow: inset 0 0 0 1px var(--color-interface-base);
+  }
+
+  &:not(:disabled):focus,
+  &:not(.disabled).focus {
+    box-shadow: inset 0 0 0 2px var(--color-interface-active);
+  }
+
+  &::placeholder {
+    color: var(--color-placeholder);
+  }
+}
+
+.ra-inner-input {
+  flex: 1;
+  padding: 0;
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+  outline: none;
+  border: none;
+}

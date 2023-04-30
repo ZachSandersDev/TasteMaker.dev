@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
-import Button from "../../@design/components/Button";
+import Button from "../../@design/components/Button/Button";
 
+import Input from "../../@design/components/Input/Input";
 import {
   addIngredient,
   deleteIngredient,
 } from "../../@modules/api/ingredients";
 
 import { ingredientStore } from "../../@modules/stores/ingredients";
-import Input from "../Input";
 import SwipeToDelete from "../SwipeToDelete";
 
 import "./EditIngredientDialog.scss";
@@ -39,7 +39,7 @@ export default function EditIngredientDialog() {
     ingredient || ""
   );
 
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setLocalIngredient(ingredient || "");
@@ -82,10 +82,8 @@ export default function EditIngredientDialog() {
         </header>
 
         <Input
-          // @ts-expect-error Don't know don't give
           ref={inputRef}
           type="text"
-          className="ra-input"
           value={localIngredient || ""}
           onChange={(e) => setLocalIngredient(e.target.value.toLowerCase())}
           placeholder="ingredient"
@@ -108,8 +106,10 @@ export default function EditIngredientDialog() {
         <div className="edit-ingredient-dialog-content ra-option-list">
           {ingredients
             .sort()
-            .filter((i) =>
-              i.toLowerCase().includes(localIngredient.toLowerCase())
+            .filter(
+              (i) =>
+                i.toLowerCase().includes(localIngredient.toLowerCase()) &&
+                i.toLowerCase() !== localIngredient.toLowerCase()
             )
             .map((i) => (
               <SwipeToDelete key={i} onDelete={() => handleDeleteIngredient(i)}>

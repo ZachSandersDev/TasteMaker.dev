@@ -1,4 +1,6 @@
 .ra-view {
+  grid-area: view;
+
   width: 100%;
   height: 100%;
 
@@ -12,10 +14,6 @@
 
   background-color: var(--color-background);
   color: var(--color-color);
-
-  @media (min-width: 1000px) {
-    padding-left: var(--app-nav-size);
-  }
 }
 
 .ra-view-content {

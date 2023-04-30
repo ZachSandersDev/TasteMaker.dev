@@ -37,7 +37,12 @@
 
 .ra-button-icon {
   font-size: 1.5em;
+  justify-content: center;
   padding: calc(var(--spacing) * 0.5);
+
+  > .material-symbols-rounded {
+    font-size: inherit;
+  }
 }
 
 //---//
@@ -59,6 +64,8 @@
   &.ra-button-icon {
     font-size: 1em;
     padding: calc(var(--spacing) * 0.5);
+    width: 25px;
+    height: 25px;
   }
 }
 

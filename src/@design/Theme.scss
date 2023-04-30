@@ -11,8 +11,12 @@
   --radius: 5px;
 
   --app-header-height: 50px;
-  --app-nav-size: 90px;
+  --app-nav-size: 60px;
   --app-view-max-size: 700px;
+
+  @supports (-webkit-touch-callout: none) {
+    --app-nav-size: 90px;
+  }
 
   --color-nav-background: rgba(249, 250, 244, 0.5);
   --color-nav-color: hsl(0, 0%, 71%);

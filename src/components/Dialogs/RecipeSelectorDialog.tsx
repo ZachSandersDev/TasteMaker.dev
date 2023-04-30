@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
-import Button from "../../@design/components/Button";
+import Button from "../../@design/components/Button/Button";
 
 import { RecipeSelectorDialogAtom } from "../../@modules/stores/dialogs";
 import { recipeStore } from "../../@modules/stores/recipes";
@@ -15,15 +15,23 @@ import "./RecipeSelectorDialog.scss";
 
 export function selectRecipe() {
   return new Promise<Recipe | undefined>((resolve, reject) => {
-    // @ts-expect-error We're coercing this dialog into returning a string or recipe
-    setRecoil(RecipeSelectorDialogAtom, { resolve, reject, folderOnly: false });
+    setRecoil(RecipeSelectorDialogAtom, {
+      // @ts-expect-error Resolve could resolve recipe or string
+      resolve,
+      reject,
+      payload: { folderOnly: false },
+    });
   });
 }
 
 export function selectFolder() {
   return new Promise<string | undefined>((resolve, reject) => {
-    // @ts-expect-error We're coercing this dialog into returning a string or recipe
-    setRecoil(RecipeSelectorDialogAtom, { resolve, reject, folderOnly: true });
+    setRecoil(RecipeSelectorDialogAtom, {
+      // @ts-expect-error Resolve could resolve recipe or string
+      resolve,
+      reject,
+      payload: { folderOnly: true },
+    });
   });
 }
 
@@ -73,11 +81,9 @@ export default function RecipeSelectorDialog() {
             </Button>
           )}
           <h3>
-            {currentFolder
-              ? currentFolder.text
-              : folderOnly
-              ? "Select Folder"
-              : "Select Recipe"}
+            {currentFolder && currentFolder.text}
+            {!currentFolder && folderOnly && "Select Folder"}
+            {!currentFolder && !folderOnly && "Select Recipe"}
           </h3>
         </header>
 
@@ -89,14 +95,16 @@ export default function RecipeSelectorDialog() {
           />
         </div>
 
-        <div className="ra-actions">
-          <Button
-            onClick={() => res(String(currentFolder?.id || -1))}
-            size="sm"
-          >
-            Select this folder
-          </Button>
-        </div>
+        {folderOnly && (
+          <div className="ra-actions">
+            <Button
+              onClick={() => res(String(currentFolder?.id || -1))}
+              size="sm"
+            >
+              Select this folder
+            </Button>
+          </div>
+        )}
       </div>
       <div className="ra-dialog-cover" onClick={() => res(undefined)}></div>
     </>

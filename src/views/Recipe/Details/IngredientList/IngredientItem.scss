@@ -1,7 +1,17 @@
-div.ingredient-list {
+.ingredient-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: calc(var(--spacing) * 1);
+}
+
+.ingredient-list.editing {
+  gap: calc(var(--spacing) * 0.5);
+}
+
+.ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1);
 }
 
 table.ingredient-list {
@@ -33,14 +43,10 @@ div.ingredient-item {
 
 .value-field {
   text-align: right;
+  width: 10ch;
 }
 
 .ingredient-field {
   width: 100%;
-
-  button {
-    text-align: left;
-    width: fit-content;
-    white-space: pre-wrap;
-  }
+  text-align: left;
 }

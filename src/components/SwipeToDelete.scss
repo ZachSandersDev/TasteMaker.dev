@@ -4,6 +4,7 @@
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   display: flex;
+  align-items: center;
 
   &::-webkit-scrollbar {
     display: none;
@@ -14,16 +15,27 @@
   width: 100%;
   flex-shrink: 0;
   scroll-snap-align: start;
+
+  @media (min-width: 1000px) {
+    flex: 1;
+    flex-shrink: 1;
+    width: fit-content;
+  }
 }
 
 .swipe-to-delete-button {
-  outline: none;
-  border: none;
-  font-family: inherit;
-  background-color: var(--color-danger);
-  color: var(--color-danger-color);
+  margin-left: var(--spacing);
 
-  font-size: 0.75em;
+  @media (max-width: 1000px) {
+    outline: none;
+    border: none;
+    font-family: inherit;
+    background-color: var(--color-danger);
+    color: var(--color-danger-color);
 
-  scroll-snap-align: end;
+    font-size: 0.75em;
+    height: 100%;
+
+    scroll-snap-align: end;
+  }
 }
