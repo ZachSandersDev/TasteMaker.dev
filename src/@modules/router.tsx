@@ -80,7 +80,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/public/:userId/recipe/:recipeId",
-    element: <PublicRecipeView />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <PublicRecipeView />
+      </Suspense>
+    ),
   },
   {
     path: "*",
