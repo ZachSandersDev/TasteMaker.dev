@@ -55,4 +55,12 @@
   font-size: 1em;
   width: 30px;
   text-align: center;
+
+  object-fit: cover;
+
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+  }
 }

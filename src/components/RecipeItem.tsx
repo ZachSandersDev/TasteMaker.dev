@@ -29,7 +29,13 @@ export const RecipeItem = ({
       className={classNames("ra-option", disabled && "disabled")}
       onClick={handleClick}
     >
-      <span className="ra-option-icon">{recipe.icon || "🗒️"}</span>
+      <span className="ra-option-icon">
+        {recipe.iconImage ? (
+          <img src={recipe.iconImage.imageUrl} />
+        ) : (
+          recipe.icon || "🗒️"
+        )}
+      </span>
       <span
         dangerouslySetInnerHTML={{
           __html: sanitize(recipe.name) || "Untitled Recipe",

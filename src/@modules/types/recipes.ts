@@ -8,6 +8,9 @@ export interface Recipe {
 
   ingredients: Ingredient[];
   steps: Step[];
+
+  bannerImage?: ImageField;
+  iconImage?: ImageField;
 }
 
 export interface Ingredient {
@@ -22,6 +25,11 @@ export interface Step {
   text: string;
 }
 
+export interface ImageField {
+  imageId: string;
+  imageUrl: string;
+}
+
 export function setRecipeDefaults(recipie: Partial<Recipe>) {
   const defaultedRecipe: Recipe = {
     _id: recipie._id || "",
@@ -33,6 +41,9 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
 
     steps: recipie.steps || [],
     ingredients: recipie.ingredients || [],
+
+    bannerImage: recipie.bannerImage || undefined,
+    iconImage: recipie.iconImage || undefined
   };
 
   return defaultedRecipe;

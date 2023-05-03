@@ -10,6 +10,11 @@ import Button from "../../../@design/components/Button/Button";
 
 import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
 import Input from "../../../@design/components/Input/Input";
+import {
+  deleteImage,
+  uploadBannerImage,
+  uploadIconImage,
+} from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { saveTree } from "../../../@modules/api/tree";
 import { useRecipe } from "../../../@modules/stores/recipes";
@@ -24,6 +29,7 @@ import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import EmojiPickerDialog from "../../../components/Dialogs/EmojiPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
+import ImageBanner from "../../../components/ImageUpload";
 
 import IngredientList from "./IngredientList/IngredientList";
 import StepItem from "./StepList/StepItem";
@@ -109,6 +115,32 @@ export default function RecipeDetailsView() {
     }
   };
 
+  const handleNewBanner = async (imageFile: File) => {
+    const newImage = await uploadBannerImage(imageFile);
+    if (recipe?.bannerImage?.imageId) {
+      deleteImage(recipe.bannerImage.imageId);
+    }
+    updateRecipe((r) => (r.bannerImage = newImage));
+  };
+
+  const handleNewIcon = async (imageFile: File) => {
+    const newImage = await uploadIconImage(imageFile);
+    if (recipe?.iconImage?.imageId) {
+      deleteImage(recipe.iconImage.imageId);
+    }
+    updateRecipe((r) => (r.iconImage = newImage));
+  };
+
+  const handleNewEmojiIcon = async (emoji: string) => {
+    if (recipe?.iconImage?.imageId) {
+      deleteImage(recipe.iconImage.imageId);
+    }
+    updateRecipe((r) => {
+      delete r.iconImage;
+      r.icon = emoji;
+    });
+  };
+
   if (!recipe) {
     return <span className="ra-error-message">Recipe not found...</span>;
   }
@@ -164,10 +196,18 @@ export default function RecipeDetailsView() {
         </AppHeader>
       }
     >
+      <ImageBanner
+        editing={editing}
+        image={recipe.bannerImage}
+        onChange={handleNewBanner}
+      />
+
       <div className="ra-view-header">
         <EmojiPickerDialog
-          value={recipe.icon || "🗒️"}
-          onEmojiChange={(emoji) => updateRecipe((r) => (r.icon = emoji))}
+          emojiValue={recipe.icon}
+          imageValue={recipe.iconImage}
+          onEmojiChange={handleNewEmojiIcon}
+          onImageChange={handleNewIcon}
           disabled={!editing}
         />
 

@@ -1,0 +1,67 @@
+.ra-image-upload {
+  width: 100%;
+  height: 200px;
+  margin-bottom: calc(var(--spacing) * 2);
+
+  object-fit: cover;
+  &.image {
+    background-size: cover;
+    background-position: center;
+  }
+
+  &:not(.image) {
+    background: linear-gradient(
+      -90deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.1)
+    );
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ra-image-upload.icon {
+  height: 100%;
+  object-fit: contain;
+  flex: 1;
+
+  &.image {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80px 80px;
+  }
+}
+
+label.ra-image-upload {
+  cursor: pointer;
+  button {
+    text-shadow: 0 0 3px white;
+  }
+}
+
+.ra-image-upload-file-input {
+  display: none;
+}
+
+.ra-image-upload-shimmer {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

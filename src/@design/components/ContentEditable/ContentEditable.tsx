@@ -77,7 +77,6 @@ export default function ContentEditable({
 }: ContentEditableProps) {
   const handleChange = (e: ContentEditableEvent) => {
     if (plaintext) {
-      console.log(parseHTMLIntoPlainText(e.target.value));
       onChange(
         sanitize(parseHTMLIntoPlainText(e.target.value), {
           allowedTags: ["br"],
