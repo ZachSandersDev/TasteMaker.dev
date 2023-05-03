@@ -42,6 +42,9 @@ label.ra-image-upload {
   cursor: pointer;
   button {
     text-shadow: 0 0 3px white;
+    @media (prefers-color-scheme: dark) {
+      text-shadow: 0 1px 4px #000000;
+    }
   }
 }
 
