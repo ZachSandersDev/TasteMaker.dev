@@ -15,6 +15,11 @@
 
   transition: all 0.25s;
 
+  text-shadow: 0 0 5px white;
+  @media (prefers-color-scheme: dark) {
+    text-shadow: 0 1px 3px #000000;
+  }
+
   &.shadow {
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
   }

@@ -31,13 +31,13 @@ export function getBreadcrumbs(folderId: string) {
 
   const folderStack: Folder[] = [];
 
-  let currId = String(folderId);
-  while (currId !== "-1") {
+  let currId: string | undefined = folderId;
+  while (currId) {
     const curr = folderMap[currId];
     if (!curr) throw new Error("Could not find node " + currId);
 
     folderStack.push(curr);
-    currId = String(curr.parent);
+    currId = curr.parent;
   }
 
   return folderStack.reverse();

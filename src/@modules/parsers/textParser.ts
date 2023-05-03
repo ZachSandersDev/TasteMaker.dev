@@ -22,7 +22,9 @@ function parseIngredients(iText: string): Ingredient[] {
     .trim()
     .replace(/\r/g, "")
     .split("\n")
-    .map(line => line.trim().replace(/^(-|\d+\.\s*|\d+\)\s*|\d+\s+(?=\d)|\.|\*)/g, ""));
+    .map(line => line.trim()
+      .replace(/`|::/g, "")
+      .replace(/^(-|\d+\.\s*|\d+\)\s*|\d+\s+(?=\d)|\.|\*)/g, ""));
 
   const rawIngredients = parseIngredient(iLines.join("\n"));
 
@@ -47,7 +49,8 @@ function parseSteps(stepText: string): Step[] {
     .trim()
     .replace(/\r/g, "")
     .split("\n")
-    .map(line => line.trim().replace(/^(-|\d+\.?\)?|\.|\*)\s*/g, ""));
+    .map(line => line.trim()
+      .replace(/`|::/g, "").replace(/^(-|\d+\.?\)?|\.|\*)\s*/g, ""));
 
   return stepLines.map(text => ({ _id: uuid(), text }));
 }

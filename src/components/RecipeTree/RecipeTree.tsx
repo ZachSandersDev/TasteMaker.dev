@@ -30,11 +30,10 @@ export default function RecipeTree({
   return (
     <div className="ra-option-list">
       {folders
-        .filter((n) =>
-          (disablePathUnder === undefined || n._id !== disablePathUnder) &&
-          folderId !== undefined
-            ? n.parent === folderId
-            : !n.parent
+        .filter(
+          (n) =>
+            (disablePathUnder === undefined || n._id !== disablePathUnder) &&
+            (folderId !== undefined ? n.parent === folderId : !n.parent)
         )
         .sort((a, b) => {
           const aText = a.text || "Untitled Folder";

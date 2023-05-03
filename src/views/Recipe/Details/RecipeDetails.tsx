@@ -187,13 +187,14 @@ export default function RecipeDetailsView() {
           </div>
         </AppHeader>
       }
+      before={
+        <ImageBanner
+          editing={editing}
+          image={recipe.bannerImage}
+          onChange={handleNewBanner}
+        />
+      }
     >
-      <ImageBanner
-        editing={editing}
-        image={recipe.bannerImage}
-        onChange={handleNewBanner}
-      />
-
       <div className="ra-view-header">
         <IconPickerDialog
           title="Recipe Icon"

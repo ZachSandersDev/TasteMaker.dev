@@ -8,11 +8,13 @@ import "./AppView.scss";
 
 export interface AppViewProps {
   header?: ReactElement;
+  before?: ReactElement;
   className?: string;
 }
 
 export default function AppView({
   header,
+  before,
   children,
   className,
 }: PropsWithChildren<AppViewProps>) {
@@ -56,11 +58,12 @@ export default function AppView({
   return (
     <div className={classNames("ra-view", className)}>
       {header}
-      <div className="ra-view-content">
-        <div className="top-observer" ref={topObserver}></div>
-        {children}
-        <div className="bottom-observer" ref={bottomObserver}></div>
-      </div>
+      {/* <div className="ra-sentinel-container"> */}
+      <div className="top-observer" ref={topObserver}></div>
+      <div className="ra-before-container">{before}</div>
+      <div className="ra-view-content">{children}</div>
+      <div className="bottom-observer" ref={bottomObserver}></div>
+      {/* </div> */}
     </div>
   );
 }
