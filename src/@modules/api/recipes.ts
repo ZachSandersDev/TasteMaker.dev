@@ -1,4 +1,4 @@
-import { child, ref, getDatabase, push, onValue, get, set, remove } from "firebase/database";
+import { child, ref, getDatabase, push, onValue, get, set, remove, update } from "firebase/database";
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
@@ -33,7 +33,7 @@ export async function getRecipe(recipeId: string) {
 }
 
 export const saveRecipe = debounce((recipe: Recipe) => {
-  return set(child(getRecipeRef(), recipe._id), stripItemID(recipe));
+  return set(child(getRecipeRef(), recipe._id), stripItemID(setRecipeDefaults(recipe)));
 }, 500);
 
 export async function newRecipe(r: Recipe) {
@@ -42,4 +42,8 @@ export async function newRecipe(r: Recipe) {
 
 export async function deleteRecipe(recipeId: string) {
   return await remove(child(getRecipeRef(), recipeId));
+}
+
+export async function batchUpdateRecipes(updates: Record<string, Recipe | null>) {
+  return await update(getRecipeRef(), updates);
 }

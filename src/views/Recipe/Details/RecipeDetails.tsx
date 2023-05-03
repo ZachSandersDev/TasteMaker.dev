@@ -1,8 +1,6 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useRecoilValue } from "recoil";
-import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
 import Breadcrumbs from "../../../@design/components/Breadcrumbs/Breadcrumbs";
@@ -16,9 +14,8 @@ import {
   uploadIconImage,
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
-import { saveTree } from "../../../@modules/api/tree";
+import { getBreadcrumbs } from "../../../@modules/stores/folders";
 import { useRecipe } from "../../../@modules/stores/recipes";
-import { getBreadcrumbs, treeStore } from "../../../@modules/stores/tree";
 import { Recipe } from "../../../@modules/types/recipes";
 import useMediaQuery from "../../../@modules/utils/useMediaQuery";
 import useUpdater from "../../../@modules/utils/useUpdater";
@@ -26,7 +23,7 @@ import useUpdater from "../../../@modules/utils/useUpdater";
 import AppHeader from "../../../components/AppHeader";
 import AppView from "../../../components/AppView";
 import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
-import EmojiPickerDialog from "../../../components/Dialogs/EmojiPickerDialog";
+import IconPickerDialog from "../../../components/Dialogs/IconPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
 import ImageBanner from "../../../components/ImageUpload";
@@ -40,9 +37,6 @@ export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 999px)");
-
-  const { tree } = useRecoilValue(treeStore);
-  const treeNode = tree.find((n) => n.data === recipeId);
 
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -87,13 +81,7 @@ export default function RecipeDetailsView() {
     if (option === "MOVE") {
       const newParent = await selectFolder();
       if (newParent) {
-        const { tree } = getRecoil(treeStore);
-        const newTree = structuredClone(tree);
-        const thisNode = newTree.find((n) => n.data === recipe._id);
-        if (thisNode) {
-          thisNode.parent = parseInt(newParent);
-          saveTree(newTree);
-        }
+        updateRecipe((r) => (r.parent = newParent));
       }
     }
 
@@ -152,14 +140,18 @@ export default function RecipeDetailsView() {
           subView
           before={
             !isMobile &&
-            treeNode && (
+            recipe.parent && (
               <Breadcrumbs
                 links={[
                   { text: "All Recipes", href: "/" },
-                  ...getBreadcrumbs(treeNode.id).map((n) => ({
-                    text: n.text || recipe.name || "Untitled Recipe",
-                    href: "/folder/" + n.id,
+                  ...getBreadcrumbs(recipe.parent).map((f) => ({
+                    text: f.text || "Untitled Folder",
+                    href: "/folder/" + f._id,
                   })),
+                  {
+                    text: recipe.name || "Untitled Recipe",
+                    href: "/recipe/" + recipe._id,
+                  },
                 ]}
               />
             )
@@ -203,9 +195,11 @@ export default function RecipeDetailsView() {
       />
 
       <div className="ra-view-header">
-        <EmojiPickerDialog
+        <IconPickerDialog
+          title="Recipe Icon"
           emojiValue={recipe.icon}
           imageValue={recipe.iconImage}
+          placeholder="🗒️"
           onEmojiChange={handleNewEmojiIcon}
           onImageChange={handleNewIcon}
           disabled={!editing}

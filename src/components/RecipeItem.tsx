@@ -1,21 +1,13 @@
-import sanitize from "sanitize-html";
-
-import { useRecipe } from "../@modules/stores/recipes";
+import { Recipe } from "../@modules/types/recipes";
 import classNames from "../@modules/utils/classNames";
 
 export type RecipeItemProps = {
   onClick?: (e: React.MouseEvent) => void;
-  recipeId: string;
+  recipe: Recipe;
   disabled?: boolean;
 };
 
-export const RecipeItem = ({
-  onClick,
-  recipeId,
-  disabled,
-}: RecipeItemProps) => {
-  const recipe = useRecipe(recipeId);
-
+export const RecipeItem = ({ onClick, recipe, disabled }: RecipeItemProps) => {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick && !disabled) onClick(e);
   };
@@ -36,11 +28,7 @@ export const RecipeItem = ({
           recipe.icon || "🗒️"
         )}
       </span>
-      <span
-        dangerouslySetInnerHTML={{
-          __html: sanitize(recipe.name) || "Untitled Recipe",
-        }}
-      ></span>
+      <span>{recipe.name || "Untitled Recipe"}</span>
     </div>
   );
 };

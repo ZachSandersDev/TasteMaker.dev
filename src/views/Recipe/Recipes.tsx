@@ -1,54 +1,71 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { v4 as uuid } from "uuid";
 
 import Breadcrumbs from "../../@design/components/Breadcrumbs/Breadcrumbs";
 import Button from "../../@design/components/Button/Button";
 
 import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
-import { newRecipe } from "../../@modules/api/recipes";
-import { saveTree } from "../../@modules/api/tree";
-import { getBreadcrumbs, treeStore } from "../../@modules/stores/tree";
-import { setRecipeDefaults } from "../../@modules/types/recipes";
+import {
+  batchUpdateFolders,
+  newFolder,
+  saveFolder,
+} from "../../@modules/api/folders";
+import { batchUpdateRecipes, newRecipe } from "../../@modules/api/recipes";
+import { stripItemID } from "../../@modules/api/utils";
+import {
+  folderStore,
+  getBreadcrumbs,
+  useFolder,
+} from "../../@modules/stores/folders";
+import { recipeStore } from "../../@modules/stores/recipes";
+import { Folder, setFolderDefaults } from "../../@modules/types/folder";
+import { Recipe, setRecipeDefaults } from "../../@modules/types/recipes";
 import useMediaQuery from "../../@modules/utils/useMediaQuery";
+import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
-import EmojiPickerDialog from "../../components/Dialogs/EmojiPickerDialog";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
+import IconPickerDialog from "../../components/Dialogs/IconPickerDialog";
+import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
   const { folderId = "" } = useParams();
+
+  const { folders } = useRecoilValue(folderStore);
+  const { recipes } = useRecoilValue(recipeStore);
+
+  const originalFolder = useFolder(folderId);
+  const [folder, setFolder] = useState<Folder | undefined>(originalFolder);
+  const updateFolder = useUpdater<Folder>(folder, (f) => {
+    setFolder(f);
+    saveFolder(f);
+  });
+
+  useEffect(() => {
+    if ((!originalFolder && folder) || originalFolder?._id !== folder?._id) {
+      setFolder(originalFolder);
+    }
+  }, [originalFolder]);
+
   const navigate = useNavigate();
-  const { tree } = useRecoilValue(treeStore);
   const isMobile = useMediaQuery("(max-width: 999px)");
 
-  const folder = tree.find((n) => String(n.id) === folderId);
-
   const makeNewRecipe = async () => {
-    const id = await newRecipe(setRecipeDefaults({ name: "Untitled Recipe" }));
-    if (!id) return;
-
-    saveTree([
-      ...tree,
-      {
-        id: uuid(),
-        parent: folder?.id !== undefined ? folder.id : -1,
-        text: "",
-        data: id,
-      },
-    ]);
+    await newRecipe(
+      setRecipeDefaults({ name: "Untitled Recipe", parent: folderId })
+    );
   };
 
   const makeNewFolder = async () => {
-    saveTree([
-      ...tree,
-      {
-        id: uuid(),
-        parent: folder?.id !== undefined ? folder.id : -1,
+    await newFolder(
+      setFolderDefaults({
         text: "New Folder",
-      },
-    ]);
+        parent: folderId,
+      })
+    );
   };
 
   const handleClick = (id: string | number | undefined, isRecipe: boolean) => {
@@ -61,61 +78,80 @@ export default function RecipesView() {
     }
   };
 
-  const deleteFolder = async (id: string | number) => {
+  const handleDeleteFolder = async () => {
+    if (!folder?._id) return;
+
     const confirmed = window.confirm(
-      "Are you sure you want to delete this folder? (Everything in it will be preserved)"
+      "Are you sure you want to delete this folder? (Everything in it will be moved up into the parent folder)"
     );
     if (!confirmed) return;
 
-    const newTree = structuredClone(tree);
-    // Rehome everything to root
-    const stuffUnderFolder = newTree.filter(
-      (n) => String(n.parent) === String(id)
-    );
-    for (const node of stuffUnderFolder) {
-      node.parent = -1;
+    const recipeUpdates: Record<string, Recipe> = {};
+
+    // Batch update all recipes under the folder
+    for (const r of recipes) {
+      if (r.parent === folder._id) {
+        const newRecipe = stripItemID(r);
+        newRecipe.parent = folder.parent;
+        recipeUpdates[`/${r._id}`] = newRecipe;
+      }
     }
 
-    const folderIndex = newTree.findIndex((n) => String(n.id) === String(id));
-    if (folderIndex > -1) {
-      newTree.splice(folderIndex, 1);
+    await batchUpdateRecipes(recipeUpdates);
+
+    const folderUpdates: Record<string, Folder | null> = {
+      [`/${folder._id}`]: null, // Delete this folder in the batch
+    };
+
+    // Batch update all subfolders
+    for (const f of folders) {
+      if (f.parent === folder._id) {
+        const newFolder = stripItemID(f);
+        newFolder.parent = folder.parent;
+        folderUpdates[`/${f._id}`] = newFolder;
+      }
     }
 
-    saveTree(newTree);
+    await batchUpdateFolders(folderUpdates);
   };
 
-  const renameFolder = (text: string) => {
-    const newTree = structuredClone(tree);
-    const node = newTree.find((tn) => String(tn.id) === folderId);
-    if (!node) throw "Could not find node " + folderId;
-
-    node.text = text;
-    saveTree(newTree);
+  const handleRenameFolder = (text: string) => {
+    updateFolder((f) => (f.text = text));
   };
 
-  const changeFolderIcon = (icon: string) => {
-    const newTree = structuredClone(tree);
-    const node = newTree.find((tn) => String(tn.id) === folderId);
-    if (!node) throw "Could not find node " + folderId;
+  const handleChangeFolderIcon = (icon: string) => {
+    updateFolder((f) => (f.icon = icon));
+  };
 
-    node.icon = icon;
-    saveTree(newTree);
+  const handleMenu = async (option: string) => {
+    if (!folder?._id) return;
+
+    if (option === "DELETE") {
+      handleDeleteFolder();
+      navigate(`/folder/${folder.parent}`);
+    }
+    if (option === "MOVE") {
+      const newParent = await selectFolder(folder._id);
+      if (newParent) {
+        updateFolder((f) => (f.parent = newParent));
+      }
+    }
   };
 
   return (
     <AppView
       header={
         <AppHeader
-          subView={folder?.id !== undefined}
+          subView={folder?._id !== undefined}
           before={
             !isMobile &&
             folder && (
               <Breadcrumbs
                 links={[
                   { text: "All Recipes", href: "/" },
-                  ...getBreadcrumbs(folder.id).map((n) => ({
-                    text: n.text,
-                    href: "/folder/" + n.id,
+                  ...getBreadcrumbs(folder._id).map((n) => ({
+                    text: n.text || "Untitled Folder",
+                    href: "/folder/" + n._id,
                   })),
                 ]}
               />
@@ -129,6 +165,26 @@ export default function RecipesView() {
             <Button onClick={makeNewRecipe} title="New Recipe" variant="icon">
               add
             </Button>
+
+            {folder?._id && (
+              <DropMenu
+                icon="more_vert"
+                onSelect={handleMenu}
+                options={[
+                  {
+                    icon: "drive_file_move",
+                    value: "MOVE",
+                    text: "Move",
+                  },
+                  {
+                    icon: "delete",
+                    text: "Delete Folder",
+                    value: "DELETE",
+                    color: "var(--color-danger)",
+                  },
+                ]}
+              />
+            )}
           </div>
         </AppHeader>
       }
@@ -136,15 +192,17 @@ export default function RecipesView() {
       <div className="ra-view-header">
         {folder ? (
           <>
-            <EmojiPickerDialog
-              emojiValue={folder.icon || ""}
-              onEmojiChange={changeFolderIcon}
-              onImageChange={() => undefined}
+            <IconPickerDialog
+              title="Folder Icon"
+              placeholder={<i className="material-symbols-rounded">folder</i>}
+              emojiValue={folder.icon}
+              onEmojiChange={handleChangeFolderIcon}
+              emojiOnly
             />
             <ContentEditable
               className="ra-title"
               value={folder.text || "Untitled Folder"}
-              onChange={renameFolder}
+              onChange={handleRenameFolder}
               naked
             />
           </>
@@ -153,11 +211,7 @@ export default function RecipesView() {
         )}
       </div>
 
-      <RecipeTree
-        folderId={folder?.id}
-        onClick={handleClick}
-        onFolderDelete={deleteFolder}
-      />
+      <RecipeTree folderId={folder?._id} onClick={handleClick} />
     </AppView>
   );
 }

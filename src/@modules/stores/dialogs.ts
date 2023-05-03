@@ -8,7 +8,7 @@ export interface DialogState<T, P> {
   payload?: P
 }
 
-export const RecipeSelectorDialogAtom = atom<DialogState<Recipe | string, { folderOnly?: boolean; }>>({
+export const RecipeSelectorDialogAtom = atom<DialogState<Recipe | string, { folderOnly?: boolean; disablePathUnder?: string }>>({
   key: "recipeSelectorDialog",
   default: {},
 });

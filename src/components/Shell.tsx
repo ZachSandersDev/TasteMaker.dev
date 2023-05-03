@@ -5,10 +5,10 @@ import { useRecoilValue } from "recoil";
 
 import router from "../@modules/router";
 import { authStore, listenForAuth } from "../@modules/stores/auth";
+import { folderStore, listenForFolders } from "../@modules/stores/folders";
 import { listenForIngredients } from "../@modules/stores/ingredients";
 import { listenForRecipes, recipeStore } from "../@modules/stores/recipes";
 import { listenForLists, listStore } from "../@modules/stores/shoppingLists";
-import { listenForTree, treeStore } from "../@modules/stores/tree";
 
 import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
 import ImportRecipeDialog from "./Dialogs/ImportRecipeDialog";
@@ -19,7 +19,7 @@ export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
   const { loading: recipesLoading } = useRecoilValue(recipeStore);
   const { loading: listsLoading } = useRecoilValue(listStore);
-  const { loading: treeLoading } = useRecoilValue(treeStore);
+  const { loading: foldersLoading } = useRecoilValue(folderStore);
 
   const prevUser = useRef<User | undefined>(undefined);
 
@@ -30,7 +30,7 @@ export default function Shell() {
   useEffect(() => {
     if (user && prevUser.current?.uid !== user.uid) {
       listenForRecipes();
-      listenForTree();
+      listenForFolders();
       listenForLists();
       listenForIngredients();
     }
@@ -44,7 +44,12 @@ export default function Shell() {
     }
   }, [userLoading, user]);
 
-  if ((!user && userLoading) || recipesLoading || listsLoading || treeLoading) {
+  if (
+    (!user && userLoading) ||
+    recipesLoading ||
+    listsLoading ||
+    foldersLoading
+  ) {
     return <Loading />;
   }
 

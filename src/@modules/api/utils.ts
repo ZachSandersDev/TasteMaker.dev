@@ -1,7 +1,5 @@
 import type { DataSnapshot } from "firebase/database";
 
-import { TreeNode } from "../types/treeNode";
-
 export function stripItemID<T extends { _id: string }>(item: T) {
   const val: any = structuredClone(item);
   delete val._id;
@@ -22,24 +20,3 @@ export function addListIDs<T extends { _id: string }>(snap: DataSnapshot) {
   return values;
 }
 
-
-export function addItemIDTree(snap: DataSnapshot) {
-  const val: TreeNode = snap.val();
-  val.id = parseInt(snap.key || "") ?? 0;
-  return val;
-}
-
-export function stripItemIDTree(item: TreeNode) {
-  const temp = structuredClone(item);
-  // @ts-expect-error These only ever get fed into firebase so this is fine
-  delete temp.id;
-  return temp;
-}
-
-export function formatTreeSnap(snap: DataSnapshot) {
-  const values: TreeNode[] = [];
-  snap.forEach((child) => {
-    values.push(addItemIDTree(child));
-  });
-  return values;
-}

@@ -1,11 +1,12 @@
 .emoji-picker {
   width: 100%;
+  height: 100%;
   --num-columns: 6;
   --border-size: 0px;
   --background: var(--color-background);
 }
 
-.recipe-icon-button {
+.icon-picker-button {
   img {
     width: 50px;
     height: 50px;
@@ -13,9 +14,14 @@
   }
 }
 
-.recipe-icon-selector {
+.icon-picker {
   height: 65vh;
   justify-content: space-between;
+
+  .icon-picker-contents {
+    overflow: auto;
+    flex: 1;
+  }
 
   .ra-button > img {
     width: 100%;

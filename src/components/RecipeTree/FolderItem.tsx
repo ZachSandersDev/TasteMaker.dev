@@ -1,24 +1,23 @@
 import { motion } from "framer-motion";
 
-import { TreeNode } from "../../@modules/types/treeNode";
+import { Folder } from "../../@modules/types/folder";
+import classNames from "../../@modules/utils/classNames";
 
 export type FolderItemProps = {
   className?: string;
-  node: TreeNode;
+  folder: Folder;
   onClick: () => void;
 };
 
 export const FolderItem = ({
   className,
-  node: { text, icon, data },
+  folder: { text, icon },
   onClick,
 }: FolderItemProps) => {
   return (
     <motion.div
       layout="position"
-      className={[data ? "" : "ra-option", className]
-        .filter((s) => !!s)
-        .join(" ")}
+      className={classNames("ra-option", className)}
       onClick={onClick}
     >
       <span className="ra-option-icon">

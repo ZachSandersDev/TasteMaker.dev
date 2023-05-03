@@ -2,6 +2,7 @@ export interface Recipe {
   _id: string;
   name: string;
   icon: string;
+  parent?: string | null;
 
   servingSize?: string
   prepTime?: string
@@ -9,8 +10,8 @@ export interface Recipe {
   ingredients: Ingredient[];
   steps: Step[];
 
-  bannerImage?: ImageField;
-  iconImage?: ImageField;
+  bannerImage?: ImageField | null;
+  iconImage?: ImageField | null;
 }
 
 export interface Ingredient {
@@ -35,6 +36,7 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
     _id: recipie._id || "",
     name: recipie.name || "",
     icon: recipie.icon || "",
+    parent: recipie.parent || null,
 
     servingSize: recipie.servingSize || "",
     prepTime: recipie.prepTime || "",
@@ -42,8 +44,8 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
     steps: recipie.steps || [],
     ingredients: recipie.ingredients || [],
 
-    bannerImage: recipie.bannerImage || undefined,
-    iconImage: recipie.iconImage || undefined
+    bannerImage: recipie.bannerImage || null,
+    iconImage: recipie.iconImage || null
   };
 
   return defaultedRecipe;

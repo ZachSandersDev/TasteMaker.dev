@@ -9,7 +9,7 @@ import "./ImageUpload.scss";
 
 export interface ImageUploadProps {
   editing: boolean;
-  image?: ImageField;
+  image?: ImageField | null;
   onChange: (imgFile: File) => void;
   variant?: "banner" | "icon";
 }

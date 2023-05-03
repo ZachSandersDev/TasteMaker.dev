@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import Button from "../../@design/components/Button/Button";
 
 import { RecipeSelectorDialogAtom } from "../../@modules/stores/dialogs";
+import { folderStore } from "../../@modules/stores/folders";
 import { recipeStore } from "../../@modules/stores/recipes";
-import { treeStore } from "../../@modules/stores/tree";
 
 import { Recipe } from "../../@modules/types/recipes";
 import RecipeTree from "../RecipeTree/RecipeTree";
@@ -24,23 +24,27 @@ export function selectRecipe() {
   });
 }
 
-export function selectFolder() {
+export function selectFolder(disablePathUnder?: string) {
   return new Promise<string | undefined>((resolve, reject) => {
     setRecoil(RecipeSelectorDialogAtom, {
       // @ts-expect-error Resolve could resolve recipe or string
       resolve,
       reject,
-      payload: { folderOnly: true },
+      payload: { folderOnly: true, disablePathUnder },
     });
   });
 }
 
 export default function RecipeSelectorDialog() {
   const [folderStack, setFolderStack] = useState<string[]>([]);
-  const { tree } = useRecoilValue(treeStore);
+  const { folders } = useRecoilValue(folderStore);
   const { recipes } = useRecoilValue(recipeStore);
   const [
-    { resolve, reject, payload: { folderOnly = false } = {} },
+    {
+      resolve,
+      reject,
+      payload: { folderOnly = false, disablePathUnder = undefined } = {},
+    },
     setDialogState,
   ] = useRecoilState(RecipeSelectorDialogAtom);
 
@@ -59,7 +63,13 @@ export default function RecipeSelectorDialog() {
     setFolderStack([...folderStack, String(id)]);
   };
 
-  const currentFolder = tree.find((f) => String(f.id) === folderStack.at(-1));
+  const currentFolder = folders.find((f) => f._id === folderStack.at(-1));
+
+  useEffect(() => {
+    if (!resolve || !reject) {
+      setFolderStack([]);
+    }
+  }, []);
 
   if (!resolve || !reject) {
     return null;
@@ -90,7 +100,8 @@ export default function RecipeSelectorDialog() {
         <div className="ra-list">
           <RecipeTree
             folderOnly={folderOnly}
-            folderId={currentFolder?.id}
+            folderId={currentFolder?._id}
+            disablePathUnder={disablePathUnder}
             onClick={handleClick}
           />
         </div>
@@ -98,7 +109,7 @@ export default function RecipeSelectorDialog() {
         {folderOnly && (
           <div className="ra-actions">
             <Button
-              onClick={() => res(String(currentFolder?.id || -1))}
+              onClick={() => res(String(currentFolder?._id || -1))}
               size="sm"
             >
               Select this folder
