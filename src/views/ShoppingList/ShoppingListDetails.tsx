@@ -101,7 +101,7 @@ export default function ShoppingListDetailsView() {
         <AppHeader subView>
           <div className="ra-actions">
             <DropMenu
-              icon="more_vert"
+              icon="more_horiz"
               options={[
                 {
                   icon: "add",

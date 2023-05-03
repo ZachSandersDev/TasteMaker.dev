@@ -11,7 +11,7 @@ export interface StepItemProps {
   step: Step;
   index: number;
   editing: boolean;
-  updateRecipe: (update: (r: Recipe) => unknown) => void;
+  updateRecipe?: (update: (r: Recipe) => unknown) => void;
 }
 
 export default function StepItem({
@@ -23,11 +23,11 @@ export default function StepItem({
   const controls = useDragControls();
 
   const setStepText = (value: string) => {
-    updateRecipe((r) => (r.steps[index].text = value));
+    updateRecipe?.((r) => (r.steps[index].text = value));
   };
 
   const deleteStep = () => {
-    updateRecipe((r) => r.steps.splice(index, 1));
+    updateRecipe?.((r) => r.steps.splice(index, 1));
   };
 
   if (!editing) {

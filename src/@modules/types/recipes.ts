@@ -12,6 +12,7 @@ export interface Recipe {
 
   bannerImage?: ImageField | null;
   iconImage?: ImageField | null;
+  public?: true | null
 }
 
 export interface Ingredient {
@@ -45,7 +46,8 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
     ingredients: recipie.ingredients || [],
 
     bannerImage: recipie.bannerImage || null,
-    iconImage: recipie.iconImage || null
+    iconImage: recipie.iconImage || null,
+    public: recipie.public || null
   };
 
   return defaultedRecipe;

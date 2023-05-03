@@ -10,7 +10,7 @@ import "./ImageUpload.scss";
 export interface ImageUploadProps {
   editing: boolean;
   image?: ImageField | null;
-  onChange: (imgFile: File) => void;
+  onChange?: (imgFile: File) => void;
   variant?: "banner" | "icon";
 }
 
@@ -25,7 +25,7 @@ export default function ImageUpload({
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const imageFile = e.target.files[0];
-    onChange(imageFile);
+    onChange?.(imageFile);
   };
 
   if (editing) {

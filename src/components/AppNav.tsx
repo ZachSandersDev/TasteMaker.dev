@@ -16,7 +16,7 @@ export default function AppNav() {
     <nav className={classNames("app-nav", bottomShadow && "shadow")}>
       {!isMobile && (
         <div className="ra-card-header">
-          <div className="ra-app-title">Easy Pea</div>
+          <div className="ra-app-title">TasteMaker.dev</div>
         </div>
       )}
 

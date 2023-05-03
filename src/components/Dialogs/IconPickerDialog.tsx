@@ -19,7 +19,7 @@ export interface IconPickerDialogProps {
   placeholder: ReactNode;
 
   disabled?: boolean;
-  onEmojiChange: (emoji: string) => void;
+  onEmojiChange?: (emoji: string) => void;
   onImageChange?: (imageFile: File) => void;
 }
 
@@ -40,7 +40,7 @@ export default function IconPickerDialog({
 
   const setIcon = (emoji: string) => {
     setIsOpen(false);
-    onEmojiChange(emoji);
+    onEmojiChange?.(emoji);
   };
 
   return (

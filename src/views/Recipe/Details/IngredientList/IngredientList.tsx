@@ -7,7 +7,7 @@ import IngredientItem from "./IngredientItem";
 export interface IngredientListProps {
   ingredients: Ingredient[];
   editing: boolean;
-  updateRecipe: (updateFunc: (r: Recipe) => void) => void;
+  updateRecipe?: (updateFunc: (r: Recipe) => void) => void;
 }
 
 export default function IngredientList({
@@ -16,15 +16,15 @@ export default function IngredientList({
   updateRecipe,
 }: IngredientListProps) {
   const reorderIngredients = (ingredients: Ingredient[]) => {
-    updateRecipe((r) => (r.ingredients = ingredients));
+    updateRecipe?.((r) => (r.ingredients = ingredients));
   };
 
   const updateIngredient = (newIngredient: Ingredient, index: number) => {
-    updateRecipe((r) => r.ingredients.splice(index, 1, newIngredient));
+    updateRecipe?.((r) => r.ingredients.splice(index, 1, newIngredient));
   };
 
   const deleteIngredient = (index: number) => {
-    updateRecipe((r) => r.ingredients.splice(index, 1));
+    updateRecipe?.((r) => r.ingredients.splice(index, 1));
   };
 
   if (!editing) {

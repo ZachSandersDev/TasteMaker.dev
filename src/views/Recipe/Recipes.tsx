@@ -50,6 +50,14 @@ export default function RecipesView() {
     }
   }, [originalFolder]);
 
+  useEffect(() => {
+    if (folder) {
+      document.title = folder.text || "Untitled Folder";
+    } else {
+      document.title = "TasteMaker.dev";
+    }
+  }, [folder]);
+
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 999px)");
 
@@ -168,7 +176,7 @@ export default function RecipesView() {
 
             {folder?._id && (
               <DropMenu
-                icon="more_vert"
+                icon="more_horiz"
                 onSelect={handleMenu}
                 options={[
                   {

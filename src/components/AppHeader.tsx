@@ -12,18 +12,23 @@ import "./AppHeader.scss";
 export interface AppHeaderProps {
   subView?: boolean;
   before?: ReactNode;
+  height?: string;
 }
 
 export default function AppHeader({
   children,
   subView,
   before,
+  height,
 }: PropsWithChildren<AppHeaderProps>) {
   const navigate = useNavigate();
   const { topShadow } = useRecoilValue(navStore);
 
   return (
-    <header className={classNames("app-header", topShadow && "shadow")}>
+    <header
+      className={classNames("app-header", topShadow && "shadow")}
+      style={{ height: height }}
+    >
       <div className="app-header-content">
         {before}
         {!before && subView && (

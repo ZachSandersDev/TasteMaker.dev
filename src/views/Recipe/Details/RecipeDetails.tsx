@@ -1,6 +1,7 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
 
 import Breadcrumbs from "../../../@design/components/Breadcrumbs/Breadcrumbs";
@@ -14,6 +15,7 @@ import {
   uploadIconImage,
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
+import { authStore } from "../../../@modules/stores/auth";
 import { getBreadcrumbs } from "../../../@modules/stores/folders";
 import { useRecipe } from "../../../@modules/stores/recipes";
 import { Recipe } from "../../../@modules/types/recipes";
@@ -35,6 +37,7 @@ import "./RecipeDetails.scss";
 
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
+  const { user } = useRecoilValue(authStore);
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 999px)");
 
@@ -52,6 +55,12 @@ export default function RecipeDetailsView() {
       setRecipe(originalRecipe);
     }
   }, [originalRecipe]);
+
+  useEffect(() => {
+    if (recipe) {
+      document.title = recipe.name || "Untitled Recipe";
+    }
+  }, [recipe]);
 
   const setRecipeField = (
     key: "name" | "servingSize" | "prepTime",
@@ -129,6 +138,33 @@ export default function RecipeDetailsView() {
     });
   };
 
+  const handleShareRecipe = async () => {
+    if (!recipe?._id || !user?.uid) return;
+
+    if (!recipe.public) {
+      const confirmed = window.confirm(
+        "Do you want to publish this recipe for public viewing?"
+      );
+      if (!confirmed) return;
+      updateRecipe((r) => (r.public = true));
+    }
+
+    const url = location.origin + `/public/${user.uid}/recipe/${recipe._id}`;
+    const shareData: ShareData = {
+      title: "TasteMaker.dev recipe",
+      text: recipe.name || "Untitled Recipe",
+      url,
+    };
+
+    const canShare = navigator.canShare?.(shareData);
+    if (canShare) {
+      navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Copied to clipboard!");
+    }
+  };
+
   if (!recipe) {
     return <span className="ra-error-message">Recipe not found...</span>;
   }
@@ -162,8 +198,12 @@ export default function RecipeDetailsView() {
               {editing ? "Save" : "Edit"}
             </Button>
 
+            <Button onClick={handleShareRecipe} variant="icon" size="xm">
+              ios_share
+            </Button>
+
             <DropMenu
-              icon="more_vert"
+              icon="more_horiz"
               options={[
                 {
                   icon: "drive_file_move",

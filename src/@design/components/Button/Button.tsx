@@ -9,7 +9,7 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  size?: "lg" | "md" | "sm";
+  size?: "lg" | "md" | "xm" | "sm";
   variant?: "chip" | "naked" | "filled" | "icon";
   iconBefore?: string;
   iconAfter?: string;

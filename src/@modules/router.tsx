@@ -1,6 +1,7 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import LoginView from "../views/Login";
+import PublicRecipeView from "../views/PublicRecipeView";
 import RecipeDetailsView from "../views/Recipe/Details/RecipeDetails";
 import RecipesView from "../views/Recipe/Recipes";
 import RootView from "../views/RootView";
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginView />,
+  },
+  {
+    path: "/public/:userId/recipe/:recipeId",
+    element: <PublicRecipeView />,
+  },
+  {
+    path: "*",
+    element: <Navigate replace to="/" />,
   },
 ]);
 

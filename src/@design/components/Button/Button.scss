@@ -3,7 +3,7 @@
   align-items: center;
   gap: var(--spacing);
 
-  font-size: 1em;
+  font-size: 0.9em;
 
   background-color: inherit;
   color: inherit;
@@ -70,6 +70,18 @@
     padding: calc(var(--spacing) * 0.5);
     width: 25px;
     height: 25px;
+  }
+}
+
+.ra-button-size-xm {
+  font-size: 0.8em;
+  // padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+
+  &.ra-button-icon {
+    font-size: 1.2em;
+    // padding: calc(var(--spacing) * 0.5);
+    // width: 25px;
+    // height: 25px;
   }
 }
 

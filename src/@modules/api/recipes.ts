@@ -32,6 +32,12 @@ export async function getRecipe(recipeId: string) {
   return setRecipeDefaults(addItemID<Recipe>(data));
 }
 
+export async function getPublicRecipe(userId: string, recipeId: string) {
+  const db = ref(getDatabase(app));
+  const data = await get(child(db, `${userId}/recipes/${recipeId}`));
+  return setRecipeDefaults(addItemID<Recipe>(data));
+}
+
 export const saveRecipe = debounce((recipe: Recipe) => {
   return set(child(getRecipeRef(), recipe._id), stripItemID(setRecipeDefaults(recipe)));
 }, 500);

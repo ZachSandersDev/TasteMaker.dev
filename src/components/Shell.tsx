@@ -39,7 +39,7 @@ export default function Shell() {
   }, [user]);
 
   useEffect(() => {
-    if (!userLoading && !user) {
+    if (!userLoading && !user && !location.pathname.includes("/public/")) {
       router.navigate("/login");
     }
   }, [userLoading, user]);
