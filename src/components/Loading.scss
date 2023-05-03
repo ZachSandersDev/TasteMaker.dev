@@ -9,6 +9,10 @@
   align-items: center;
   justify-content: center;
   gap: calc(var(--spacing) * 1.5);
+
+  visibility: hidden;
+
+  animation: 0s 0.5s forwards hide-then-show;
 }
 
 .loading-dot {
@@ -25,6 +29,16 @@
 
   &:nth-child(3) {
     animation-delay: 1.4s;
+  }
+}
+
+@keyframes hide-then-show {
+  0% {
+    visibility: hidden;
+  }
+
+  100% {
+    visibility: visible;
   }
 }
 

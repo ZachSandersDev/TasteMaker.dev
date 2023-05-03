@@ -1,13 +1,22 @@
+import React, { Suspense } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
+import Loading from "../components/Loading";
 import LoginView from "../views/Login";
-import PublicRecipeView from "../views/PublicRecipeView";
-import RecipeDetailsView from "../views/Recipe/Details/RecipeDetails";
-import RecipesView from "../views/Recipe/Recipes";
 import RootView from "../views/RootView";
-import SettingsView from "../views/SettingsView";
-import ShoppingListDetailsView from "../views/ShoppingList/ShoppingListDetails";
-import ShoppingListsView from "../views/ShoppingList/ShoppingLists";
+
+const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
+const RecipeDetailsView = React.lazy(
+  () => import("../views/Recipe/Details/RecipeDetails")
+);
+const RecipesView = React.lazy(() => import("../views/Recipe/Recipes"));
+const SettingsView = React.lazy(() => import("../views/SettingsView"));
+const ShoppingListDetailsView = React.lazy(
+  () => import("../views/ShoppingList/ShoppingListDetails")
+);
+const ShoppingListsView = React.lazy(
+  () => import("../views/ShoppingList/ShoppingLists")
+);
 
 const router = createBrowserRouter([
   {
@@ -17,27 +26,51 @@ const router = createBrowserRouter([
       {
         path: "",
         index: true,
-        element: <RecipesView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RecipesView />
+          </Suspense>
+        ),
       },
       {
         path: "recipe/:recipeId",
-        element: <RecipeDetailsView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RecipeDetailsView />
+          </Suspense>
+        ),
       },
       {
         path: "shopping-lists",
-        element: <ShoppingListsView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ShoppingListsView />
+          </Suspense>
+        ),
       },
       {
         path: "shopping-list/:listId",
-        element: <ShoppingListDetailsView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ShoppingListDetailsView />
+          </Suspense>
+        ),
       },
       {
         path: "settings",
-        element: <SettingsView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <SettingsView />
+          </Suspense>
+        ),
       },
       {
         path: "/folder/:folderId",
-        element: <RecipesView />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RecipesView />
+          </Suspense>
+        ),
       },
     ],
   },

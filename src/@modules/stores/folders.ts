@@ -33,7 +33,7 @@ export function getBreadcrumbs(folderId: string) {
 
   let currId: string | undefined = folderId;
   while (currId) {
-    const curr = folderMap[currId];
+    const curr: Folder | undefined = folderMap[currId];
     if (!curr) throw new Error("Could not find node " + currId);
 
     folderStack.push(curr);

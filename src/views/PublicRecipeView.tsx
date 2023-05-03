@@ -11,7 +11,7 @@ import ImageUpload from "../components/ImageUpload";
 import IngredientList from "./Recipe/Details/IngredientList/IngredientList";
 import StepItem from "./Recipe/Details/StepList/StepItem";
 
-// import "./RecipeDetails.scss";
+import "./Recipe/Details/RecipeDetails.scss";
 
 export default function PublicRecipeView() {
   const { userId, recipeId } = useParams();
