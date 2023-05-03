@@ -137,9 +137,9 @@ export default function RecipesView() {
         {folder ? (
           <>
             <EmojiPickerDialog
-              value={folder.icon || ""}
-              placeholder="folder"
+              emojiValue={folder.icon || ""}
               onEmojiChange={changeFolderIcon}
+              onImageChange={() => undefined}
             />
             <ContentEditable
               className="ra-title"
