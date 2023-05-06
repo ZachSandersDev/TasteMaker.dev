@@ -85,7 +85,7 @@ export default function EditIngredientDialog() {
           ref={inputRef}
           type="text"
           value={localIngredient || ""}
-          onChange={(e) => setLocalIngredient(e.target.value.toLowerCase())}
+          onChange={(e) => setLocalIngredient(e.target.value)}
           placeholder="ingredient"
           onKeyUp={(e) => {
             if (e.key === "Enter") {
