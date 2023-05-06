@@ -136,7 +136,11 @@ export default function RecipesView() {
 
     if (option === "DELETE") {
       handleDeleteFolder();
-      navigate(`/folder/${folder.parent}`);
+      if(folder.parent) {
+        navigate(`/folder/${folder.parent}`);
+      }else {
+        navigate("/");
+      }
     }
     if (option === "MOVE") {
       const newParent = await selectFolder(folder._id);
