@@ -249,7 +249,8 @@ export default function RecipeDetailsView() {
         {editing ? (
           <ContentEditable
             className="ra-title"
-            value={recipe.name || "Untitled Recipe"}
+            placeholder="Untitled Recipe"
+            value={recipe.name}
             onChange={(v) => setRecipeField("name", v)}
             naked
             plaintext
