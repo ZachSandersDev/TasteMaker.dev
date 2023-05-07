@@ -72,7 +72,7 @@ export const ContentEditable = forwardRef<HTMLDivElement, ContentEditableProps>(
       disabled,
       naked,
       noborder,
-      plaintext,
+      plaintext = true,
     },
     ref
   ) => {

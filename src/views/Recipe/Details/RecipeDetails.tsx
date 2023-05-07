@@ -24,7 +24,6 @@ import useUpdater from "../../../@modules/utils/useUpdater";
 
 import AppHeader from "../../../components/AppHeader";
 import AppView from "../../../components/AppView";
-import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import IconPickerDialog from "../../../components/Dialogs/IconPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
@@ -84,31 +83,29 @@ export default function RecipeDetailsView() {
     updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
-  const handleMenu = async (option: string) => {
+  const handleMove = async () => {
+    const newParent = await selectFolder();
+    if (newParent) {
+      updateRecipe((r) => (r.parent = newParent));
+    }
+  };
+
+  const handleImport = async () => {
     if (!recipe) throw "Recipe not loaded";
-
-    if (option === "MOVE") {
-      const newParent = await selectFolder();
-      if (newParent) {
-        updateRecipe((r) => (r.parent = newParent));
-      }
+    const newRecipe = await importRecipe(recipe);
+    if (newRecipe) {
+      updateRecipe((r) => Object.assign(r, newRecipe));
     }
+  };
 
-    if (option === "IMPORT") {
-      const newRecipe = await importRecipe(recipe);
-      if (newRecipe) {
-        updateRecipe((r) => Object.assign(r, newRecipe));
-      }
-    }
-
-    if (option === "DELETE") {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this recipe?"
-      );
-      if (confirmed) {
-        deleteRecipe(recipe._id);
-        navigate(-1);
-      }
+  const handleDelete = async () => {
+    if (!recipe) throw "Recipe not loaded";
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this recipe?"
+    );
+    if (confirmed) {
+      deleteRecipe(recipe._id);
+      navigate(-1);
     }
   };
 
@@ -194,36 +191,38 @@ export default function RecipeDetailsView() {
           }
         >
           <div className="ra-actions">
-            <Button onClick={() => setEditing(!editing)} variant="naked">
+            <Button
+              title="Edit"
+              onClick={() => setEditing(!editing)}
+              variant="naked"
+            >
               {editing ? "Save" : "Edit"}
             </Button>
 
-            <Button onClick={handleShareRecipe} variant="icon" size="xm">
+            <Button
+              title="Share"
+              onClick={handleShareRecipe}
+              variant="icon"
+              size="xm"
+            >
               ios_share
             </Button>
 
-            <DropMenu
-              icon="more_horiz"
-              options={[
-                {
-                  icon: "drive_file_move",
-                  value: "MOVE",
-                  text: "Move",
-                },
-                {
-                  icon: "download",
-                  value: "IMPORT",
-                  text: "Import recipe data",
-                },
-                {
-                  icon: "delete",
-                  value: "DELETE",
-                  text: "Delete Recipe",
-                  color: "var(--color-danger)",
-                },
-              ]}
-              onSelect={handleMenu}
-            />
+            <Button title="Move recipe" onClick={handleMove} variant="icon">
+              drive_file_move
+            </Button>
+
+            <Button
+              title="Import ingredients (From copy / paste)"
+              onClick={handleImport}
+              variant="icon"
+            >
+              format_list_bulleted_add
+            </Button>
+
+            <Button title="Delete recipe" onClick={handleDelete} variant="icon">
+              delete
+            </Button>
           </div>
         </AppHeader>
       }

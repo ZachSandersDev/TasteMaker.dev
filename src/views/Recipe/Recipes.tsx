@@ -26,7 +26,6 @@ import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
-import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import IconPickerDialog from "../../components/Dialogs/IconPickerDialog";
 import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import RecipeTree from "../../components/RecipeTree/RecipeTree";
@@ -121,6 +120,12 @@ export default function RecipesView() {
     }
 
     await batchUpdateFolders(folderUpdates);
+
+    if (folder.parent) {
+      navigate(`/folder/${folder.parent}`);
+    } else {
+      navigate("/");
+    }
   };
 
   const handleRenameFolder = (text: string) => {
@@ -134,14 +139,6 @@ export default function RecipesView() {
   const handleMenu = async (option: string) => {
     if (!folder?._id) return;
 
-    if (option === "DELETE") {
-      handleDeleteFolder();
-      if(folder.parent) {
-        navigate(`/folder/${folder.parent}`);
-      }else {
-        navigate("/");
-      }
-    }
     if (option === "MOVE") {
       const newParent = await selectFolder(folder._id);
       if (newParent) {
@@ -171,32 +168,30 @@ export default function RecipesView() {
           }
         >
           <div className="ra-actions">
+            {folder?._id && (
+              <>
+                <Button
+                  onClick={handleDeleteFolder}
+                  title="Delete Folder"
+                  variant="icon"
+                >
+                  delete
+                </Button>
+                <Button
+                  onClick={handleDeleteFolder}
+                  title="Move Folder"
+                  variant="icon"
+                >
+                  drive_file_move
+                </Button>
+              </>
+            )}
             <Button onClick={makeNewFolder} title="New Folder" variant="icon">
               create_new_folder
             </Button>
             <Button onClick={makeNewRecipe} title="New Recipe" variant="icon">
               add
             </Button>
-
-            {folder?._id && (
-              <DropMenu
-                icon="more_horiz"
-                onSelect={handleMenu}
-                options={[
-                  {
-                    icon: "drive_file_move",
-                    value: "MOVE",
-                    text: "Move",
-                  },
-                  {
-                    icon: "delete",
-                    text: "Delete Folder",
-                    value: "DELETE",
-                    color: "var(--color-danger)",
-                  },
-                ]}
-              />
-            )}
           </div>
         </AppHeader>
       }

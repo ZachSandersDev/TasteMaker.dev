@@ -2,6 +2,7 @@
   outline: none;
   border: none;
 
+  min-width: 3ch;
   transition: box-shadow 0.25s;
 
   &:not(.disabled):hover {

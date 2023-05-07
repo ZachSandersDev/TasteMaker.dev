@@ -95,15 +95,27 @@ export default function ShoppingListDetailsView() {
       header={
         <AppHeader subView>
           <div className="ra-actions">
-            <Button onClick={() => setEditing(!editing)} variant="naked">
+            <Button
+              title="Edit"
+              onClick={() => setEditing(!editing)}
+              variant="naked"
+            >
               {editing ? "Save" : "Edit"}
             </Button>
 
-            <Button onClick={addRecipe} variant="icon">
+            <Button
+              title="Import ingredients from recipe"
+              onClick={addRecipe}
+              variant="icon"
+            >
               format_list_bulleted_add
             </Button>
 
-            <Button onClick={handleDeleteList} variant="icon">
+            <Button
+              title="Delete list"
+              onClick={handleDeleteList}
+              variant="icon"
+            >
               delete
             </Button>
           </div>
@@ -120,7 +132,9 @@ export default function ShoppingListDetailsView() {
             naked
           />
         ) : (
-          <span className="ra-title">{list.name}</span>
+          <span className="ra-title">
+            {list.name || "Untitled Shopping List"}
+          </span>
         )}
       </div>
 
