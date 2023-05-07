@@ -5,6 +5,7 @@ import { navStore } from "../@modules/stores/nav";
 import classNames from "../@modules/utils/classNames";
 
 import "./AppView.scss";
+import { getCSSVariableNumber } from "../@modules/utils/getCSSVariable";
 
 export interface AppViewProps {
   header?: ReactElement;
@@ -22,6 +23,8 @@ export default function AppView({
   const bottomObserver = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const headerHeight = getCSSVariableNumber("--app-header-height");
+
     const observer = new IntersectionObserver(
       (entries) => {
         const newState = structuredClone(getRecoil(navStore));
@@ -37,7 +40,7 @@ export default function AppView({
         setRecoil(navStore, newState);
       },
       {
-        rootMargin: "-49px 0px -90px 0px",
+        rootMargin: `-${headerHeight - 1}px 0px 0px 0px`,
       }
     );
 
