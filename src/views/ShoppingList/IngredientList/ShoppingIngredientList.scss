@@ -1,6 +1,10 @@
 .sil-ingredient-item {
   width: 100%;
   display: flex;
+
+  // &.editing {
+  //   border-bottom: 1px solid var(--color-border);
+  // }
 }
 
 .sil-ingredient-line {

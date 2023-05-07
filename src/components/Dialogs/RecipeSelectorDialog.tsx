@@ -69,7 +69,7 @@ export default function RecipeSelectorDialog() {
     if (!resolve || !reject) {
       setFolderStack([]);
     }
-  }, []);
+  }, [resolve, reject]);
 
   if (!resolve || !reject) {
     return null;

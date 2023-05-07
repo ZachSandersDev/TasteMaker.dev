@@ -1,8 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
 
+import { KeyboardEvent, forwardRef } from "react";
+
 import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
 import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
 
+import classNames from "../../../@modules/utils/classNames";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import { ShoppingIngredientListProps } from "../IngredientList/ShoppingIngredientList";
@@ -11,15 +14,13 @@ export interface ShoppingIngredientItemProp
   extends ShoppingIngredientListProps {
   ingredient: ShoppingListIngredient;
   index: number;
+  onKeyDown?: (e: KeyboardEvent) => void;
 }
 
-export default function ShoppingIngredientItem({
-  ingredient,
-  index,
-  onDelete,
-  onUpdate,
-  onNew,
-}: ShoppingIngredientItemProp) {
+export const ShoppingIngredientItem = forwardRef<
+  HTMLDivElement,
+  ShoppingIngredientItemProp
+>(({ ingredient, index, onDelete, onUpdate, onKeyDown, editing }, ref) => {
   const controls = useDragControls();
 
   const setComplete = (
@@ -34,25 +35,27 @@ export default function ShoppingIngredientItem({
 
   return (
     <Reorder.Item
-      className="sil-ingredient-item"
+      className={classNames("sil-ingredient-item", editing && "editing")}
       value={ingredient}
       dragListener={false}
       dragControls={controls}
     >
-      <SwipeToDelete onDelete={() => onDelete(index)}>
+      <SwipeToDelete editing={editing} onDelete={() => onDelete(index)}>
         <div
           className="sil-ingredient-line"
           style={{
             opacity: ingredient.complete ? ".4" : "1",
           }}
         >
-          <div
-            onPointerDown={(e) => controls.start(e)}
-            style={{ touchAction: "none" }}
-            className="material-symbols-rounded drag-handle"
-          >
-            drag_indicator
-          </div>
+          {editing && (
+            <div
+              onPointerDown={(e) => controls.start(e)}
+              style={{ touchAction: "none" }}
+              className="material-symbols-rounded drag-handle"
+            >
+              drag_indicator
+            </div>
+          )}
 
           <label>
             <input
@@ -72,27 +75,32 @@ export default function ShoppingIngredientItem({
             </span>
           </label>
 
-          {ingredient.complete && <div className="sil-strikethrough" />}
-          <ContentEditable
-            className="sil-item-text"
-            value={ingredient.ingredient}
-            placeholder="Shopping item"
-            onChange={(v) => {
-              const newIngredient = structuredClone(ingredient);
-              newIngredient.ingredient = v;
-              onUpdate(newIngredient, index);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                onNew(index + 1);
-              }
-            }}
-            disabled={ingredient.complete}
-            naked
-          />
+          {ingredient.complete && !editing && (
+            <div className="sil-strikethrough" />
+          )}
+
+          {editing ? (
+            <ContentEditable
+              className="sil-item-text"
+              value={ingredient.ingredient}
+              placeholder="Shopping item"
+              onChange={(v) => {
+                const newIngredient = structuredClone(ingredient);
+                newIngredient.ingredient = v;
+                onUpdate(newIngredient, index);
+              }}
+              onKeyDown={onKeyDown}
+              ref={ref}
+              naked
+            />
+          ) : (
+            <span className="sil-item-text">{ingredient.ingredient}</span>
+          )}
         </div>
       </SwipeToDelete>
     </Reorder.Item>
   );
-}
+});
+
+ShoppingIngredientItem.displayName = "ShoppingIngredientItem";
+export default ShoppingIngredientItem;

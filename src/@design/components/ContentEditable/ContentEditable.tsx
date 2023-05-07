@@ -1,7 +1,4 @@
-import {
-  ContentEditableEvent,
-  default as ReactContentEditable,
-} from "react-contenteditable";
+import { FocusEvent, forwardRef } from "react";
 import sanitize from "sanitize-html";
 
 import classNames from "../../../@modules/utils/classNames";
@@ -63,47 +60,60 @@ function parseHTMLIntoPlainText(value: string) {
   return newValue;
 }
 
-export default function ContentEditable({
-  className,
-  value,
-  placeholder,
-  onChange,
-  onKeyDown,
-  onKeyUp,
-  disabled,
-  naked,
-  noborder,
-  plaintext,
-}: ContentEditableProps) {
-  const handleChange = (e: ContentEditableEvent) => {
-    if (plaintext) {
-      onChange(
-        sanitize(parseHTMLIntoPlainText(e.target.value), {
-          allowedTags: ["br"],
-          allowedAttributes: {},
-        })
-      );
-    } else {
-      onChange(sanitize(e.target.value));
-    }
-  };
+export const ContentEditable = forwardRef<HTMLDivElement, ContentEditableProps>(
+  (
+    {
+      className,
+      value,
+      placeholder,
+      onChange,
+      onKeyDown,
+      onKeyUp,
+      disabled,
+      naked,
+      noborder,
+      plaintext,
+    },
+    ref
+  ) => {
+    const handleChange = (e: FocusEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLDivElement;
+      if (plaintext) {
+        onChange(
+          sanitize(parseHTMLIntoPlainText(target.innerHTML), {
+            allowedTags: ["br"],
+            allowedAttributes: {},
+          })
+        );
+      } else {
+        onChange(sanitize(target.innerHTML));
+      }
+    };
 
-  return (
-    <ReactContentEditable
-      placeholder={placeholder}
-      className={classNames(
-        "content-editable",
-        naked ? "content-editable-naked" : "ra-input",
-        disabled && "disabled",
-        plaintext && "plain",
-        noborder && "noborder",
-        className
-      )}
-      html={sanitize(value).replaceAll("\n", "<br/>")}
-      onChange={handleChange}
-      onKeyDown={onKeyDown}
-      onKeyUp={onKeyUp}
-      disabled={disabled}
-    />
-  );
-}
+    return (
+      <div
+        placeholder={placeholder}
+        className={classNames(
+          "content-editable",
+          naked ? "content-editable-naked" : "ra-input",
+          disabled && "disabled",
+          plaintext && "plain",
+          noborder && "noborder",
+          className
+        )}
+        dangerouslySetInnerHTML={{
+          __html: sanitize(value).replaceAll("\n", "<br/>"),
+        }}
+        onBlur={handleChange}
+        onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
+        // disabled={disabled}
+        ref={ref}
+        contentEditable={!disabled}
+      />
+    );
+  }
+);
+
+ContentEditable.displayName = "ContentEditable";
+export default ContentEditable;

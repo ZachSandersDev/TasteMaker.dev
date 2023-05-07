@@ -1,7 +1,9 @@
 import React from "react";
 
 import Button from "../@design/components/Button/Button";
+import classNames from "../@modules/utils/classNames";
 import useMediaQuery from "../@modules/utils/useMediaQuery";
+
 import "./SwipeToDelete.scss";
 
 export interface SwipeToDeleteProps {
@@ -9,6 +11,7 @@ export interface SwipeToDeleteProps {
   onClick?: () => void;
   className?: string;
   children?: React.ReactNode;
+  editing?: boolean;
 }
 
 export default function SwipeToDelete({
@@ -16,16 +19,23 @@ export default function SwipeToDelete({
   onClick,
   className = "",
   children,
+  editing,
 }: SwipeToDeleteProps) {
   const isMobile = useMediaQuery("(max-width: 1000px)");
 
   return (
-    <div className={`swipe-to-delete-container ${className}`}>
+    <div
+      className={classNames(
+        "swipe-to-delete-container",
+        className,
+        isMobile && !editing && "mobile"
+      )}
+    >
       <div className="swipe-to-delete-child" onClick={onClick}>
         {children}
       </div>
 
-      {isMobile ? (
+      {isMobile && !editing ? (
         <Button className="swipe-to-delete-button" onClick={onDelete}>
           Delete
         </Button>
