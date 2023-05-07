@@ -10,7 +10,7 @@ export default function parseRecipe(recipe: Recipe, ingredientText: string, step
   return newRecipe;
 }
 
-function getShortUnit(unitOfMeasureID: string | null) {
+export function getShortUnit(unitOfMeasureID: string | null) {
   const shortUOM = unitsOfMeasure?.[unitOfMeasureID || ""]?.short;
 
   if (shortUOM === "c") return "cups";

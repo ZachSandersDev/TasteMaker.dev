@@ -1,4 +1,3 @@
-import { Ingredient } from "./recipes";
 
 export interface ShoppingList {
   _id: string;
@@ -7,8 +6,10 @@ export interface ShoppingList {
   ingredients: ShoppingListIngredient[];
 }
 
-export interface ShoppingListIngredient extends Ingredient {
-  complete?: boolean
+export interface ShoppingListIngredient {
+  _id: string;
+  ingredient: string;
+  complete?: boolean;
 }
 
 export function setListDefaults(list: Partial<ShoppingList>) {

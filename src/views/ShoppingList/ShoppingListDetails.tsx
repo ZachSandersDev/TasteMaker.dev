@@ -50,10 +50,6 @@ export default function ShoppingListDetailsView() {
     }
   };
 
-  // const removeRecipe = async (index: number) => {
-  //   updateList((l) => l.recipeIds.splice(index, 1));
-  // };
-
   const setListName = (value: string) => {
     updateList((l) => (l.name = value));
   };
@@ -61,10 +57,8 @@ export default function ShoppingListDetailsView() {
   const addNewIngredient = (at?: number) => {
     updateList((l) =>
       l.ingredients.splice(at ?? l.ingredients.length, 0, {
-        value: "",
-        units: "",
-        ingredient: "",
         _id: uuid(),
+        ingredient: "",
       })
     );
   };

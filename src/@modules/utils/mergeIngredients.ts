@@ -1,44 +1,49 @@
-import { Ingredient, parseIngredient } from "parse-ingredient";
+import { Ingredient as RawIngredient, parseIngredient } from "parse-ingredient";
+import { v4 as uuid } from "uuid";
 
-import { Recipe } from "../types/recipes";
-import { ShoppingList } from "../types/shoppingLists";
+import { getShortUnit } from "../parsers/textParser";
+import { Ingredient, Recipe } from "../types/recipes";
+import { ShoppingList, ShoppingListIngredient } from "../types/shoppingLists";
+
+interface ParsedIngredientItem<T> {
+  raw: RawIngredient;
+  original: T;
+}
+
+function parseIngredients(ingredients: Ingredient[]): ParsedIngredientItem<Ingredient>[] {
+  return ingredients.map((li) => ({ raw: parseIngredient(li.value + " " + li.ingredient)[0], original: li }));
+}
+
+function parseShoppingIngredients(ingredients: ShoppingListIngredient[]): ParsedIngredientItem<ShoppingListIngredient>[] {
+  return ingredients.map((li) => ({ raw: parseIngredient(li.ingredient)[0], original: li })).filter(({ raw }) => !!raw);
+}
 
 export default function mergeIngredients(recipe: Recipe, list: ShoppingList) {
-  const rawRecipeIngredients = recipe.ingredients.reduce((a, li) => {
-    a[li._id] = parseIngredient(li.ingredient)[0];
-    return a;
-  }, {} as Record<string, Ingredient>);
+  const recipeIngredients = parseIngredients(recipe.ingredients);
+  const listIngredients = parseShoppingIngredients(list.ingredients);
 
-  const rawListIngredients = list.ingredients.reduce((a, li) => {
-    a[li._id] = parseIngredient(li.ingredient)[0];
-    return a;
-  }, {} as Record<string, Ingredient>);
+  for (const { raw: rawRecipeI, original: recipeI } of recipeIngredients) {
 
-  for (const recipeId in rawRecipeIngredients) {
-    const riRaw = rawRecipeIngredients[recipeId];
-    const listId = Object.keys(rawListIngredients).find(
-      (liKey) => {
-        const li = rawListIngredients[liKey];
-        if(li.description === riRaw.description && 
-        li.unitOfMeasureID === riRaw.unitOfMeasureID) {
-          return liKey;
-        } 
-      }
-    );
+    // Find a matching list ingredient
+    const { raw: rawListI, original: listI } = listIngredients.find(
+      ({ raw: rawListI }) => rawListI.description === rawRecipeI.description &&
+        rawListI.unitOfMeasureID === rawRecipeI.unitOfMeasureID
+    ) || {};
 
-    const listIngredient = list.ingredients.find(li => li._id === listId);
-    if (listIngredient && listId) {
-      const liRaw = rawListIngredients[listId];
-      listIngredient.value = (
-        Number(liRaw.quantity) + Number(riRaw.quantity)
-      ).toString();
-    } else {
-      const recipeIngredient = recipe.ingredients.find(li => li._id === recipeId);
-      if(recipeIngredient) {
-        const ingredient = structuredClone(recipeIngredient);
-        ingredient.ingredient = ingredient.value + " " + ingredient.ingredient;
-        list.ingredients.push(ingredient);
-      }
+    // If we already have that ingredient, just add the quantity to it
+    if (rawListI && listI) {
+      listI.ingredient = `${(
+        Number(rawListI.quantity || 0) + Number(rawRecipeI.quantity || 0)
+      )} ${getShortUnit(rawListI.unitOfMeasureID)} ${recipeI.ingredient}`;
+    }
+
+    // Otherwise, add the recipe ingredient to the end of the list
+    else {
+      const newIngredient: ShoppingListIngredient = {
+        _id: uuid(),
+        ingredient: recipeI.value + " " + recipeI.ingredient,
+      };
+      list.ingredients.push(newIngredient);
     }
   }
 }
