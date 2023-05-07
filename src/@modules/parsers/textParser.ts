@@ -54,3 +54,22 @@ function parseSteps(stepText: string): Step[] {
 
   return stepLines.map(text => ({ _id: uuid(), text }));
 }
+
+export function strToIngredients(str: string) {
+  const rawIngredients = parseIngredient(str);
+
+  return rawIngredients
+    .map(
+      ({ quantity, unitOfMeasure, description, unitOfMeasureID }) => {
+        if (description) {
+          return {
+            _id: uuid(),
+            value: `${quantity || ""} ${getShortUnit(unitOfMeasureID) || unitOfMeasure || ""}`,
+            ingredient: description.replace(/\*+/g, "")
+          };
+        }
+        return null;
+      }
+    )
+    .filter((i): i is Ingredient => !!i);
+}

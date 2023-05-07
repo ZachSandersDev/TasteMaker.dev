@@ -124,7 +124,8 @@ export default function ShoppingListDetailsView() {
       <div className="ra-view-header">
         <ContentEditable
           className="ra-title"
-          value={list.name || "Untitled List"}
+          value={list.name}
+          placeholder="Untitled Shopping List"
           onChange={(v) => setListName(v)}
           naked
         />

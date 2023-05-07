@@ -29,6 +29,7 @@ const DEFAULT_ITEM: ShoppingListIngredient = {
 
 export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
   const { list, onReorder } = props;
+
   return (
     <>
       <Reorder.Group
