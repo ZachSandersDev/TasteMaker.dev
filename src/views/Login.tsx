@@ -19,6 +19,7 @@ export default function LoginView() {
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       await doLogin(email, password);
       navigate("/");
@@ -54,10 +55,10 @@ export default function LoginView() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <header className="ra-actions">
-          <Button variant="naked" onClick={signUp}>
+          <Button variant="naked" type="button" onClick={signUp}>
             Sign up
           </Button>
-          <Button variant="filled" formMethod="submit">
+          <Button variant="filled" type="submit">
             Login
           </Button>
         </header>
