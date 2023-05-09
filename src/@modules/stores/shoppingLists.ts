@@ -1,4 +1,4 @@
-import { atom, useRecoilValue } from "recoil";
+import { atom, useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import { getListsLive } from "../api/shoppingLists";
@@ -17,7 +17,19 @@ export function listenForLists() {
   setRecoil(listStore, (state) => ({ ...state, loading: true, listener }));
 }
 
-export function useList(listId: string) {
-  const { lists } = useRecoilValue(listStore);
-  return structuredClone(lists.find(r => r._id === listId));
+export function useList(listId: string): [ShoppingList | undefined, (newList: ShoppingList) => void] {
+  const [state, setState] = useRecoilState(listStore);
+  const {lists} = state;
+
+  const updateList = (newList: ShoppingList) => {
+    const listIndex = lists.findIndex(r => r._id === newList._id);
+    if(listIndex === -1) throw "List not found";
+
+    const newState = {...state, lists: [...state.lists]};
+    newState.lists[listIndex] = newList;
+    setState(newState);
+  };
+
+  const list = lists.find(r => r._id === listId);
+  return [list ? structuredClone(list) : undefined, updateList];
 }

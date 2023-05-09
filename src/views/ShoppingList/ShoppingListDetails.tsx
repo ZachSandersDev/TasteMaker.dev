@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -23,18 +22,11 @@ export default function ShoppingListDetailsView() {
   const navigate = useNavigate();
   const [editing, setEditing] = useState<boolean>(false);
 
-  const originalList = useList(listId as string);
-  const [list, setList] = useState<ShoppingList | undefined>(originalList);
+  const [list, setList] = useList(listId as string);
   const updateList = useUpdater<ShoppingList>(list, (l) => {
     setList(l);
     saveList(l);
   });
-
-  useEffect(() => {
-    if (originalList && !list) {
-      setList(originalList);
-    }
-  }, [originalList]);
 
   const addRecipe = async () => {
     try {

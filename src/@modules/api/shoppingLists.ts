@@ -27,19 +27,20 @@ export function getListsLive(callback: (r: ShoppingList[]) => void) {
   });
 }
 
-export async function getList(recipeId: string) {
-  const data = await get(child(getListRef(), recipeId));
+export async function getList(listId: string) {
+  const data = await get(child(getListRef(), listId));
   return setListDefaults(addItemID<ShoppingList>(data));
 }
 
-export const saveList = debounce((recipe: ShoppingList) => {
-  return set(child(getListRef(), recipe._id), stripItemID(recipe));
+export const saveList = debounce((list: ShoppingList) => {
+  console.log("Saving shopping list");
+  return set(child(getListRef(), list._id), stripItemID(list));
 }, 500);
 
 export async function newList(r: ShoppingList) {
   return await push(getListRef(), stripItemID(r)).key;
 }
 
-export async function deleteList(recipeId: string) {
-  return await remove(child(getListRef(), recipeId));
+export async function deleteList(listId: string) {
+  return await remove(child(getListRef(), listId));
 }
