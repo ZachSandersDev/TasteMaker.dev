@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
 import Button from "../../@design/components/Button/Button";
 
-import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
+import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import { deleteList, saveList } from "../../@modules/api/shoppingLists";
 import { useList } from "../../@modules/stores/shoppingLists";
 import { Ingredient } from "../../@modules/types/recipes";
@@ -116,12 +117,12 @@ export default function ShoppingListDetailsView() {
     >
       <div className="ra-view-header">
         {editing ? (
-          <ContentEditable
+          <MultilineInput
             className="ra-title"
             value={list.name}
             placeholder="Untitled Shopping List"
             onChange={(v) => setListName(v)}
-            naked
+            variant="naked"
           />
         ) : (
           <span className="ra-title">

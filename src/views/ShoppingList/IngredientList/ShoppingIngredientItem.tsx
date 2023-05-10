@@ -2,7 +2,7 @@ import { Reorder, useDragControls } from "framer-motion";
 
 import { KeyboardEvent, forwardRef } from "react";
 
-import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
+import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
 
 import classNames from "../../../@modules/utils/classNames";
@@ -18,7 +18,7 @@ export interface ShoppingIngredientItemProp
 }
 
 export const ShoppingIngredientItem = forwardRef<
-  HTMLDivElement,
+  HTMLTextAreaElement,
   ShoppingIngredientItemProp
 >(({ ingredient, index, onDelete, onUpdate, onKeyDown, editing }, ref) => {
   const controls = useDragControls();
@@ -80,7 +80,7 @@ export const ShoppingIngredientItem = forwardRef<
           )}
 
           {editing ? (
-            <ContentEditable
+            <MultilineInput
               className="sil-item-text"
               value={ingredient.ingredient}
               placeholder="Shopping item"
@@ -91,7 +91,7 @@ export const ShoppingIngredientItem = forwardRef<
               }}
               onKeyDown={onKeyDown}
               ref={ref}
-              naked
+              variant="naked"
             />
           ) : (
             <span className="sil-item-text">{ingredient.ingredient}</span>

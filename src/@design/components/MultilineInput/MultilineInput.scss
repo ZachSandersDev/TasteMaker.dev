@@ -1,0 +1,61 @@
+.multiline-input {
+  display: grid;
+  flex: 1 0;
+}
+
+.multiline-input::after {
+  content: attr(data-replicated-value) " ";
+  white-space: pre-wrap;
+  visibility: hidden;
+}
+
+.multiline-input > textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.multiline-input > textarea,
+.multiline-input::after {
+  /* Place on top of each other */
+  grid-area: 1 / 1 / 2 / 2;
+
+  outline: none;
+  border: none;
+  min-width: 3ch;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: 1em;
+  transition: box-shadow 0.25s;
+}
+
+.multiline-input.filled > textarea,
+.multiline-input.filled::after {
+  background-color: var(--color-input-background);
+  color: var(--color-color);
+
+  padding: calc(var(--spacing) * 0.5) var(--spacing);
+
+  border-radius: calc(var(--spacing) * 0.5);
+
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+  &::placeholder {
+    color: var(--color-placeholder);
+  }
+}
+
+.multiline-input.filled > textarea:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px var(--color-interface-base);
+}
+
+.multiline-input.filled > textarea:not(:disabled):focus {
+  box-shadow: inset 0 0 0 2px var(--color-interface-active);
+}
+
+.multiline-input.naked > textarea:not(:disabled):hover {
+  box-shadow: 0 3px 0 var(--color-interface-base);
+}
+
+.multiline-input.naked > textarea:not(:disabled):focus {
+  box-shadow: 0 3px 0 var(--color-interface-active);
+}

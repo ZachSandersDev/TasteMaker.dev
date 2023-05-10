@@ -3,10 +3,9 @@ import { atom, useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import Button from "../../@design/components/Button/Button";
+import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 
-import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
 import parseRecipe from "../../@modules/parsers/textParser";
-
 import { Recipe } from "../../@modules/types/recipes";
 
 import "./ImportRecipeDialog.scss";
@@ -56,21 +55,13 @@ export default function ImportRecipeDialog() {
     <>
       <div className="ra-dialog ra-card import-recipe-dialog">
         <header className="ra-card-header">
-          <h2>Import Recipe</h2>
+          <h2>Import Ingredients</h2>
         </header>
 
-        <ContentEditable
+        <MultilineInput
           placeholder="Ingredients text"
           value={ingredientText}
           onChange={(v) => setIngredientText(v)}
-          plaintext
-        />
-
-        <ContentEditable
-          placeholder="Instructions text"
-          value={stepText}
-          onChange={(v) => setStepText(v)}
-          plaintext
         />
 
         <div className="ra-actions">

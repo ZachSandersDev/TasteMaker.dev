@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import ContentEditable from "../../../../@design/components/ContentEditable/ContentEditable";
+import MultilineInput from "../../../../@design/components/MultilineInput/MultilineInput";
 import { Ingredient } from "../../../../@modules/types/recipes";
 
 import { editIngredient } from "../../../../components/Dialogs/EditIngredientDialog";
@@ -57,13 +57,12 @@ export default function IngredientItem({
             drag_indicator
           </span>
 
-          <ContentEditable
+          <MultilineInput
             className="value-field"
             placeholder="amount"
             value={ingredient.value}
             onChange={(e) => setIngredientValue("value", e)}
-            naked
-            plaintext
+            variant="naked"
           />
 
           <button

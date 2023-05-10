@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import Breadcrumbs from "../../@design/components/Breadcrumbs/Breadcrumbs";
 import Button from "../../@design/components/Button/Button";
 
-import ContentEditable from "../../@design/components/ContentEditable/ContentEditable";
+import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import {
   batchUpdateFolders,
   newFolder,
@@ -31,23 +31,16 @@ import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import RecipeTree from "../../components/RecipeTree/RecipeTree";
 
 export default function RecipesView() {
-  const { folderId = "" } = useParams();
+  const { folderId } = useParams();
 
   const { folders } = useRecoilValue(folderStore);
   const { recipes } = useRecoilValue(recipeStore);
 
-  const originalFolder = useFolder(folderId);
-  const [folder, setFolder] = useState<Folder | undefined>(originalFolder);
+  const [folder, setFolder] = useFolder(folderId);
   const updateFolder = useUpdater<Folder>(folder, (f) => {
     setFolder(f);
     saveFolder(f);
   });
-
-  useEffect(() => {
-    if ((!originalFolder && folder) || originalFolder?._id !== folder?._id) {
-      setFolder(originalFolder);
-    }
-  }, [originalFolder]);
 
   useEffect(() => {
     if (folder) {
@@ -62,7 +55,10 @@ export default function RecipesView() {
 
   const makeNewRecipe = async () => {
     await newRecipe(
-      setRecipeDefaults({ name: "Untitled Recipe", parent: folderId })
+      setRecipeDefaults({
+        name: "Untitled Recipe",
+        parent: folder?._id,
+      })
     );
   };
 
@@ -70,7 +66,7 @@ export default function RecipesView() {
     await newFolder(
       setFolderDefaults({
         text: "New Folder",
-        parent: folderId,
+        parent: folder?._id,
       })
     );
   };
@@ -136,14 +132,12 @@ export default function RecipesView() {
     updateFolder((f) => (f.icon = icon));
   };
 
-  const handleMenu = async (option: string) => {
+  const handleMove = async () => {
     if (!folder?._id) return;
 
-    if (option === "MOVE") {
-      const newParent = await selectFolder(folder._id);
-      if (newParent) {
-        updateFolder((f) => (f.parent = newParent));
-      }
+    const newParent = await selectFolder(folder._id);
+    if (newParent) {
+      updateFolder((f) => (f.parent = newParent));
     }
   };
 
@@ -177,11 +171,7 @@ export default function RecipesView() {
                 >
                   delete
                 </Button>
-                <Button
-                  onClick={handleDeleteFolder}
-                  title="Move Folder"
-                  variant="icon"
-                >
+                <Button onClick={handleMove} title="Move Folder" variant="icon">
                   drive_file_move
                 </Button>
               </>
@@ -206,11 +196,11 @@ export default function RecipesView() {
               onEmojiChange={handleChangeFolderIcon}
               emojiOnly
             />
-            <ContentEditable
+            <MultilineInput
               className="ra-title"
               value={folder.text || "Untitled Folder"}
               onChange={handleRenameFolder}
-              naked
+              variant="naked"
             />
           </>
         ) : (

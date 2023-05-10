@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import sanitize from "sanitize-html";
 
 import { ShoppingList } from "../@modules/types/shoppingLists";
 
@@ -18,11 +17,9 @@ export const ShoppingListItem = ({ shoppingList }: ShoppingListItemProps) => {
   return (
     <div className="ra-option" onClick={handleClick}>
       <span className="ra-option-icon">🗒️</span>
-      <span
-        dangerouslySetInnerHTML={{
-          __html: sanitize(shoppingList.name) || "Untitled List",
-        }}
-      ></span>
+      <span style={{ whiteSpace: "pre-wrap" }}>
+        {shoppingList.name || "Untitled List"}
+      </span>
     </div>
   );
 };

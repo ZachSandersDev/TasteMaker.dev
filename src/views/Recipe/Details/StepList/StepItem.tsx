@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import ContentEditable from "../../../../@design/components/ContentEditable/ContentEditable";
+import MultilineInput from "../../../../@design/components/MultilineInput/MultilineInput";
 import { Recipe, Step } from "../../../../@modules/types/recipes";
 
 import SwipeToDelete from "../../../../components/SwipeToDelete";
@@ -34,7 +34,7 @@ export default function StepItem({
     return (
       <div className="step-item">
         <span className="step-number">{index + 1}.</span>
-        <span>{step.text}</span>
+        <span style={{ whiteSpace: "pre-wrap" }}>{step.text}</span>
       </div>
     );
   }
@@ -51,7 +51,6 @@ export default function StepItem({
         onDelete={deleteStep}
       >
         <div className="step-item">
-          {/* <span className="step-number">{index + 1}.</span> */}
           <div
             onPointerDown={(e) => controls.start(e)}
             style={{ touchAction: "none" }}
@@ -59,11 +58,11 @@ export default function StepItem({
           >
             drag_indicator
           </div>
-          <ContentEditable
+          <MultilineInput
+            placeholder="Instructions"
             className="step-input"
             value={step.text}
             onChange={(v) => setStepText(v)}
-            plaintext
           />
         </div>
       </SwipeToDelete>

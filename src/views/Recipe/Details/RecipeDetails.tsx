@@ -7,8 +7,8 @@ import { v4 as uuid } from "uuid";
 import Breadcrumbs from "../../../@design/components/Breadcrumbs/Breadcrumbs";
 import Button from "../../../@design/components/Button/Button";
 
-import ContentEditable from "../../../@design/components/ContentEditable/ContentEditable";
 import Input from "../../../@design/components/Input/Input";
+import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import {
   deleteImage,
   uploadBannerImage,
@@ -42,18 +42,11 @@ export default function RecipeDetailsView() {
 
   const [editing, setEditing] = useState<boolean>(false);
 
-  const originalRecipe = useRecipe(recipeId as string);
-  const [recipe, setRecipe] = useState<Recipe | undefined>(originalRecipe);
+  const [recipe, setRecipe] = useRecipe(recipeId as string);
   const updateRecipe = useUpdater<Recipe>(recipe, (r) => {
     setRecipe(r);
     saveRecipe(r);
   });
-
-  useEffect(() => {
-    if (originalRecipe && !recipe) {
-      setRecipe(originalRecipe);
-    }
-  }, [originalRecipe]);
 
   useEffect(() => {
     if (recipe) {
@@ -213,7 +206,7 @@ export default function RecipeDetailsView() {
             </Button>
 
             <Button
-              title="Import ingredients (From copy / paste)"
+              title="Import ingredients"
               onClick={handleImport}
               variant="icon"
             >
@@ -246,13 +239,12 @@ export default function RecipeDetailsView() {
         />
 
         {editing ? (
-          <ContentEditable
+          <MultilineInput
             className="ra-title"
             placeholder="Untitled Recipe"
             value={recipe.name}
             onChange={(v) => setRecipeField("name", v)}
-            naked
-            plaintext
+            variant="naked"
           />
         ) : (
           <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>
