@@ -88,7 +88,7 @@ export default function RecipeSelectorDialog() {
               onClick={() => setFolderStack((f) => f.slice(0, f.length - 1))}
               variant="icon"
             >
-              chevron_left
+              arrow_back_ios_new
             </Button>
           )}
           <h3>

@@ -33,7 +33,7 @@ export default function AppHeader({
         {before}
         {!before && subView && (
           <Button onClick={() => navigate(-1)} variant="icon">
-            chevron_left
+            arrow_back_ios_new
           </Button>
         )}
         {children}

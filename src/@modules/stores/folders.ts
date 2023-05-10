@@ -1,5 +1,5 @@
-import { atom, useRecoilState } from "recoil";
-import { getRecoil, setRecoil } from "recoil-nexus";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { setRecoil } from "recoil-nexus";
 
 import { getFoldersLive } from "../api/folders";
 import { Folder } from "../types/folder";
@@ -39,8 +39,13 @@ export function useFolder(folderId?: string): [Folder | undefined, (newFolder: F
 }
 
 
-export function getBreadcrumbs(folderId: string) {
-  const { folders } = getRecoil(folderStore);
+export function useBreadcrumbStack(folderId?: string | null) {
+  const { folders } = useRecoilValue(folderStore);
+
+  if (!folderId) {
+    return [];
+  }
+
   const folderMap = folders.reduce((m, f) => {
     m[f._id] = f;
     return m;

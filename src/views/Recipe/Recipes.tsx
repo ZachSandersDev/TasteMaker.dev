@@ -13,15 +13,11 @@ import {
 } from "../../@modules/api/folders";
 import { batchUpdateRecipes, newRecipe } from "../../@modules/api/recipes";
 import { stripItemID } from "../../@modules/api/utils";
-import {
-  folderStore,
-  getBreadcrumbs,
-  useFolder,
-} from "../../@modules/stores/folders";
+import { folderStore, useFolder } from "../../@modules/stores/folders";
 import { recipeStore } from "../../@modules/stores/recipes";
 import { Folder, setFolderDefaults } from "../../@modules/types/folder";
 import { Recipe, setRecipeDefaults } from "../../@modules/types/recipes";
-import useMediaQuery from "../../@modules/utils/useMediaQuery";
+import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
@@ -51,7 +47,7 @@ export default function RecipesView() {
   }, [folder]);
 
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 999px)");
+  const breadcrumbs = useBreadcrumbs(folderId);
 
   const makeNewRecipe = async () => {
     await newRecipe(
@@ -144,20 +140,7 @@ export default function RecipesView() {
       header={
         <AppHeader
           subView={folder?._id !== undefined}
-          before={
-            !isMobile &&
-            folder && (
-              <Breadcrumbs
-                links={[
-                  { text: "All Recipes", href: "/" },
-                  ...getBreadcrumbs(folder._id).map((n) => ({
-                    text: n.text || "Untitled Folder",
-                    href: "/folder/" + n._id,
-                  })),
-                ]}
-              />
-            )
-          }
+          before={folder && <Breadcrumbs links={breadcrumbs} />}
         >
           <div className="ra-actions">
             {folder?._id && (

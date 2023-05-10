@@ -3,16 +3,22 @@
   gap: var(--spacing);
   padding: 0 var(--spacing);
   font-size: 0.9em;
+  flex: 1;
+  // overflow: auto;
+  overflow: hidden;
 }
 
 .breadcrumb-link {
   color: var(--color-link);
   text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 span.breadcrumb-link {
   font-weight: 700;
   color: var(--color-color);
+  flex: 1;
 }
 
 .breadcrumb-divider {

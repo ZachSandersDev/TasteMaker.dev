@@ -16,10 +16,9 @@ import {
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { authStore } from "../../../@modules/stores/auth";
-import { getBreadcrumbs } from "../../../@modules/stores/folders";
 import { useRecipe } from "../../../@modules/stores/recipes";
 import { Recipe } from "../../../@modules/types/recipes";
-import useMediaQuery from "../../../@modules/utils/useMediaQuery";
+import { useBreadcrumbs } from "../../../@modules/utils/useBreadcrumbs";
 import useUpdater from "../../../@modules/utils/useUpdater";
 
 import AppHeader from "../../../components/AppHeader";
@@ -39,7 +38,7 @@ export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const { user } = useRecoilValue(authStore);
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 999px)");
+  const breadcrumbs = useBreadcrumbs(recipeId);
 
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -165,24 +164,7 @@ export default function RecipeDetailsView() {
       header={
         <AppHeader
           subView
-          before={
-            !isMobile &&
-            recipe.parent && (
-              <Breadcrumbs
-                links={[
-                  { text: "All Recipes", href: "/" },
-                  ...getBreadcrumbs(recipe.parent).map((f) => ({
-                    text: f.text || "Untitled Folder",
-                    href: "/folder/" + f._id,
-                  })),
-                  {
-                    text: recipe.name || "Untitled Recipe",
-                    href: "/recipe/" + recipe._id,
-                  },
-                ]}
-              />
-            )
-          }
+          before={recipe.parent && <Breadcrumbs links={breadcrumbs} />}
         >
           <div className="ra-actions">
             <Button
