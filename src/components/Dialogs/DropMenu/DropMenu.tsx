@@ -9,24 +9,22 @@ export interface DropMenuOption {
   color?: string;
   icon: string;
   text: string;
-  value: string;
+  onClick: () => void;
 }
 
 export interface DropMenuProps {
-  icon: string;
-  onSelect: (value: string) => void;
   options: DropMenuOption[];
 }
 
-export default function DropMenu({ icon, onSelect, options }: DropMenuProps) {
+export default function DropMenu({ options }: DropMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (value: string) => {
-    onSelect(value);
+  const handleSelect = (option: DropMenuOption) => {
+    option.onClick();
     setIsOpen(false);
   };
 
@@ -37,7 +35,7 @@ export default function DropMenu({ icon, onSelect, options }: DropMenuProps) {
   return (
     <div className="drop-menu-container">
       <Button variant="icon" onClick={handleClick}>
-        {icon}
+        more_horiz
       </Button>
 
       {isOpen && (

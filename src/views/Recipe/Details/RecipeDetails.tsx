@@ -24,6 +24,7 @@ import useUpdater from "../../../@modules/utils/useUpdater";
 
 import AppHeader from "../../../components/AppHeader";
 import AppView from "../../../components/AppView";
+import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import IconPickerDialog from "../../../components/Dialogs/IconPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
@@ -187,35 +188,43 @@ export default function RecipeDetailsView() {
             <Button
               title="Edit"
               onClick={() => setEditing(!editing)}
-              variant="naked"
+              variant={editing ? "chip" : "naked"}
             >
               {editing ? "Save" : "Edit"}
             </Button>
 
-            <Button
-              title="Share"
-              onClick={handleShareRecipe}
-              variant="icon"
-              size="xm"
-            >
-              ios_share
-            </Button>
+            {!editing && (
+              <>
+                <Button
+                  title="Share"
+                  onClick={handleShareRecipe}
+                  variant="icon"
+                  size="xm"
+                >
+                  ios_share
+                </Button>
 
-            <Button title="Move recipe" onClick={handleMove} variant="icon">
-              drive_file_move
-            </Button>
-
-            <Button
-              title="Import ingredients"
-              onClick={handleImport}
-              variant="icon"
-            >
-              format_list_bulleted_add
-            </Button>
-
-            <Button title="Delete recipe" onClick={handleDelete} variant="icon">
-              delete
-            </Button>
+                <DropMenu
+                  options={[
+                    {
+                      text: "Move recipe",
+                      onClick: handleMove,
+                      icon: "drive_file_move",
+                    },
+                    {
+                      text: "Import ingredients",
+                      onClick: handleImport,
+                      icon: "format_list_bulleted_add",
+                    },
+                    {
+                      text: "Delete recipe",
+                      onClick: handleDelete,
+                      icon: "delete",
+                    },
+                  ]}
+                />
+              </>
+            )}
           </div>
         </AppHeader>
       }
