@@ -1,4 +1,4 @@
-import { atom, useRecoilValue } from "recoil";
+import { atom, useRecoilState } from "recoil";
 import { getRecoil, setRecoil } from "recoil-nexus";
 
 import { getFoldersLive } from "../api/folders";
@@ -17,10 +17,27 @@ export function listenForFolders() {
   setRecoil(folderStore, (state) => ({ ...state, loading: true, listener }));
 }
 
-export function useFolder(folderId: string) {
-  const { folders } = useRecoilValue(folderStore);
-  return structuredClone(folders.find(f => f._id === folderId));
+export function useFolder(folderId?: string): [Folder | undefined, (newFolder: Folder) => void] {
+  const [state, setState] = useRecoilState(folderStore);
+  const { folders } = state;
+
+  if (!folderId) {
+    return [undefined, () => undefined];
+  }
+
+  const updateFolder = (newFolder: Folder) => {
+    const folderIndex = folders.findIndex(r => r._id === newFolder._id);
+    if (folderIndex === -1) throw "Folder not found";
+
+    const newState = { ...state, folders: [...state.folders] };
+    newState.folders[folderIndex] = newFolder;
+    setState(newState);
+  };
+
+  const folder = folders.find(r => r._id === folderId);
+  return [folder ? structuredClone(folder) : undefined, updateFolder];
 }
+
 
 export function getBreadcrumbs(folderId: string) {
   const { folders } = getRecoil(folderStore);

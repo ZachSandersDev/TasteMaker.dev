@@ -19,13 +19,17 @@ export function listenForLists() {
 
 export function useList(listId: string): [ShoppingList | undefined, (newList: ShoppingList) => void] {
   const [state, setState] = useRecoilState(listStore);
-  const {lists} = state;
+  const { lists } = state;
+
+  if (!listId) {
+    return [undefined, () => undefined];
+  }
 
   const updateList = (newList: ShoppingList) => {
     const listIndex = lists.findIndex(r => r._id === newList._id);
-    if(listIndex === -1) throw "List not found";
+    if (listIndex === -1) throw "List not found";
 
-    const newState = {...state, lists: [...state.lists]};
+    const newState = { ...state, lists: [...state.lists] };
     newState.lists[listIndex] = newList;
     setState(newState);
   };
