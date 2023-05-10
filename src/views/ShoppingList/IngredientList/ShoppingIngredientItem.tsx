@@ -41,6 +41,52 @@ export const ShoppingIngredientItem = forwardRef<
     onUpdate(newIngredient, index);
   };
 
+  if (!editing) {
+    return (
+      <div className="sil-ingredient-item">
+        <div className="sil-wrapper">
+          <div
+            className="sil-ingredient-line"
+            style={{
+              opacity: ingredient.complete ? ".2" : "1",
+            }}
+          >
+            <label>
+              <input
+                type="checkbox"
+                checked={!!ingredient.complete}
+                onChange={(e) =>
+                  setComplete(ingredient, index, e.target.checked)
+                }
+              />
+              <span
+                className={[
+                  "sil-checkbox material-symbols-rounded",
+                  ingredient.complete ? "sil-checkbox-checked" : "",
+                ]
+                  .filter((c) => !!c)
+                  .join(" ")}
+              >
+                {ingredient.complete ? "check" : ""}
+              </span>
+              <span className="sil-item-text">{ingredient.ingredient}</span>
+            </label>
+          </div>
+          {!!includedInRecipes.length && (
+            <span className="sil-included-in">
+              {includedInRecipes.map((r, i) => (
+                <span key={r._id}>
+                  {r.name}
+                  {i !== includedInRecipes.length - 1 && ", "}
+                </span>
+              ))}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Reorder.Item
       className={classNames("sil-ingredient-item", editing && "editing")}

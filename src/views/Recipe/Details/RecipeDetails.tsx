@@ -16,14 +16,14 @@ import {
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { authStore } from "../../../@modules/stores/auth";
-import { getBreadcrumbs } from "../../../@modules/stores/folders";
 import { useRecipe } from "../../../@modules/stores/recipes";
 import { Recipe } from "../../../@modules/types/recipes";
-import useMediaQuery from "../../../@modules/utils/useMediaQuery";
+import { useBreadcrumbs } from "../../../@modules/utils/useBreadcrumbs";
 import useUpdater from "../../../@modules/utils/useUpdater";
 
 import AppHeader from "../../../components/AppHeader";
 import AppView from "../../../components/AppView";
+import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import IconPickerDialog from "../../../components/Dialogs/IconPickerDialog";
 import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
@@ -38,7 +38,7 @@ export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const { user } = useRecoilValue(authStore);
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 999px)");
+  const breadcrumbs = useBreadcrumbs(recipeId);
 
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -98,7 +98,11 @@ export default function RecipeDetailsView() {
     );
     if (confirmed) {
       deleteRecipe(recipe._id);
-      navigate(-1);
+      if (recipe.parent) {
+        navigate(`/folder/${recipe.parent}`);
+      } else {
+        navigate("/");
+      }
     }
   };
 
@@ -164,58 +168,49 @@ export default function RecipeDetailsView() {
       header={
         <AppHeader
           subView
-          before={
-            !isMobile &&
-            recipe.parent && (
-              <Breadcrumbs
-                links={[
-                  { text: "All Recipes", href: "/" },
-                  ...getBreadcrumbs(recipe.parent).map((f) => ({
-                    text: f.text || "Untitled Folder",
-                    href: "/folder/" + f._id,
-                  })),
-                  {
-                    text: recipe.name || "Untitled Recipe",
-                    href: "/recipe/" + recipe._id,
-                  },
-                ]}
-              />
-            )
-          }
+          before={recipe.parent && <Breadcrumbs links={breadcrumbs} />}
         >
           <div className="ra-actions">
             <Button
               title="Edit"
               onClick={() => setEditing(!editing)}
-              variant="naked"
+              variant={editing ? "chip" : "naked"}
             >
               {editing ? "Save" : "Edit"}
             </Button>
 
-            <Button
-              title="Share"
-              onClick={handleShareRecipe}
-              variant="icon"
-              size="xm"
-            >
-              ios_share
-            </Button>
+            {!editing && (
+              <>
+                <Button
+                  title="Share"
+                  onClick={handleShareRecipe}
+                  variant="icon"
+                  size="xm"
+                >
+                  ios_share
+                </Button>
 
-            <Button title="Move recipe" onClick={handleMove} variant="icon">
-              drive_file_move
-            </Button>
-
-            <Button
-              title="Import ingredients"
-              onClick={handleImport}
-              variant="icon"
-            >
-              format_list_bulleted_add
-            </Button>
-
-            <Button title="Delete recipe" onClick={handleDelete} variant="icon">
-              delete
-            </Button>
+                <DropMenu
+                  options={[
+                    {
+                      text: "Move recipe",
+                      onClick: handleMove,
+                      icon: "drive_file_move",
+                    },
+                    {
+                      text: "Import ingredients",
+                      onClick: handleImport,
+                      icon: "format_list_bulleted_add",
+                    },
+                    {
+                      text: "Delete recipe",
+                      onClick: handleDelete,
+                      icon: "delete",
+                    },
+                  ]}
+                />
+              </>
+            )}
           </div>
         </AppHeader>
       }

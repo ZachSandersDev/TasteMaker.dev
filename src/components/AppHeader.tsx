@@ -32,8 +32,8 @@ export default function AppHeader({
       <div className="app-header-content">
         {before}
         {!before && subView && (
-          <Button onClick={() => navigate(-1)} variant="icon">
-            chevron_left
+          <Button onClick={() => navigate(-1)} variant="icon" size="xm">
+            arrow_back_ios_new
           </Button>
         )}
         {children}

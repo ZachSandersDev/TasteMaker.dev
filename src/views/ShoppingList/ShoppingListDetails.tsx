@@ -75,7 +75,7 @@ export default function ShoppingListDetailsView() {
     );
     if (confirmed) {
       deleteList(list._id);
-      navigate(-1);
+      navigate("/shopping-lists");
     }
   };
 
@@ -91,7 +91,7 @@ export default function ShoppingListDetailsView() {
             <Button
               title="Edit"
               onClick={() => setEditing(!editing)}
-              variant="naked"
+              variant={editing ? "chip" : "naked"}
             >
               {editing ? "Save" : "Edit"}
             </Button>

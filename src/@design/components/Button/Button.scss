@@ -48,8 +48,12 @@
 //---//
 
 .ra-button-size-lg {
-  font-size: 1.5em;
+  font-size: 1.15em;
   padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+
+  &.ra-button-chip {
+    padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 2);
+  }
 
   &.ra-button-icon {
     font-size: 1.75em;

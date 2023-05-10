@@ -2,7 +2,7 @@ import { DropMenuOption } from "./DropMenu";
 
 export interface DropMenuDialogProps {
   options: DropMenuOption[];
-  onSelect: (value: string) => void;
+  onSelect: (option: DropMenuOption) => void;
   onClose: () => void;
 }
 
@@ -16,9 +16,9 @@ export default function DropMenuDialog({
       <div className="ra-card drop-menu">
         {options.map((o) => (
           <button
-            key={o.value}
+            key={o.icon + o.text}
             className="drop-menu-item"
-            onClick={() => onSelect(o.value)}
+            onClick={() => onSelect(o)}
             style={{ color: o.color || "" }}
           >
             {o.icon && <i className="material-symbols-rounded">{o.icon}</i>}
