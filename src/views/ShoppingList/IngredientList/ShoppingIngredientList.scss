@@ -1,30 +1,43 @@
 .sil-ingredient-item {
   width: 100%;
   display: flex;
+  overflow: hidden;
+
+  padding-bottom: var(--spacing);
+  border-bottom: 1px solid var(--color-border);
 
   &.editing {
-    padding-bottom: var(--spacing);
-    border-bottom: 1px solid var(--color-border);
+    .sil-wrapper {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .sil-included-in {
+      max-width: none;
+      padding-left: calc(var(--spacing) * 5);
+    }
   }
 }
 
 .sil-wrapper {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  flex: 1;
 }
 
 .sil-ingredient-line {
   display: flex;
   gap: var(--spacing);
-  padding: 0 calc(var(--spacing) * 0.5);
+  padding: calc(var(--spacing) * 0.5);
   position: relative;
   width: fit-content;
   align-items: center;
+  flex: 1;
 
   label {
     display: flex;
     align-items: center;
-    gap: calc(var(--spacing) * 2);
+    gap: calc(var(--spacing) * 1);
 
     cursor: pointer;
 
@@ -56,14 +69,6 @@
   background-color: var(--color-interface-active);
 }
 
-.sil-strikethrough {
-  position: absolute;
-  top: 50%;
-  left: calc(25px + var(--spacing));
-  width: calc(100% - 25px - var(--spacing));
-  border-bottom: 2px solid var(--color-color);
-}
-
 .sil-item-text {
   min-width: 6ch;
   white-space: nowrap;
@@ -72,7 +77,22 @@
 .sil-included-in {
   font-size: 0.8em;
   color: var(--color-placeholder);
-  padding-top: calc(var(--spacing) * 0.5);
-  padding-left: calc(var(--spacing) * 4);
-  flex-shrink: 0;
+  // padding-top: calc(var(--spacing) * 0.5);
+  padding-left: calc(var(--spacing));
+
+  display: flex;
+  gap: 0.5ch;
+  overflow: hidden;
+  flex: 1;
+  justify-content: flex-end;
+
+  @media (max-width: 1000px) {
+    max-width: 15ch;
+  }
+
+  * {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
