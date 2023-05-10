@@ -144,7 +144,9 @@ export default function EditIngredientDialogComponent() {
                 onClick={() => {
                   handleSaveIngredient(i);
                 }}
-                ref={(e) => (optionRefs.current[index] = e)}
+                ref={(e) => {
+                  if (e) optionRefs.current[index] = e;
+                }}
               >
                 {i}
               </button>
