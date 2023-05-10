@@ -24,7 +24,7 @@ export interface ShoppingIngredientListProps {
 export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
   const { list, onReorder, onNew, onDelete } = props;
 
-  const editorRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const editorRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
   const nextTickFocus = useRef<number | null>(null);
 
   const handleKeyDown = (e: KeyboardEvent, index: number) => {
@@ -40,7 +40,7 @@ export function ShoppingIngredientList(props: ShoppingIngredientListProps) {
       editorRefs.current[index - 1]?.focus();
     } else if (
       e.key === "Backspace" &&
-      (e.target as HTMLDivElement).innerHTML === ""
+      !(e.target as HTMLTextAreaElement).value
     ) {
       e.preventDefault();
       onDelete(index);

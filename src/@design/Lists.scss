@@ -40,6 +40,7 @@
   border: none;
 
   transition: background-color 0.25s;
+  &.hover:not(.disabled),
   &:hover:not(.disabled) {
     background-color: var(--color-interface-active);
     color: var(--color-input-color);

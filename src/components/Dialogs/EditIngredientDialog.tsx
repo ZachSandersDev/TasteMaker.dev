@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import Button from "../../@design/components/Button/Button";
@@ -10,36 +10,39 @@ import {
   deleteIngredient,
 } from "../../@modules/api/ingredients";
 
+import { EditIngredientDialog } from "../../@modules/stores/dialogs";
 import { ingredientStore } from "../../@modules/stores/ingredients";
+import classNames from "../../@modules/utils/classNames";
 import SwipeToDelete from "../SwipeToDelete";
 
 import "./EditIngredientDialog.scss";
 
-const editIngredientDialog = atom<{
-  resolve?: (r?: string) => void;
-  reject?: (e: Error) => void;
-  ingredient?: string;
-}>({
-  key: "editIngredientDialog",
-  default: {},
-});
-
 export function editIngredient(ingredient: string) {
   return new Promise<string | undefined>((resolve, reject) => {
-    setRecoil(editIngredientDialog, { resolve, reject, ingredient });
+    setRecoil(EditIngredientDialog, { resolve, reject, payload: ingredient });
   });
 }
 
-export default function EditIngredientDialog() {
+export default function EditIngredientDialogComponent() {
   const { ingredients } = useRecoilValue(ingredientStore);
-  const [{ resolve, reject, ingredient }, setDialogState] =
-    useRecoilState(editIngredientDialog);
+  const [{ resolve, reject, payload: ingredient }, setDialogState] =
+    useRecoilState(EditIngredientDialog);
 
   const [localIngredient, setLocalIngredient] = useState<string>(
     ingredient || ""
   );
 
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  const optionRefs = useRef<HTMLButtonElement[]>([]);
+
+  const filteredIngredients = ingredients
+    .sort()
+    .filter(
+      (i) =>
+        i.toLowerCase().includes(localIngredient.toLowerCase()) &&
+        i.toLowerCase() !== localIngredient.toLowerCase()
+    );
 
   useEffect(() => {
     setLocalIngredient(ingredient || "");
@@ -48,8 +51,20 @@ export default function EditIngredientDialog() {
   useEffect(() => {
     if (resolve && reject && inputRef.current) {
       inputRef.current.focus();
+    } else {
+      setLocalIngredient("");
+      setSelectedIndex(-1);
     }
   }, [resolve, reject]);
+
+  useEffect(() => {
+    if (optionRefs.current[selectedIndex]) {
+      optionRefs.current[selectedIndex].scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [selectedIndex]);
 
   const res = (i?: string) => {
     if (resolve) {
@@ -70,6 +85,22 @@ export default function EditIngredientDialog() {
     if (confirmed) deleteIngredient(i);
   };
 
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp") {
+      setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : -1);
+    } else if (e.key === "ArrowDown") {
+      setSelectedIndex(
+        selectedIndex < filteredIngredients.length - 2
+          ? selectedIndex + 1
+          : filteredIngredients.length - 1
+      );
+    } else if (e.key === "Enter" && filteredIngredients[selectedIndex]) {
+      handleSaveIngredient(filteredIngredients[selectedIndex]);
+    } else if (e.key === "Enter" && localIngredient) {
+      handleSaveIngredient(localIngredient);
+    }
+  };
+
   if (!resolve || !reject) {
     return null;
   }
@@ -85,13 +116,12 @@ export default function EditIngredientDialog() {
           ref={inputRef}
           type="text"
           value={localIngredient || ""}
-          onChange={(e) => setLocalIngredient(e.target.value)}
-          placeholder="ingredient"
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
-              handleSaveIngredient();
-            }
+          onChange={(e) => {
+            setLocalIngredient(e.target.value);
+            setSelectedIndex(-1);
           }}
+          placeholder="ingredient"
+          onKeyUp={handleKeyUp}
           after={
             <Button
               onClick={() => setLocalIngredient("")}
@@ -104,25 +134,22 @@ export default function EditIngredientDialog() {
         />
 
         <div className="edit-ingredient-dialog-content ra-option-list">
-          {ingredients
-            .sort()
-            .filter(
-              (i) =>
-                i.toLowerCase().includes(localIngredient.toLowerCase()) &&
-                i.toLowerCase() !== localIngredient.toLowerCase()
-            )
-            .map((i) => (
-              <SwipeToDelete key={i} onDelete={() => handleDeleteIngredient(i)}>
-                <button
-                  className="ra-option"
-                  onClick={() => {
-                    handleSaveIngredient(i);
-                  }}
-                >
-                  {i}
-                </button>
-              </SwipeToDelete>
-            ))}
+          {filteredIngredients.map((i, index) => (
+            <SwipeToDelete key={i} onDelete={() => handleDeleteIngredient(i)}>
+              <button
+                className={classNames(
+                  "ra-option",
+                  selectedIndex === index && "hover"
+                )}
+                onClick={() => {
+                  handleSaveIngredient(i);
+                }}
+                ref={(e) => (optionRefs.current[index] = e)}
+              >
+                {i}
+              </button>
+            </SwipeToDelete>
+          ))}
         </div>
         <div className="ra-actions">
           <Button onClick={() => res(undefined)} variant="naked" size="sm">

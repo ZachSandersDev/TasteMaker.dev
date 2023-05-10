@@ -35,6 +35,10 @@ export default function mergeIngredients(recipe: Recipe, list: ShoppingList) {
       listI.ingredient = `${(
         Number(rawListI.quantity || 0) + Number(rawRecipeI.quantity || 0)
       )} ${getShortUnit(rawListI.unitOfMeasureID)} ${recipeI.ingredient}`;
+
+      // Add this recipe to the ingredient entry
+      if (!listI.recipeIds) listI.recipeIds = [];
+      listI.recipeIds.push(recipe._id);
     }
 
     // Otherwise, add the recipe ingredient to the end of the list
@@ -43,6 +47,11 @@ export default function mergeIngredients(recipe: Recipe, list: ShoppingList) {
         _id: uuid(),
         ingredient: recipeI.value + " " + recipeI.ingredient,
       };
+
+      // Add this recipe to the ingredient entry
+      if (!newIngredient.recipeIds) newIngredient.recipeIds = [];
+      newIngredient.recipeIds.push(recipe._id);
+
       list.ingredients.push(newIngredient);
     }
   }

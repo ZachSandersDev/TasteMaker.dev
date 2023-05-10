@@ -1,8 +1,10 @@
 import { Reorder, useDragControls } from "framer-motion";
-
 import { KeyboardEvent, forwardRef } from "react";
+import { useRecoilValue } from "recoil";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
+import { recipeStore } from "../../../@modules/stores/recipes";
+import { Recipe } from "../../../@modules/types/recipes";
 import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
 
 import classNames from "../../../@modules/utils/classNames";
@@ -21,6 +23,12 @@ export const ShoppingIngredientItem = forwardRef<
   HTMLTextAreaElement,
   ShoppingIngredientItemProp
 >(({ ingredient, index, onDelete, onUpdate, onKeyDown, editing }, ref) => {
+  const { recipes } = useRecoilValue(recipeStore);
+  const includedInRecipes =
+    ingredient.recipeIds
+      ?.map((id) => recipes.find((r) => r._id === id))
+      .filter((r): r is Recipe => !!r) || [];
+
   const controls = useDragControls();
 
   const setComplete = (
@@ -41,60 +49,71 @@ export const ShoppingIngredientItem = forwardRef<
       dragControls={controls}
     >
       <SwipeToDelete editing={editing} onDelete={() => onDelete(index)}>
-        <div
-          className="sil-ingredient-line"
-          style={{
-            opacity: ingredient.complete ? ".4" : "1",
-          }}
-        >
-          {editing && (
-            <div
-              onPointerDown={(e) => controls.start(e)}
-              style={{ touchAction: "none" }}
-              className="material-symbols-rounded drag-handle"
-            >
-              drag_indicator
-            </div>
-          )}
+        <div className="sil-wrapper">
+          <div
+            className="sil-ingredient-line"
+            style={{
+              opacity: ingredient.complete ? ".4" : "1",
+            }}
+          >
+            {editing && (
+              <div
+                onPointerDown={(e) => controls.start(e)}
+                style={{ touchAction: "none" }}
+                className="material-symbols-rounded drag-handle"
+              >
+                drag_indicator
+              </div>
+            )}
 
-          <label>
-            <input
-              type="checkbox"
-              checked={!!ingredient.complete}
-              onChange={(e) => setComplete(ingredient, index, e.target.checked)}
-            />
-            <span
-              className={[
-                "sil-checkbox material-symbols-rounded",
-                ingredient.complete ? "sil-checkbox-checked" : "",
-              ]
-                .filter((c) => !!c)
-                .join(" ")}
-            >
-              {ingredient.complete ? "check" : ""}
+            {!editing && (
+              <label>
+                <input
+                  type="checkbox"
+                  checked={!!ingredient.complete}
+                  onChange={(e) =>
+                    setComplete(ingredient, index, e.target.checked)
+                  }
+                />
+                <span
+                  className={[
+                    "sil-checkbox material-symbols-rounded",
+                    ingredient.complete ? "sil-checkbox-checked" : "",
+                  ]
+                    .filter((c) => !!c)
+                    .join(" ")}
+                >
+                  {ingredient.complete ? "check" : ""}
+                </span>
+              </label>
+            )}
+
+            {ingredient.complete && !editing && (
+              <div className="sil-strikethrough" />
+            )}
+
+            {editing ? (
+              <MultilineInput
+                className="sil-item-text"
+                value={ingredient.ingredient}
+                placeholder="Shopping item"
+                onChange={(v) => {
+                  const newIngredient = structuredClone(ingredient);
+                  newIngredient.ingredient = v;
+                  onUpdate(newIngredient, index);
+                }}
+                onKeyDown={onKeyDown}
+                ref={ref}
+                variant="naked"
+              />
+            ) : (
+              <span className="sil-item-text">{ingredient.ingredient}</span>
+            )}
+          </div>
+          {!!includedInRecipes.length && (
+            <span className="sil-included-in">
+              {includedInRecipes.map((r) => r.name).join(", ")}
             </span>
-          </label>
-
-          {ingredient.complete && !editing && (
-            <div className="sil-strikethrough" />
-          )}
-
-          {editing ? (
-            <MultilineInput
-              className="sil-item-text"
-              value={ingredient.ingredient}
-              placeholder="Shopping item"
-              onChange={(v) => {
-                const newIngredient = structuredClone(ingredient);
-                newIngredient.ingredient = v;
-                onUpdate(newIngredient, index);
-              }}
-              onKeyDown={onKeyDown}
-              ref={ref}
-              variant="naked"
-            />
-          ) : (
-            <span className="sil-item-text">{ingredient.ingredient}</span>
           )}
         </div>
       </SwipeToDelete>

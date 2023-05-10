@@ -33,7 +33,6 @@ export async function getList(listId: string) {
 }
 
 export const saveList = debounce((list: ShoppingList) => {
-  console.log("Saving shopping list");
   return set(child(getListRef(), list._id), stripItemID(list));
 }, 500);
 

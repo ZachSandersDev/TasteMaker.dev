@@ -9,6 +9,7 @@ export interface ShoppingList {
 export interface ShoppingListIngredient {
   _id: string;
   ingredient: string;
+  recipeIds?: string[];
   complete?: boolean;
 }
 

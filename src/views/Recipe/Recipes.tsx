@@ -71,14 +71,12 @@ export default function RecipesView() {
     );
   };
 
-  const handleClick = (id: string | number | undefined, isRecipe: boolean) => {
-    if (id === undefined) throw new Error("No ID passed to handleNavigate");
+  const handleRecipeClick = (recipe: Recipe) => {
+    navigate(`/recipe/${recipe._id}`);
+  };
 
-    if (isRecipe) {
-      navigate(`/recipe/${id}`);
-    } else {
-      navigate(`/folder/${id}`);
-    }
+  const handleFolderClick = (folder: Folder) => {
+    navigate(`/folder/${folder._id}`);
   };
 
   const handleDeleteFolder = async () => {
@@ -208,7 +206,11 @@ export default function RecipesView() {
         )}
       </div>
 
-      <RecipeTree folderId={folder?._id} onClick={handleClick} />
+      <RecipeTree
+        folderId={folder?._id}
+        onRecipeClick={handleRecipeClick}
+        onFolderClick={handleFolderClick}
+      />
     </AppView>
   );
 }

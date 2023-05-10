@@ -8,6 +8,7 @@ import { RecipeSelectorDialogAtom } from "../../@modules/stores/dialogs";
 import { folderStore } from "../../@modules/stores/folders";
 import { recipeStore } from "../../@modules/stores/recipes";
 
+import { Folder } from "../../@modules/types/folder";
 import { Recipe } from "../../@modules/types/recipes";
 import RecipeTree from "../RecipeTree/RecipeTree";
 
@@ -55,12 +56,12 @@ export default function RecipeSelectorDialog() {
     setDialogState({});
   };
 
-  const handleClick = (id: string | number, isRecipe: boolean) => {
-    if (isRecipe) {
-      return res(recipes.find((r) => r._id === String(id)));
-    }
+  const handleRecipeClick = (recipe: Recipe) => {
+    res(recipe);
+  };
 
-    setFolderStack([...folderStack, String(id)]);
+  const handleFolderClick = (folder: Folder) => {
+    setFolderStack([...folderStack, String(folder._id)]);
   };
 
   const currentFolder = folders.find((f) => f._id === folderStack.at(-1));
@@ -102,7 +103,8 @@ export default function RecipeSelectorDialog() {
             folderOnly={folderOnly}
             folderId={currentFolder?._id}
             disablePathUnder={disablePathUnder}
-            onClick={handleClick}
+            onRecipeClick={handleRecipeClick}
+            onFolderClick={handleFolderClick}
           />
         </div>
 

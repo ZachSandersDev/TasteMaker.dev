@@ -2,23 +2,27 @@ import { useRecoilValue } from "recoil";
 
 import { folderStore } from "../../@modules/stores/folders";
 import { recipeStore } from "../../@modules/stores/recipes";
+import { Folder } from "../../@modules/types/folder";
+import { Recipe } from "../../@modules/types/recipes";
 
 import { RecipeItem } from "../RecipeItem";
 
 import { FolderItem } from "./FolderItem";
 
 export interface RecipeTreeProps {
-  folderId?: string | number;
+  folderId?: string;
   folderOnly?: boolean;
   disablePathUnder?: string;
-  onClick: (id: string | number, isRecipe: boolean) => void;
+  onRecipeClick: (recipe: Recipe) => void;
+  onFolderClick: (folder: Folder) => void;
 }
 
 export default function RecipeTree({
   folderId,
   folderOnly,
   disablePathUnder,
-  onClick,
+  onRecipeClick,
+  onFolderClick,
 }: RecipeTreeProps) {
   const { folders } = useRecoilValue(folderStore);
   const { recipes } = useRecoilValue(recipeStore);
@@ -44,7 +48,7 @@ export default function RecipeTree({
           <FolderItem
             key={folder._id}
             folder={folder}
-            onClick={() => onClick(folder._id, false)}
+            onClick={() => onFolderClick(folder)}
           />
         ))}
 
@@ -61,7 +65,7 @@ export default function RecipeTree({
           <RecipeItem
             key={recipe._id}
             recipe={recipe}
-            onClick={() => onClick(recipe._id || "", true)}
+            onClick={() => onRecipeClick(recipe)}
             disabled={folderOnly}
           />
         ))}

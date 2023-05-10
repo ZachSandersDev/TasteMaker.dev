@@ -12,3 +12,8 @@ export const RecipeSelectorDialogAtom = atom<DialogState<Recipe | string, { fold
   key: "recipeSelectorDialog",
   default: {},
 });
+
+export const EditIngredientDialog = atom<DialogState<string, string>>({
+  key: "editIngredientDialog",
+  default: {},
+});
