@@ -98,7 +98,11 @@ export default function RecipeDetailsView() {
     );
     if (confirmed) {
       deleteRecipe(recipe._id);
-      navigate(-1);
+      if (recipe.parent) {
+        navigate(`/folder/${recipe.parent}`);
+      } else {
+        navigate("/");
+      }
     }
   };
 

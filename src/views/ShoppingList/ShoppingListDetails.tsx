@@ -75,7 +75,7 @@ export default function ShoppingListDetailsView() {
     );
     if (confirmed) {
       deleteList(list._id);
-      navigate(-1);
+      navigate("/shopping-lists");
     }
   };
 
