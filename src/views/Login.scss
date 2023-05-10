@@ -2,8 +2,9 @@
   padding: 0 !important;
 
   .ra-app-title {
-    width: 100%;
-    text-align: center;
+    max-width: 30ch;
+    font-size: 2.5em;
+    margin-bottom: calc(var(--spacing) * 5);
   }
 }
 
@@ -12,7 +13,6 @@
   flex-direction: column;
 
   width: 100%;
-  margin: auto;
   max-width: 30ch;
 
   gap: calc(var(--spacing) * 2);

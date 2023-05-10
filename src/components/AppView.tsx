@@ -11,6 +11,7 @@ export interface AppViewProps {
   header?: ReactElement;
   before?: ReactElement;
   className?: string;
+  center?: boolean;
 }
 
 export default function AppView({
@@ -18,6 +19,7 @@ export default function AppView({
   before,
   children,
   className,
+  center,
 }: PropsWithChildren<AppViewProps>) {
   const topObserver = useRef<HTMLDivElement>(null);
   const bottomObserver = useRef<HTMLDivElement>(null);
@@ -64,7 +66,11 @@ export default function AppView({
       {/* <div className="ra-sentinel-container"> */}
       <div className="top-observer" ref={topObserver}></div>
       <div className="ra-before-container">{before}</div>
-      <div className="ra-view-content">{children}</div>
+      <div
+        className={classNames("ra-view-content", center && "absolute-center")}
+      >
+        {children}
+      </div>
       <div className="bottom-observer" ref={bottomObserver}></div>
       {/* </div> */}
     </div>
