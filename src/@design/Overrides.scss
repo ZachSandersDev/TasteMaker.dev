@@ -2,10 +2,6 @@ body {
   margin: 0;
   font-size: 1.15rem;
 
-  @media (min-width: 1000px) {
-    font-size: 1em;
-  }
-
   background-color: var(--color-background);
   color: var(--color-color);
 }

@@ -14,7 +14,8 @@
   padding-bottom: calc(var(--spacing) * 2);
 }
 
-.ra-actions {
+.ra-actions,
+.ra-actions-left {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -26,8 +27,14 @@
   }
 }
 
+.ra-actions-left {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: var(--spacing);
+}
+
 .ra-title {
-  font-size: 1.75rem;
+  font-size: 1.75em;
   font-weight: 300;
   color: var(--color-color);
 
@@ -50,7 +57,7 @@ h1.ra-title {
   width: 100%;
   text-align: center;
   font-family: "Kalam", sans-serif;
-  font-size: 2.5rem;
+  font-size: 2.5em;
 }
 
 .ra-error-message {
