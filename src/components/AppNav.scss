@@ -64,7 +64,7 @@
   width: 60px;
   text-decoration: none;
 
-  font-size: 0.9rem;
+  font-size: 0.9em;
   font-weight: 700;
   transition: all 0.25s;
 
@@ -74,17 +74,17 @@
   }
 
   i {
-    font-size: 1.35rem;
+    font-size: 1.35em;
   }
 
   @media (min-width: 1000px) {
     flex-direction: row;
     justify-content: flex-start;
     gap: calc(var(--spacing) * 2);
-    font-size: 1rem;
+    font-size: 1em;
 
     i {
-      font-size: 1.25rem;
+      font-size: 1.25em;
     }
   }
 }

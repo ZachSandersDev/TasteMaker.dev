@@ -14,3 +14,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </RecoilRoot>
   </React.StrictMode>
 );
+
+if (typeof navigator.serviceWorker !== "undefined") {
+  navigator.serviceWorker.register("/sw.js");
+}

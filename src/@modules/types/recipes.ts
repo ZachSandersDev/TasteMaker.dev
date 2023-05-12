@@ -20,6 +20,7 @@ export interface Ingredient {
   units: string;
   ingredient: string;
   _id: string;
+  subHeading?: boolean;
 }
 
 export interface Step {

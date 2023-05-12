@@ -1,20 +1,25 @@
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import { getFoldersLive } from "../api/folders";
 import { Folder } from "../types/folder";
+import persistentAtom from "../utils/persistentAtom";
 
-export const folderStore = atom<{ listener: () => void, folders: Folder[], loading: boolean }>({
+const FOLDER_PERSIST_KEY = "tm-folder-store";
+
+export const folderStore = persistentAtom<{ listener: () => void, folders: Folder[], loading: boolean }>({
   key: "folderStore",
   default: { listener: () => undefined, loading: false, folders: [] }
-});
+}, FOLDER_PERSIST_KEY, "folders");
 
 export function listenForFolders() {
   const listener = getFoldersLive((folders) => {
     setRecoil(folderStore, (state) => ({ ...state, folders, loading: false }));
   });
 
-  setRecoil(folderStore, (state) => ({ ...state, loading: true, listener }));
+  if (!localStorage.getItem(FOLDER_PERSIST_KEY)) {
+    setRecoil(folderStore, (state) => ({ ...state, loading: true, listener }));
+  }
 }
 
 export function useFolder(folderId?: string): [Folder | undefined, (newFolder: Folder) => void] {

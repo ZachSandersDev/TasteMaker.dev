@@ -72,6 +72,18 @@ export default function RecipeDetailsView() {
     );
   };
 
+  const addNewSection = () => {
+    updateRecipe((r) =>
+      r.ingredients.push({
+        value: "",
+        units: "",
+        ingredient: "",
+        subHeading: true,
+        _id: uuid(),
+      })
+    );
+  };
+
   const addNewStep = () => {
     updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
@@ -276,11 +288,6 @@ export default function RecipeDetailsView() {
           {(recipe.ingredients.length || editing) && (
             <header className="ra-header">
               <h3>Ingredients</h3>
-              {editing && (
-                <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
-                  New Ingredient
-                </Button>
-              )}
             </header>
           )}
 
@@ -289,17 +296,23 @@ export default function RecipeDetailsView() {
             updateRecipe={updateRecipe}
             editing={editing}
           />
+
+          {editing && (
+            <div className="ra-actions-left">
+              <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
+                New Ingredient
+              </Button>
+              <Button iconBefore="add" size="sm" onClick={addNewSection}>
+                New Section
+              </Button>
+            </div>
+          )}
         </div>
 
         <div>
           {(recipe.steps.length || editing) && (
             <header className="ra-header">
               <h3>Steps</h3>
-              {editing && (
-                <Button iconBefore="add" size="sm" onClick={addNewStep}>
-                  New Step
-                </Button>
-              )}
             </header>
           )}
 
@@ -319,6 +332,14 @@ export default function RecipeDetailsView() {
               />
             ))}
           </Reorder.Group>
+
+          {editing && (
+            <div className="ra-actions-left">
+              <Button iconBefore="add" size="sm" onClick={addNewStep}>
+                New Step
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </AppView>

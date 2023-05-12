@@ -46,10 +46,7 @@ export default function StepItem({
       dragListener={false}
       dragControls={controls}
     >
-      <SwipeToDelete
-        className="ingredient-item-container"
-        onDelete={deleteStep}
-      >
+      <SwipeToDelete onDelete={deleteStep} editing={editing}>
         <div className="step-item">
           <div
             onPointerDown={(e) => controls.start(e)}
@@ -59,7 +56,7 @@ export default function StepItem({
             drag_indicator
           </div>
           <MultilineInput
-            placeholder="Instructions"
+            placeholder={`Step ${index + 1}`}
             className="step-input"
             value={step.text}
             onChange={(v) => setStepText(v)}

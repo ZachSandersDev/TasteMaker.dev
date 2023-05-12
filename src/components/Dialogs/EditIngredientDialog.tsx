@@ -37,12 +37,12 @@ export default function EditIngredientDialogComponent() {
   const optionRefs = useRef<HTMLButtonElement[]>([]);
 
   const filteredIngredients = ingredients
-    .sort()
     .filter(
       (i) =>
         i.toLowerCase().includes(localIngredient.toLowerCase()) &&
         i.toLowerCase() !== localIngredient.toLowerCase()
-    );
+    )
+    .sort();
 
   useEffect(() => {
     setLocalIngredient(ingredient || "");
