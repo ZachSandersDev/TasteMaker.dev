@@ -3,6 +3,7 @@ import { Reorder, useDragControls } from "framer-motion";
 import MultilineInput from "../../../../@design/components/MultilineInput/MultilineInput";
 import { Ingredient } from "../../../../@modules/types/recipes";
 
+import classNames from "../../../../@modules/utils/classNames";
 import { editIngredient } from "../../../../components/Dialogs/EditIngredientDialog";
 import SwipeToDelete from "../../../../components/SwipeToDelete";
 
@@ -23,19 +24,31 @@ export default function IngredientItem({
 }: IngredientItemProps) {
   const controls = useDragControls();
 
-  const setIngredientValue = (key: keyof Ingredient, value: string) => {
+  const setIngredientValue = (value: string) => {
     const newIngredient = structuredClone(ingredient);
-    newIngredient[key] = value;
+    newIngredient.value = value;
+    updateIngredient(newIngredient);
+  };
+
+  const setIngredient = (ingredientValue: string) => {
+    const newIngredient = structuredClone(ingredient);
+    newIngredient.ingredient = ingredientValue;
     updateIngredient(newIngredient);
   };
 
   if (!editing) {
     return (
       <div className="ingredient-item">
-        <span>&bull;</span>
-        <span>
-          {ingredient.value} <b>{ingredient.ingredient}</b>
-        </span>
+        {ingredient.subHeading ? (
+          <span className="subheading">{ingredient.value}</span>
+        ) : (
+          <>
+            <span>&bull;</span>
+            <span>
+              {ingredient.value} <b>{ingredient.ingredient}</b>
+            </span>
+          </>
+        )}
       </div>
     );
   }
@@ -47,8 +60,8 @@ export default function IngredientItem({
       dragControls={controls}
       as="div"
     >
-      <SwipeToDelete onDelete={deleteIngredient}>
-        <div className="ingredient-row">
+      <SwipeToDelete onDelete={deleteIngredient} editing={editing}>
+        <div className="ingredient-item">
           <span
             onPointerDown={(e) => controls.start(e)}
             style={{ touchAction: "none" }}
@@ -58,26 +71,33 @@ export default function IngredientItem({
           </span>
 
           <MultilineInput
-            className="value-field"
-            placeholder="amount"
+            className={classNames(
+              "value-field",
+              ingredient.subHeading && "subheading"
+            )}
+            placeholder={ingredient.subHeading ? "Section:" : "amount"}
             value={ingredient.value}
-            onChange={(e) => setIngredientValue("value", e)}
+            onChange={(value) => setIngredientValue(value)}
             variant="naked"
           />
 
-          <button
-            className="ingredient-field ra-input"
-            onClick={async () => {
-              const newIngredient = await editIngredient(ingredient.ingredient);
-              if (newIngredient) {
-                setIngredientValue("ingredient", newIngredient);
-              }
-            }}
-          >
-            {ingredient.ingredient || (
-              <span className="placeholder">ingredient</span>
-            )}
-          </button>
+          {!ingredient.subHeading && (
+            <button
+              className="ingredient-field ra-input"
+              onClick={async () => {
+                const newIngredient = await editIngredient(
+                  ingredient.ingredient
+                );
+                if (newIngredient) {
+                  setIngredient(newIngredient);
+                }
+              }}
+            >
+              {ingredient.ingredient || (
+                <span className="placeholder">ingredient</span>
+              )}
+            </button>
+          )}
         </div>
       </SwipeToDelete>
     </Reorder.Item>

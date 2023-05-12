@@ -11,7 +11,9 @@ interface ParsedIngredientItem<T> {
 }
 
 function parseIngredients(ingredients: Ingredient[]): ParsedIngredientItem<Ingredient>[] {
-  return ingredients.map((li) => ({ raw: parseIngredient(li.value + " " + li.ingredient)[0], original: li }));
+  return ingredients
+    .filter(i => !i.subHeading)
+    .map((li) => ({ raw: parseIngredient(li.value + " " + li.ingredient)[0], original: li }));
 }
 
 function parseShoppingIngredients(ingredients: ShoppingListIngredient[]): ParsedIngredientItem<ShoppingListIngredient>[] {

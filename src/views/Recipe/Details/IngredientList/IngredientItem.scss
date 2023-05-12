@@ -8,42 +8,29 @@
   gap: calc(var(--spacing) * 0.5);
 }
 
-.ingredient-row {
+.ingredient-item {
   display: flex;
   align-items: center;
   gap: calc(var(--spacing) * 1);
-}
 
-table.ingredient-list {
-  border-collapse: collapse;
-  width: 100%;
-  white-space: nowrap;
-
-  tr {
-    td:first-child {
-      padding-right: calc(var(--spacing) * 0.5);
-    }
-    td {
-      padding: calc(var(--spacing) * 0.25) calc(var(--spacing) * 0.5);
-    }
+  .subheading {
+    font-weight: 500;
+    font-style: italic;
   }
 
-  overflow: hidden;
-}
-
-div.ingredient-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-
-  background-color: var(--color-background);
-  gap: calc(var(--spacing) * 1);
+  &:not(:first-child) .subheading {
+    margin-top: calc(var(--spacing) * 2);
+  }
 }
 
 .value-field {
   text-align: right;
   width: 10ch;
+
+  &.subheading {
+    width: 100%;
+    text-align: left;
+  }
 }
 
 .ingredient-field {
