@@ -1,20 +1,25 @@
-import { atom, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
 import { getListsLive } from "../api/shoppingLists";
 import { ShoppingList } from "../types/shoppingLists";
+import persistentAtom from "../utils/persistentAtom";
 
-export const listStore = atom<{ listener: () => void, loading: boolean, lists: ShoppingList[] }>({
+const LIST_PERSIST_KEY = "tm-list-store";
+
+export const listStore = persistentAtom<{ loading: boolean, lists: ShoppingList[] }>({
   key: "listStore",
-  default: { listener: () => undefined, loading: false, lists: [] }
-});
+  default: { loading: false, lists: [] }
+}, LIST_PERSIST_KEY, "lists");
 
 export function listenForLists() {
-  const listener = getListsLive((lists) => {
+  getListsLive((lists) => {
     setRecoil(listStore, (state) => ({ ...state, lists, loading: false }));
   });
 
-  setRecoil(listStore, (state) => ({ ...state, loading: true, listener }));
+  if (!localStorage.getItem(LIST_PERSIST_KEY)) {
+    setRecoil(listStore, (state) => ({ ...state, loading: true, }));
+  }
 }
 
 export function useList(listId: string): [ShoppingList | undefined, (newList: ShoppingList) => void] {

@@ -1,21 +1,26 @@
-import { atom, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { setRecoil } from "recoil-nexus";
 
 import { getRecipesLive } from "../api/recipes";
 import { Recipe } from "../types/recipes";
+import persistentAtom from "../utils/persistentAtom";
 
-export const recipeStore = atom<{ listener: () => void, loading: boolean, recipes: Recipe[] }>({
+const RECIPE_PERSIST_KEY = "tm-recipe-store";
+
+export const recipeStore = persistentAtom<{ loading: boolean, recipes: Recipe[] }>({
   key: "recipeStore",
-  default: { listener: () => undefined, loading: false, recipes: [] }
-});
+  default: { loading: false, recipes: [] }
+}, RECIPE_PERSIST_KEY, "recipes");
 
 export function listenForRecipes() {
-  const listener = getRecipesLive((recipes) => {
+  getRecipesLive((recipes) => {
     setRecoil(recipeStore, (state) => ({ ...state, recipes, loading: false }));
   });
 
-  setRecoil(recipeStore, (state) => ({ ...state, loading: true, listener }));
+  if (!localStorage.getItem(RECIPE_PERSIST_KEY)) {
+    setRecoil(recipeStore, (state) => ({ ...state, loading: true }));
+  }
 }
 
 export function useRecipe(recipeId: string): [Recipe | undefined, (newRecipe: Recipe) => void] {

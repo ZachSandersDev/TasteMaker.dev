@@ -7,21 +7,25 @@ import {
   User
 } from "firebase/auth";
 import debounce from "lodash/debounce";
-import { atom } from "recoil";
 
 import { setRecoil } from "recoil-nexus";
 
 import { app } from "../api/firebase";
+import persistentAtom from "../utils/persistentAtom";
 
-export const authStore = atom<{ loading: boolean, user?: User }>({
+const AUTH_PERSIST_KEY = "tm-auth-store";
+
+export const authStore = persistentAtom<{ loading: boolean, user?: User }>({
   key: "authStore",
-  default: { loading: true, user: undefined }
-});
+  default: { loading: true, user: undefined },
+}, AUTH_PERSIST_KEY, "user");
 
 export function listenForAuth() {
   const auth = getAuth(app);
 
-  setRecoil(authStore, state => ({ ...state, loading: true }));
+  if (!localStorage.getItem(AUTH_PERSIST_KEY)) {
+    setRecoil(authStore, state => ({ ...state, loading: true }));
+  }
 
   onAuthStateChanged(auth, debounce(async (user) => {
     if (user) {
