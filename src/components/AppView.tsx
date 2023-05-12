@@ -42,7 +42,7 @@ export default function AppView({
         setRecoil(navStore, newState);
       },
       {
-        rootMargin: `-${headerHeight - 1}px 0px 0px 0px`,
+        rootMargin: `-${(headerHeight || 50) - 1}px 0px 0px 0px`,
       }
     );
 

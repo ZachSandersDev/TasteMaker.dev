@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useParams } from "react-router";
 
 import { getPublicRecipe } from "../@modules/api/recipes";
-import { Recipe } from "../@modules/types/recipes";
+import useLoader from "../@modules/utils/useLoader";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import IconPickerDialog from "../components/Dialogs/IconPickerDialog";
 import ImageUpload from "../components/ImageUpload";
+
+import Loading from "../components/Loading";
 
 import IngredientList from "./Recipe/Details/IngredientList/IngredientList";
 import StepItem from "./Recipe/Details/StepList/StepItem";
@@ -16,18 +18,20 @@ import "./Recipe/Details/RecipeDetails.scss";
 export default function PublicRecipeView() {
   const { userId, recipeId } = useParams();
 
-  const [recipe, setRecipe] = useState<Recipe>();
+  const recipeLoader = useCallback(async () => {
+    if (!userId || !recipeId) return undefined;
 
-  useEffect(() => {
-    (async () => {
-      if (userId && recipeId) {
-        const recipe = await getPublicRecipe(userId, recipeId);
-        if (!recipe) return;
-        setRecipe(recipe);
-        document.title = recipe.name || "Untitled Recipe";
-      }
-    })();
+    const recipe = await getPublicRecipe(userId, recipeId);
+
+    document.title = recipe?.name || "TasteMaker.dev";
+    return recipe;
   }, [userId, recipeId]);
+
+  const { loading, data: recipe } = useLoader(recipeLoader, true);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   if (!recipe) {
     return (
