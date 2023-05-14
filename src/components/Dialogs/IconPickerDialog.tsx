@@ -2,7 +2,7 @@ import { ReactNode, createElement, useEffect, useRef, useState } from "react";
 import "emoji-picker-element";
 
 import Button from "../../@design/components/Button/Button";
-import { ImageField } from "../../@modules/types/recipes";
+import { ImageField } from "../../@modules/types/imageField";
 import classNames from "../../@modules/utils/classNames";
 
 import ImageUpload from "../ImageUpload";
