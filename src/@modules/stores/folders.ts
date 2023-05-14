@@ -7,19 +7,19 @@ import persistentAtom from "../utils/persistentAtom";
 
 const FOLDER_PERSIST_KEY = "tm-folder-store";
 
-export const folderStore = persistentAtom<{ listener: () => void, folders: Folder[], loading: boolean }>({
+export const folderStore = persistentAtom<{ folders: Folder[], loading: boolean }>({
   key: "folderStore",
-  default: { listener: () => undefined, loading: false, folders: [] }
+  default: { loading: false, folders: [] }
 }, FOLDER_PERSIST_KEY, "folders");
 
 export function listenForFolders() {
-  const listener = getFoldersLive((folders) => {
+  if (!localStorage.getItem(FOLDER_PERSIST_KEY)) {
+    setRecoil(folderStore, (state) => ({ ...state, loading: true }));
+  }
+
+  return getFoldersLive((folders) => {
     setRecoil(folderStore, (state) => ({ ...state, folders, loading: false }));
   });
-
-  if (!localStorage.getItem(FOLDER_PERSIST_KEY)) {
-    setRecoil(folderStore, (state) => ({ ...state, loading: true, listener }));
-  }
 }
 
 export function useFolder(folderId?: string): [Folder | undefined, (newFolder: Folder) => void] {

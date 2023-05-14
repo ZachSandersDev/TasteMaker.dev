@@ -14,11 +14,11 @@ export const ingredientStore = persistentAtom<{
 }, INGREDIENT_PERSIST_KEY, "ingredients");
 
 export function listenForIngredients() {
-  getIngredientsLive((ingredients) => {
-    setRecoil(ingredientStore, (state) => ({ ...state, ingredients: Object.keys(ingredients).sort(), loading: false }));
-  });
-
   if (!localStorage.getItem(INGREDIENT_PERSIST_KEY)) {
     setRecoil(ingredientStore, (state) => ({ ...state, loading: true }));
   }
+
+  return getIngredientsLive((ingredients) => {
+    setRecoil(ingredientStore, (state) => ({ ...state, ingredients: Object.keys(ingredients).sort(), loading: false }));
+  });
 }

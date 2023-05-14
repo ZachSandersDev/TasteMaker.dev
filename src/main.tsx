@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import RecoilNexus from "recoil-nexus";
 
+import { listenForAuth } from "./@modules/stores/auth";
 import Shell from "./components/Shell";
+
 import "./@design/@EPDesign.scss";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -18,3 +20,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 if (typeof navigator.serviceWorker !== "undefined") {
   navigator.serviceWorker.register("/sw.js");
 }
+
+listenForAuth();

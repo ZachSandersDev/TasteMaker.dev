@@ -13,13 +13,18 @@ export const listStore = persistentAtom<{ loading: boolean, lists: ShoppingList[
 }, LIST_PERSIST_KEY, "lists");
 
 export function listenForLists() {
-  getListsLive((lists) => {
-    setRecoil(listStore, (state) => ({ ...state, lists, loading: false }));
-  });
-
   if (!localStorage.getItem(LIST_PERSIST_KEY)) {
     setRecoil(listStore, (state) => ({ ...state, loading: true, }));
   }
+
+  const listener = getListsLive((lists) => {
+    setRecoil(listStore, (state) => ({ ...state, lists, loading: false }));
+  });
+
+  return () => {
+    listener();
+    setRecoil(listStore, () => ({ lists: [], loading: false }));
+  };
 }
 
 export function useList(listId: string): [ShoppingList | undefined, (newList: ShoppingList) => void] {

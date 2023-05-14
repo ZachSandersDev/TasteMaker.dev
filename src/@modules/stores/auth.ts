@@ -7,11 +7,12 @@ import {
   User
 } from "firebase/auth";
 import debounce from "lodash/debounce";
-
 import { setRecoil } from "recoil-nexus";
 
 import { app } from "../api/firebase";
 import persistentAtom from "../utils/persistentAtom";
+
+import { loadAllData, unloadAllData } from "./dataLoader";
 
 const AUTH_PERSIST_KEY = "tm-auth-store";
 
@@ -25,13 +26,16 @@ export function listenForAuth() {
 
   if (!localStorage.getItem(AUTH_PERSIST_KEY)) {
     setRecoil(authStore, state => ({ ...state, loading: true }));
+    loadAllData();
   }
 
   onAuthStateChanged(auth, debounce(async (user) => {
     if (user) {
       setRecoil(authStore, state => ({ ...state, loading: false, user }));
+      loadAllData();
     } else {
       setRecoil(authStore, state => ({ ...state, loading: false, user: undefined }));
+      unloadAllData();
     }
   }, 200));
 }
