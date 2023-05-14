@@ -14,6 +14,10 @@
 
   background-color: var(--color-background);
   color: var(--color-color);
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    height: 100%;
+  }
 }
 
 .ra-before-container {

@@ -16,6 +16,7 @@ import {
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { authStore } from "../../../@modules/stores/auth";
+import { profileStore } from "../../../@modules/stores/profile";
 import { useRecipe } from "../../../@modules/stores/recipes";
 import { Recipe } from "../../../@modules/types/recipes";
 import { useBreadcrumbs } from "../../../@modules/utils/useBreadcrumbs";
@@ -37,6 +38,8 @@ import "./RecipeDetails.scss";
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const { user } = useRecoilValue(authStore);
+  const { profile } = useRecoilValue(profileStore);
+
   const navigate = useNavigate();
   const breadcrumbs = useBreadcrumbs(recipeId);
 
@@ -244,7 +247,9 @@ export default function RecipeDetailsView() {
           onImageChange={handleNewIcon}
           disabled={!editing}
         />
+      </div>
 
+      <div className="ra-header">
         {editing ? (
           <MultilineInput
             className="ra-title"

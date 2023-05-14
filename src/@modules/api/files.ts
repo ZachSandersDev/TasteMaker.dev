@@ -4,13 +4,20 @@ import { getRecoil } from "recoil-nexus";
 import { v4 as uuid } from "uuid";
 
 import { authStore } from "../stores/auth";
-import { ImageField } from "../types/recipes";
+
+import { ImageField } from "../types/imageField";
 
 import { app } from "./firebase";
 
 const BANNER_COMPRESSION: CompressionOptions = {
   maxSizeMB: 0.5,
   maxWidthOrHeight: 1920,
+  useWebWorker: true,
+};
+
+const PROFILE_IMAGE_COMPRESSION: CompressionOptions = {
+  maxSizeMB: 0.5,
+  maxWidthOrHeight: 200,
   useWebWorker: true,
 };
 
@@ -43,6 +50,10 @@ async function uploadImageInternal(imgFile: File, compressionOptions: Compressio
 
 export function uploadBannerImage(imgFile: File): Promise<ImageField> {
   return uploadImageInternal(imgFile, BANNER_COMPRESSION);
+}
+
+export function uploadProfileImage(imgFile: File): Promise<ImageField> {
+  return uploadImageInternal(imgFile, PROFILE_IMAGE_COMPRESSION);
 }
 
 export function uploadIconImage(imgFile: File): Promise<ImageField> {

@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import RecoilNexus from "recoil-nexus";
 
 import Shell from "./components/Shell";
+
 import "./@design/@EPDesign.scss";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

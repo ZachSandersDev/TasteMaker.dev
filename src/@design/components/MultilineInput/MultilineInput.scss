@@ -55,7 +55,7 @@
 
 .multiline-input.naked > textarea,
 .multiline-input.naked::after {
-  padding: calc(var(--spacing) * 0.5) var(--spacing);
+  padding: calc(var(--spacing) * 0.5);
   border-radius: calc(var(--spacing) * 0.5);
 }
 

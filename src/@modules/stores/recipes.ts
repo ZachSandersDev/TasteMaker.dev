@@ -14,13 +14,18 @@ export const recipeStore = persistentAtom<{ loading: boolean, recipes: Recipe[] 
 }, RECIPE_PERSIST_KEY, "recipes");
 
 export function listenForRecipes() {
-  getRecipesLive((recipes) => {
-    setRecoil(recipeStore, (state) => ({ ...state, recipes, loading: false }));
-  });
-
   if (!localStorage.getItem(RECIPE_PERSIST_KEY)) {
     setRecoil(recipeStore, (state) => ({ ...state, loading: true }));
   }
+
+  const listener = getRecipesLive((recipes) => {
+    setRecoil(recipeStore, (state) => ({ ...state, recipes, loading: false }));
+  });
+
+  return () => {
+    listener();
+    setRecoil(recipeStore, () => ({ recipes: [], loading: false }));
+  };
 }
 
 export function useRecipe(recipeId: string): [Recipe | undefined, (newRecipe: Recipe) => void] {

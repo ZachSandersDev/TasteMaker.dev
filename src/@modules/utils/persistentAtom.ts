@@ -16,7 +16,11 @@ export default function persistentAtom<T>(options: AtomOptions<T> & { default: T
         onSet
       }) => {
         onSet((newValue) => {
-          localStorage.setItem(persistKey, JSON.stringify(newValue[dataKey]));
+          if (!newValue[dataKey]) {
+            localStorage.removeItem(persistKey);
+          } else {
+            localStorage.setItem(persistKey, JSON.stringify(newValue[dataKey]));
+          }
         });
       }
     ]

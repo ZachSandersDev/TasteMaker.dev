@@ -2,7 +2,7 @@ import { ChangeEvent, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
 import Button from "../@design/components/Button/Button";
-import { ImageField } from "../@modules/types/recipes";
+import { ImageField } from "../@modules/types/imageField";
 import classNames from "../@modules/utils/classNames";
 
 import "./ImageUpload.scss";

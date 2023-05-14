@@ -28,7 +28,7 @@ export default function RecipeTree({
   const { recipes } = useRecoilValue(recipeStore);
 
   if (!folders.length && !recipes.length) {
-    return <span style={{ alignSelf: "center" }}>No recipes yet!</span>;
+    return <span>No recipes yet!</span>;
   }
 
   return (

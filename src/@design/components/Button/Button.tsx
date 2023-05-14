@@ -14,6 +14,7 @@ export interface ButtonProps
   iconBefore?: string;
   iconAfter?: string;
   color?: string;
+  noPadding?: boolean;
 }
 
 export default function Button({
@@ -24,6 +25,7 @@ export default function Button({
   color,
   children,
   className,
+  noPadding,
   ...rest
 }: PropsWithChildren<ButtonProps>) {
   return (
@@ -32,7 +34,8 @@ export default function Button({
         "ra-button",
         `ra-button-size-${size}`,
         `ra-button-${variant}`,
-        className
+        className,
+        noPadding && "ra-button-no-padding"
       )}
       style={{ color }}
       {...rest}
