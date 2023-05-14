@@ -1,3 +1,5 @@
+import { ImageField } from "./imageField";
+
 export interface Recipe {
   _id: string;
   name: string;
@@ -26,11 +28,6 @@ export interface Ingredient {
 export interface Step {
   _id: string;
   text: string;
-}
-
-export interface ImageField {
-  imageId: string;
-  imageUrl: string;
 }
 
 export function setRecipeDefaults(recipie: Partial<Recipe>) {

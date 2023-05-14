@@ -55,6 +55,7 @@ export default function IconPickerDialog({
         disabled={disabled}
         variant="naked"
         size="lg"
+        noPadding
       >
         {imageValue ? (
           <img src={imageValue.imageUrl} />

@@ -10,7 +10,7 @@ const RecipeDetailsView = React.lazy(
   () => import("../views/Recipe/Details/RecipeDetails")
 );
 const RecipesView = React.lazy(() => import("../views/Recipe/Recipes"));
-const SettingsView = React.lazy(() => import("../views/SettingsView"));
+const SettingsView = React.lazy(() => import("../views/Settings/SettingsView"));
 const ShoppingListDetailsView = React.lazy(
   () => import("../views/ShoppingList/ShoppingListDetails")
 );

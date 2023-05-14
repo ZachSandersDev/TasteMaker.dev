@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { useParams } from "react-router";
 
+import { getProfile } from "../@modules/api/profile";
 import { getPublicRecipe } from "../@modules/api/recipes";
 import useLoader from "../@modules/utils/useLoader";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
-import IconPickerDialog from "../components/Dialogs/IconPickerDialog";
 import ImageUpload from "../components/ImageUpload";
 
 import Loading from "../components/Loading";
@@ -14,6 +14,7 @@ import IngredientList from "./Recipe/Details/IngredientList/IngredientList";
 import StepItem from "./Recipe/Details/StepList/StepItem";
 
 import "./Recipe/Details/RecipeDetails.scss";
+import { ProfileImage } from "./Settings/ProfileImage";
 
 export default function PublicRecipeView() {
   const { userId, recipeId } = useParams();
@@ -28,6 +29,16 @@ export default function PublicRecipeView() {
   }, [userId, recipeId]);
 
   const { loading, data: recipe } = useLoader(recipeLoader, true);
+
+  const profileLoader = useCallback(async () => {
+    if (!userId) return undefined;
+    return await getProfile(userId);
+  }, [userId]);
+
+  const { loading: profileLoading, data: profile } = useLoader(
+    profileLoader,
+    true
+  );
 
   if (loading) {
     return <Loading />;
@@ -58,17 +69,17 @@ export default function PublicRecipeView() {
       }
       before={<ImageUpload editing={false} image={recipe.bannerImage} />}
     >
-      <div className="ra-view-header">
-        <IconPickerDialog
-          title="Recipe Icon"
-          emojiValue={recipe.icon}
-          imageValue={recipe.iconImage}
-          placeholder="🗒️"
-          disabled
-        />
-
-        <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>
+      <div className="ra-header">
+        <ProfileImage size="md" profile={profile} />
       </div>
+
+      <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>
+
+      {profile && (
+        <div className="ra-header ra-sub-title">
+          By: {profile?.displayName || "Anonymous User"}
+        </div>
+      )}
 
       <div className="recipe-details-container">
         {(recipe.prepTime || recipe.servingSize) && (

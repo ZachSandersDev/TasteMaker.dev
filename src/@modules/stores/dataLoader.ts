@@ -2,6 +2,7 @@ import { Unsubscribe } from "firebase/database";
 
 import { listenForFolders } from "./folders";
 import { listenForIngredients } from "./ingredients";
+import { listenForMyProfile } from "./profile";
 import { listenForRecipes } from "./recipes";
 import { listenForLists } from "./shoppingLists";
 
@@ -12,19 +13,16 @@ export function loadAllData() {
     return;
   }
 
-  console.log("Loading data!");
-
   unsubscribers.push(
     listenForRecipes(),
     listenForFolders(),
     listenForLists(),
-    listenForIngredients()
+    listenForIngredients(),
+    listenForMyProfile()
   );
 }
 
 export function unloadAllData() {
-  console.log("Unloading data!");
-
   unsubscribers.forEach(u => u());
   unsubscribers.splice(0, unsubscribers.length);
 }

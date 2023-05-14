@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import router from "../@modules/router";
-import { authStore } from "../@modules/stores/auth";
+import { authStore, listenForAuth } from "../@modules/stores/auth";
 import { folderStore } from "../@modules/stores/folders";
 import { recipeStore } from "../@modules/stores/recipes";
 import { listStore } from "../@modules/stores/shoppingLists";
@@ -18,6 +18,10 @@ export default function Shell() {
   const { loading: recipesLoading } = useRecoilValue(recipeStore);
   const { loading: listsLoading } = useRecoilValue(listStore);
   const { loading: foldersLoading } = useRecoilValue(folderStore);
+
+  useEffect(() => {
+    listenForAuth();
+  }, []);
 
   useEffect(() => {
     if (!userLoading && !user && !location.pathname.includes("/public/")) {

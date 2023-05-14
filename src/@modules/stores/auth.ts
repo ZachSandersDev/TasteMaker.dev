@@ -26,6 +26,7 @@ export function listenForAuth() {
 
   if (!localStorage.getItem(AUTH_PERSIST_KEY)) {
     setRecoil(authStore, state => ({ ...state, loading: true }));
+  } else {
     loadAllData();
   }
 
