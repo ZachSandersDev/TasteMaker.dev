@@ -237,17 +237,15 @@ export default function RecipeDetailsView() {
         />
       }
     >
-      <div className="ra-view-header">
-        <IconPickerDialog
-          title="Recipe Icon"
-          emojiValue={recipe.icon}
-          imageValue={recipe.iconImage}
-          placeholder="🗒️"
-          onEmojiChange={handleNewEmojiIcon}
-          onImageChange={handleNewIcon}
-          disabled={!editing}
-        />
-      </div>
+      <IconPickerDialog
+        title="Recipe Icon"
+        emojiValue={recipe.icon}
+        imageValue={recipe.iconImage}
+        placeholder="🗒️"
+        onEmojiChange={handleNewEmojiIcon}
+        onImageChange={handleNewIcon}
+        disabled={!editing}
+      />
 
       <div className="ra-header">
         {editing ? (
