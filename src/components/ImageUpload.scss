@@ -19,6 +19,19 @@
     animation: gradient 5s ease infinite;
   }
 
+  @media (prefers-color-scheme: dark) {
+    &:not(.image) {
+      background: linear-gradient(
+        -90deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05)
+      );
+      background-size: 400% 400%;
+      animation: gradient 5s ease infinite;
+    }
+  }
+
   display: flex;
   align-items: center;
   justify-content: center;
