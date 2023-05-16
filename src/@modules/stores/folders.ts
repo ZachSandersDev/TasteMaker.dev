@@ -57,15 +57,18 @@ export function useBreadcrumbStack(folderId?: string | null) {
   }, {} as Record<string, Folder>);
 
   const folderStack: Folder[] = [];
+  try {
+    let currId: string | undefined = folderId;
+    while (currId) {
+      const curr: Folder | undefined = folderMap[currId];
+      if (!curr) throw new Error("Could not find node " + currId);
 
-  let currId: string | undefined = folderId;
-  while (currId) {
-    const curr: Folder | undefined = folderMap[currId];
-    if (!curr) throw new Error("Could not find node " + currId);
+      folderStack.push(curr);
+      currId = curr.parent;
+    }
 
-    folderStack.push(curr);
-    currId = curr.parent;
+    return folderStack.reverse();
+  } catch {
+    return [];
   }
-
-  return folderStack.reverse();
 }
