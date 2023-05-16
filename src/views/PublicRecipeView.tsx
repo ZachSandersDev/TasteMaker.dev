@@ -62,11 +62,11 @@ export default function PublicRecipeView() {
 
   return (
     <AppView
-      header={
-        <AppHeader height="fit-content">
-          <h1 className="ra-app-title">TasteMaker.dev</h1>
-        </AppHeader>
-      }
+      // header={
+      // <AppHeader height="fit-content">
+      //   <h1 className="ra-app-title">TasteMaker.dev</h1>
+      // </AppHeader>
+      // }
       before={<ImageUpload editing={false} image={recipe.bannerImage} />}
     >
       <div className="ra-header">

@@ -36,7 +36,7 @@
   margin: 0 auto;
 
   flex: 1;
-  padding: 0 calc(var(--spacing) * 1.5)
+  padding: var(--spacing) calc(var(--spacing) * 1.5)
     calc(var(--app-nav-size) + var(--spacing) * 3) calc(var(--spacing) * 1.5);
 
   background-color: var(--color-background);

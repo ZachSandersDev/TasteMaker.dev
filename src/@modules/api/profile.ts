@@ -20,7 +20,7 @@ function getProfileRef(userId: string) {
   return child(db, `${userId}/profile`);
 }
 
-export function getMyProfileLive(callback: (r: Profile[]) => void) {
+export function getMyProfileLive(callback: (r: Profile) => void) {
   return onValue(getMyProfileRef(), (snapshot) => {
     callback(snapshot.val());
   });
