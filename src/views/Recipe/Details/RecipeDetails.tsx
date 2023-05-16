@@ -16,7 +16,6 @@ import {
 } from "../../../@modules/api/files";
 import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
 import { authStore } from "../../../@modules/stores/auth";
-import { profileStore } from "../../../@modules/stores/profile";
 import { useRecipe } from "../../../@modules/stores/recipes";
 import { Recipe } from "../../../@modules/types/recipes";
 import { useBreadcrumbs } from "../../../@modules/utils/useBreadcrumbs";
@@ -38,7 +37,6 @@ import "./RecipeDetails.scss";
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const { user } = useRecoilValue(authStore);
-  const { profile } = useRecoilValue(profileStore);
 
   const navigate = useNavigate();
   const breadcrumbs = useBreadcrumbs(recipeId);
@@ -147,6 +145,17 @@ export default function RecipeDetailsView() {
     });
   };
 
+  const handleRemoveIcons = () => {
+    if (recipe?.iconImage?.imageId) {
+      deleteImage(recipe.iconImage.imageId);
+    }
+
+    updateRecipe((r) => {
+      delete r.iconImage;
+      delete r.icon;
+    });
+  };
+
   const handleShareRecipe = async () => {
     if (!recipe?._id || !user?.uid) return;
 
@@ -236,17 +245,15 @@ export default function RecipeDetailsView() {
         />
       }
     >
-      <div className="ra-header">
-        <IconPickerDialog
-          title="Recipe Icon"
-          emojiValue={recipe.icon}
-          imageValue={recipe.iconImage}
-          placeholder="🗒️"
-          onEmojiChange={handleNewEmojiIcon}
-          onImageChange={handleNewIcon}
-          disabled={!editing}
-        />
-      </div>
+      <IconPickerDialog
+        title="Recipe Icon"
+        emojiValue={recipe.icon}
+        imageValue={recipe.iconImage}
+        onEmojiChange={handleNewEmojiIcon}
+        onImageChange={handleNewIcon}
+        onRemoveIcon={handleRemoveIcons}
+        disabled={!editing}
+      />
 
       <div className="ra-header">
         {editing ? (

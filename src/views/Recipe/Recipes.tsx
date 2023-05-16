@@ -122,7 +122,7 @@ export default function RecipesView() {
     updateFolder((f) => (f.text = text));
   };
 
-  const handleChangeFolderIcon = (icon: string) => {
+  const handleChangeFolderIcon = (icon?: string) => {
     updateFolder((f) => (f.icon = icon));
   };
 
@@ -179,9 +179,9 @@ export default function RecipesView() {
         <>
           <IconPickerDialog
             title="Folder Icon"
-            placeholder={<i className="material-symbols-rounded">folder</i>}
             emojiValue={folder.icon}
             onEmojiChange={handleChangeFolderIcon}
+            onRemoveIcon={handleChangeFolderIcon}
             emojiOnly
           />
           <div className="ra-header">

@@ -14,13 +14,14 @@ export interface IconPickerDialogProps {
 
   emojiOnly?: boolean;
 
-  emojiValue?: string;
+  emojiValue?: string | null;
   imageValue?: ImageField | null;
-  placeholder: ReactNode;
+  placeholder?: ReactNode;
 
   disabled?: boolean;
   onEmojiChange?: (emoji: string) => void;
   onImageChange?: (imageFile: File) => void;
+  onRemoveIcon?: () => void;
 }
 
 export default function IconPickerDialog({
@@ -31,6 +32,7 @@ export default function IconPickerDialog({
   emojiOnly = false,
   onEmojiChange,
   onImageChange,
+  onRemoveIcon,
   disabled,
 }: IconPickerDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,24 +47,42 @@ export default function IconPickerDialog({
 
   return (
     <>
-      <Button
-        className="icon-picker-button"
-        onClick={() => {
-          if (!disabled) {
-            setIsOpen(true);
-          }
-        }}
-        disabled={disabled}
-        variant="naked"
-        size="lg"
-        noPadding
-      >
-        {imageValue ? (
-          <img src={imageValue.imageUrl} />
-        ) : (
-          emojiValue || placeholder
+      <div className="icon-header">
+        {!imageValue && !emojiValue && !placeholder && !disabled && (
+          <Button
+            className="icon-hidden-option"
+            variant="chip"
+            iconBefore="add"
+            size="sm"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            add icon
+          </Button>
         )}
-      </Button>
+
+        {(imageValue || emojiValue || placeholder) && (
+          <Button
+            className="icon-picker-button"
+            onClick={() => {
+              if (!disabled) {
+                setIsOpen(true);
+              }
+            }}
+            disabled={disabled}
+            variant="icon"
+            size="lg"
+            noPadding
+          >
+            {imageValue ? (
+              <img src={imageValue.imageUrl} />
+            ) : (
+              emojiValue || placeholder
+            )}
+          </Button>
+        )}
+      </div>
 
       {isOpen && (
         <>
@@ -98,18 +118,25 @@ export default function IconPickerDialog({
                     className={classNames(tab === "emoji" && "active")}
                     variant="icon"
                     onClick={() => setTab("emoji")}
-                  >
-                    mood
-                  </Button>
+                    iconBefore="mood"
+                  />
                   <Button
                     className={classNames(tab === "image" && "active")}
                     variant="icon"
                     onClick={() => setTab("image")}
-                  >
-                    image
-                  </Button>
+                    iconBefore="image"
+                  />
                 </div>
               )}
+              <Button
+                onClick={() => {
+                  onRemoveIcon?.();
+                  setIsOpen(false);
+                }}
+                variant="naked"
+              >
+                Remove Icon
+              </Button>
               <Button onClick={() => setIsOpen(false)}>Save</Button>
             </div>
           </div>

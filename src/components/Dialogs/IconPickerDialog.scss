@@ -6,8 +6,29 @@
   --background: var(--color-background);
 }
 
+.icon-header {
+  display: flex;
+  width: 100%;
+  padding: calc(var(--spacing) * 0.5);
+
+  .icon-hidden-option {
+    transition: opacity 0.25s;
+    @media (min-width: 1000px) {
+      opacity: 0;
+    }
+  }
+
+  &:hover {
+    .icon-hidden-option {
+      opacity: 1;
+    }
+  }
+}
+
 .icon-picker-button {
   font-size: 2em;
+  width: 40px;
+  height: 40px;
 
   img {
     width: 50px;
@@ -36,9 +57,11 @@
   }
 
   .ra-actions.center-actions {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex: 1;
+    justify-content: flex-start;
+    // position: absolute;
+    // left: 50%;
+    // transform: translateX(-50%);
 
     .ra-button-icon {
       color: var(--color-nav-color);
