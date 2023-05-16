@@ -32,9 +32,12 @@ export default function AppHeader({
       <div className="app-header-content">
         {before}
         {!before && subView && (
-          <Button onClick={() => navigate(-1)} variant="icon" size="xm">
-            arrow_back_ios_new
-          </Button>
+          <Button
+            onClick={() => navigate(-1)}
+            variant="icon"
+            size="xm"
+            iconBefore="arrow_back_ios_new"
+          />
         )}
         {children}
       </div>

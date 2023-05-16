@@ -34,9 +34,7 @@ export default function DropMenu({ options }: DropMenuProps) {
 
   return (
     <div className="drop-menu-container">
-      <Button variant="icon" onClick={handleClick}>
-        more_horiz
-      </Button>
+      <Button variant="icon" onClick={handleClick} iconBefore="more_horiz" />
 
       {isOpen && (
         <DropMenuDialog

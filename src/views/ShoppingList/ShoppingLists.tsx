@@ -26,9 +26,11 @@ export default function ShoppingListsView() {
       header={
         <AppHeader>
           <div className="ra-actions">
-            <Button onClick={makeNewShoppingList} variant="icon">
-              add
-            </Button>
+            <Button
+              onClick={makeNewShoppingList}
+              variant="icon"
+              iconBefore="add"
+            />
           </div>
         </AppHeader>
       }

@@ -201,9 +201,8 @@ export default function RecipeDetailsView() {
                   onClick={handleShareRecipe}
                   variant="icon"
                   size="xm"
-                >
-                  ios_share
-                </Button>
+                  iconBefore="ios_share"
+                />
 
                 <DropMenu
                   options={[
@@ -237,15 +236,17 @@ export default function RecipeDetailsView() {
         />
       }
     >
-      <IconPickerDialog
-        title="Recipe Icon"
-        emojiValue={recipe.icon}
-        imageValue={recipe.iconImage}
-        placeholder="🗒️"
-        onEmojiChange={handleNewEmojiIcon}
-        onImageChange={handleNewIcon}
-        disabled={!editing}
-      />
+      <div className="ra-header">
+        <IconPickerDialog
+          title="Recipe Icon"
+          emojiValue={recipe.icon}
+          imageValue={recipe.iconImage}
+          placeholder="🗒️"
+          onEmojiChange={handleNewEmojiIcon}
+          onImageChange={handleNewIcon}
+          disabled={!editing}
+        />
+      </div>
 
       <div className="ra-header">
         {editing ? (
@@ -260,7 +261,6 @@ export default function RecipeDetailsView() {
           <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>
         )}
       </div>
-
       <div className="recipe-details-container">
         {(editing || recipe.prepTime || recipe.servingSize) && (
           <section className="ra-list">

@@ -149,45 +149,55 @@ export default function RecipesView() {
                   onClick={handleDeleteFolder}
                   title="Delete Folder"
                   variant="icon"
-                >
-                  delete
-                </Button>
-                <Button onClick={handleMove} title="Move Folder" variant="icon">
-                  drive_file_move
-                </Button>
+                  iconBefore="delete"
+                />
+                <Button
+                  onClick={handleMove}
+                  title="Move Folder"
+                  variant="icon"
+                  iconBefore="drive_file_move"
+                />
               </>
             )}
-            <Button onClick={makeNewFolder} title="New Folder" variant="icon">
-              create_new_folder
-            </Button>
-            <Button onClick={makeNewRecipe} title="New Recipe" variant="icon">
-              add
-            </Button>
+            <Button
+              onClick={makeNewFolder}
+              title="New Folder"
+              variant="icon"
+              iconBefore="create_new_folder"
+            />
+            <Button
+              onClick={makeNewRecipe}
+              title="New Recipe"
+              variant="icon"
+              iconBefore="add"
+            />
           </div>
         </AppHeader>
       }
     >
-      <div className="ra-view-header">
-        {folder ? (
-          <>
-            <IconPickerDialog
-              title="Folder Icon"
-              placeholder={<i className="material-symbols-rounded">folder</i>}
-              emojiValue={folder.icon}
-              onEmojiChange={handleChangeFolderIcon}
-              emojiOnly
-            />
+      {folder ? (
+        <>
+          <IconPickerDialog
+            title="Folder Icon"
+            placeholder={<i className="material-symbols-rounded">folder</i>}
+            emojiValue={folder.icon}
+            onEmojiChange={handleChangeFolderIcon}
+            emojiOnly
+          />
+          <div className="ra-header">
             <MultilineInput
               className="ra-title"
               value={folder.text || "Untitled Folder"}
               onChange={handleRenameFolder}
               variant="naked"
             />
-          </>
-        ) : (
+          </div>
+        </>
+      ) : (
+        <div className="ra-view-header">
           <h2 className="ra-title">All Recipes</h2>
-        )}
-      </div>
+        </div>
+      )}
 
       <RecipeTree
         folderId={folder?._id}

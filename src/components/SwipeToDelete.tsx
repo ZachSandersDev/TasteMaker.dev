@@ -46,9 +46,8 @@ export default function SwipeToDelete({
           variant="icon"
           size="sm"
           color="var(--color-danger)"
-        >
-          clear
-        </Button>
+          iconBefore="clear"
+        />
       )}
     </div>
   );

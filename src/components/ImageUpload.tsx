@@ -44,9 +44,11 @@ export default function ImageUpload({
               : undefined,
           }}
         >
-          <Button style={{ pointerEvents: "none" }} variant="icon">
-            add_photo_alternate
-          </Button>
+          <Button
+            style={{ pointerEvents: "none" }}
+            variant="icon"
+            iconBefore="add_photo_alternate"
+          />
         </label>
         <input
           className="ra-image-upload-file-input"

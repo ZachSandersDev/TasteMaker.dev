@@ -40,14 +40,14 @@ export default function Button({
       style={{ color }}
       {...rest}
     >
-      {iconBefore && (
+      {variant !== "icon" && iconBefore && (
         <i className="material-symbols-rounded ra-button-icon-before">
           {iconBefore}
         </i>
       )}
 
-      {variant === "icon" ? (
-        <i className="material-symbols-rounded">{children}</i>
+      {variant === "icon" && iconBefore ? (
+        <i className="material-symbols-rounded">{iconBefore}</i>
       ) : (
         children
       )}

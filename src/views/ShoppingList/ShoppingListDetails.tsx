@@ -100,17 +100,15 @@ export default function ShoppingListDetailsView() {
               title="Import ingredients from recipe"
               onClick={addRecipe}
               variant="icon"
-            >
-              format_list_bulleted_add
-            </Button>
+              iconBefore="format_list_bulleted_add"
+            />
 
             <Button
               title="Delete list"
               onClick={handleDeleteList}
               variant="icon"
-            >
-              delete
-            </Button>
+              iconBefore="delete"
+            />
           </div>
         </AppHeader>
       }
