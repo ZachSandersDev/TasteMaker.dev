@@ -113,7 +113,7 @@ export default function ShoppingListDetailsView() {
         </AppHeader>
       }
     >
-      <div className="ra-view-header">
+      <div className="ra-header">
         {editing ? (
           <MultilineInput
             className="ra-title"

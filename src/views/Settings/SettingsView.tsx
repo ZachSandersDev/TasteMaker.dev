@@ -29,7 +29,7 @@ export default function SettingsView() {
 
   return (
     <AppView>
-      <header className="ra-view-header">
+      <header className="ra-header">
         <h2 className="ra-title">My Profile:</h2>
       </header>
 

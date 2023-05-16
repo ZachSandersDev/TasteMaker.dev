@@ -35,7 +35,7 @@ export default function ShoppingListsView() {
         </AppHeader>
       }
     >
-      <header className="ra-view-header">
+      <header className="ra-header">
         <h2 className="ra-title">Shopping Lists</h2>
       </header>
 

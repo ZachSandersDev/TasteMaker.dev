@@ -194,7 +194,7 @@ export default function RecipesView() {
           </div>
         </>
       ) : (
-        <div className="ra-view-header">
+        <div className="ra-header">
           <h2 className="ra-title">All Recipes</h2>
         </div>
       )}
