@@ -57,6 +57,9 @@
   width: 30px;
   text-align: center;
 
+  display: flex;
+  align-items: center;
+
   object-fit: cover;
 
   img {

@@ -16,7 +16,9 @@ export const ShoppingListItem = ({ shoppingList }: ShoppingListItemProps) => {
 
   return (
     <div className="ra-option" onClick={handleClick}>
-      <span className="ra-option-icon">🗒️</span>
+      <span className="ra-option-icon">
+        <i className="material-symbols-rounded">notes</i>
+      </span>
       <span style={{ whiteSpace: "pre-wrap" }}>
         {shoppingList.name || "Untitled List"}
       </span>

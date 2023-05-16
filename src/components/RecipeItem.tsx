@@ -25,7 +25,7 @@ export const RecipeItem = ({ onClick, recipe, disabled }: RecipeItemProps) => {
         {recipe.iconImage ? (
           <img src={recipe.iconImage.imageUrl} />
         ) : (
-          recipe.icon || "🗒️"
+          recipe.icon || <i className="material-symbols-rounded">notes</i>
         )}
       </span>
       <span>{recipe.name || "Untitled Recipe"}</span>
