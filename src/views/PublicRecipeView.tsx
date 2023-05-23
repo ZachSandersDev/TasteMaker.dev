@@ -1,46 +1,53 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
 
 import { getProfile } from "../@modules/api/profile";
-import { getPublicRecipe } from "../@modules/api/recipes";
-import useLoader from "../@modules/utils/useLoader";
+import { getRecipe } from "../@modules/api/recipes";
+import { Profile } from "../@modules/types/profile";
+import { Recipe } from "../@modules/types/recipes";
+import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import ImageUpload from "../components/ImageUpload";
 
 import Loading from "../components/Loading";
 
-import IngredientList from "./Recipe/Details/IngredientList/IngredientList";
-import StepItem from "./Recipe/Details/StepList/StepItem";
+import IngredientList from "./Recipe/IngredientList/IngredientList";
+import StepItem from "./Recipe/StepList/StepItem";
 
-import "./Recipe/Details/RecipeDetails.scss";
 import { ProfileImage } from "./Settings/ProfileImage";
+import "./Recipe/RecipeDetails.scss";
 
 export default function PublicRecipeView() {
-  const { userId, recipeId } = useParams();
+  const { userId, recipeId, workspaceId } = useParams();
 
-  const recipeLoader = useCallback(async () => {
-    if (!userId || !recipeId) return undefined;
+  const recipeLoader = useCallback<LoaderFunc<Recipe>>(
+    (cb) => getRecipe({ userId, workspaceId, recipeId }, cb),
+    [userId, workspaceId, recipeId]
+  );
 
-    const recipe = await getPublicRecipe(userId, recipeId);
+  const { loading, data: recipe } = useLoader(
+    recipeLoader,
+    `/recipe/${recipeId}`
+  );
 
-    document.title = recipe?.name || "TasteMaker.dev";
-    return recipe;
-  }, [userId, recipeId]);
-
-  const { loading, data: recipe } = useLoader(recipeLoader, true);
-
-  const profileLoader = useCallback(async () => {
-    if (!userId) return undefined;
-    return await getProfile(userId);
-  }, [userId]);
+  const profileLoader = useCallback<LoaderFunc<Profile>>(
+    (cb) => getProfile(userId || "", cb),
+    [userId]
+  );
 
   const { loading: profileLoading, data: profile } = useLoader(
     profileLoader,
-    true
+    `/profile/${userId}`
   );
 
-  if (loading) {
+  useEffect(() => {
+    if (recipe) {
+      document.title = recipe.name || "TasteMaker.dev";
+    }
+  }, [recipe]);
+
+  if (loading || profileLoading) {
     return <Loading />;
   }
 

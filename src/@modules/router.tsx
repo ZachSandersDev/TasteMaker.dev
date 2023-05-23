@@ -7,9 +7,9 @@ import RootView from "../views/RootView";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
 const RecipeDetailsView = React.lazy(
-  () => import("../views/Recipe/Details/RecipeDetails")
+  () => import("../views/Recipe/RecipeDetails")
 );
-const RecipesView = React.lazy(() => import("../views/Recipe/Recipes"));
+const FolderView = React.lazy(() => import("../views/Folder"));
 const SettingsView = React.lazy(() => import("../views/Settings/SettingsView"));
 const ShoppingListDetailsView = React.lazy(
   () => import("../views/ShoppingList/ShoppingListDetails")
@@ -28,10 +28,35 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <Suspense fallback={<Loading />}>
-            <RecipesView />
+            <FolderView />
           </Suspense>
         ),
       },
+      {
+        path: "/folder/:folderId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <FolderView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/workspace/:userId/:workspaceId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <FolderView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/workspace/:userId/:workspaceId/folder/:folderId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <FolderView />
+          </Suspense>
+        ),
+      },
+
       {
         path: "recipe/:recipeId",
         element: (
@@ -40,6 +65,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "/workspace/:userId/:workspaceId/recipe/:recipeId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <RecipeDetailsView />
+          </Suspense>
+        ),
+      },
+
       {
         path: "shopping-lists",
         element: (
@@ -64,14 +98,6 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "/folder/:folderId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <RecipesView />
-          </Suspense>
-        ),
-      },
     ],
   },
   {
@@ -80,6 +106,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/public/:userId/recipe/:recipeId",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <PublicRecipeView />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/public/workspace/:userId/:workspaceId/recipe/:recipeId",
     element: (
       <Suspense fallback={<Loading />}>
         <PublicRecipeView />

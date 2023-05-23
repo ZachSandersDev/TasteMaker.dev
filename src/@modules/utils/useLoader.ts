@@ -1,3 +1,4 @@
+import { Unsubscribe } from "firebase/database";
 import { useEffect, useState } from "react";
 
 export interface LoaderState<T> {
@@ -5,16 +6,29 @@ export interface LoaderState<T> {
   data?: T;
 }
 
-export default function useLoader<T>(loader: () => Promise<T>, loadingByDefault?: boolean) {
-  const [state, setState] = useState<LoaderState<T>>({ loading: loadingByDefault || false });
+export type LoaderFunc<T> = (callback: (newValue: T | undefined) => void) => Unsubscribe
+
+export default function useLoader<T>(loader: LoaderFunc<T>, cacheKey: string) {
+  const cachedValue = JSON.parse(sessionStorage.getItem(cacheKey) || "0") || undefined;
+  const [state, setState] = useState<LoaderState<T>>({ loading: !cachedValue, data: cachedValue });
 
   useEffect(() => {
-    (async () => {
-      setState({ loading: true });
-      const data = await loader();
-      setState({ loading: false, data });
-    })();
-  }, [loader, setState,]);
+    setState({ loading: !cachedValue, data: cachedValue });
+    const unsub = loader((newData) => {
+      setState({ loading: false, data: newData });
 
-  return { ...state };
+      if (!newData) {
+        sessionStorage.removeItem(cacheKey);
+      } else {
+        sessionStorage.setItem(cacheKey, JSON.stringify(newData));
+      }
+    });
+    return unsub;
+  }, [loader, setState]);
+
+  return {
+    loading: state.loading,
+    data: state.data,
+    setData: (newData: T) => setState({ loading: false, data: newData })
+  };
 }

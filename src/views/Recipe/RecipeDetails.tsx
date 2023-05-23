@@ -1,33 +1,39 @@
 import { Reorder } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
 
-import Breadcrumbs from "../../../@design/components/Breadcrumbs/Breadcrumbs";
-import Button from "../../../@design/components/Button/Button";
+import Breadcrumbs from "../../@design/components/Breadcrumbs/Breadcrumbs";
+import Button from "../../@design/components/Button/Button";
 
-import Input from "../../../@design/components/Input/Input";
-import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
+import Input from "../../@design/components/Input/Input";
+import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import {
   deleteImage,
   uploadBannerImage,
   uploadIconImage,
-} from "../../../@modules/api/files";
-import { deleteRecipe, saveRecipe } from "../../../@modules/api/recipes";
-import { authStore } from "../../../@modules/stores/auth";
-import { useRecipe } from "../../../@modules/stores/recipes";
-import { Recipe } from "../../../@modules/types/recipes";
-import { useBreadcrumbs } from "../../../@modules/utils/useBreadcrumbs";
-import useUpdater from "../../../@modules/utils/useUpdater";
+} from "../../@modules/api/files";
+import {
+  deleteRecipe,
+  getRecipe,
+  saveRecipe,
+} from "../../@modules/api/recipes";
+import { authStore } from "../../@modules/stores/auth";
+import { Recipe } from "../../@modules/types/recipes";
+import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
-import AppHeader from "../../../components/AppHeader";
-import AppView from "../../../components/AppView";
-import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
-import IconPickerDialog from "../../../components/Dialogs/IconPickerDialog";
-import { importRecipe } from "../../../components/Dialogs/ImportRecipeDialog";
-import { selectFolder } from "../../../components/Dialogs/RecipeSelectorDialog";
-import ImageBanner from "../../../components/ImageUpload";
+import useLoader, { LoaderFunc } from "../../@modules/utils/useLoader";
+import useUpdater from "../../@modules/utils/useUpdater";
+
+import AppHeader from "../../components/AppHeader";
+import AppView from "../../components/AppView";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
+import IconPickerDialog from "../../components/Dialogs/IconPickerDialog";
+import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
+import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
+import ImageBanner from "../../components/ImageUpload";
+import Loading from "../../components/Loading";
 
 import IngredientList from "./IngredientList/IngredientList";
 import StepItem from "./StepList/StepItem";
@@ -35,7 +41,7 @@ import StepItem from "./StepList/StepItem";
 import "./RecipeDetails.scss";
 
 export default function RecipeDetailsView() {
-  const { recipeId } = useParams();
+  const { recipeId, userId, workspaceId } = useParams();
   const { user } = useRecoilValue(authStore);
 
   const navigate = useNavigate();
@@ -43,10 +49,20 @@ export default function RecipeDetailsView() {
 
   const [editing, setEditing] = useState<boolean>(false);
 
-  const [recipe, setRecipe] = useRecipe(recipeId as string);
+  const recipeLoader = useCallback<LoaderFunc<Recipe>>(
+    (cb) => getRecipe({ userId, workspaceId, recipeId }, cb),
+    [userId, workspaceId, recipeId]
+  );
+
+  const {
+    loading: recipeLoading,
+    data: recipe,
+    setData: setRecipe,
+  } = useLoader<Recipe>(recipeLoader, `/recipe/${recipeId}`);
+
   const updateRecipe = useUpdater<Recipe>(recipe, (r) => {
     setRecipe(r);
-    saveRecipe(r);
+    saveRecipe({ userId, workspaceId, recipeId }, r);
   });
 
   useEffect(() => {
@@ -110,7 +126,7 @@ export default function RecipeDetailsView() {
       "Are you sure you want to delete this recipe?"
     );
     if (confirmed) {
-      deleteRecipe(recipe._id);
+      deleteRecipe({ userId, workspaceId, recipeId });
       if (recipe.parent) {
         navigate(`/folder/${recipe.parent}`);
       } else {
@@ -167,7 +183,13 @@ export default function RecipeDetailsView() {
       updateRecipe((r) => (r.public = true));
     }
 
-    const url = location.origin + `/public/${user.uid}/recipe/${recipe._id}`;
+    let url = location.origin + `/public/${user.uid}/recipe/${recipe._id}`;
+    if (workspaceId) {
+      url =
+        location.origin +
+        `/public/workspace/${user.uid}/${workspaceId}/recipe/${recipe._id}`;
+    }
+
     const shareData: ShareData = {
       title: "TasteMaker.dev recipe",
       text: recipe.name || "Untitled Recipe",
@@ -182,6 +204,10 @@ export default function RecipeDetailsView() {
       alert("Copied to clipboard!");
     }
   };
+
+  if (recipeLoading) {
+    return <Loading />;
+  }
 
   if (!recipe) {
     return <span className="ra-error-message">Recipe not found...</span>;

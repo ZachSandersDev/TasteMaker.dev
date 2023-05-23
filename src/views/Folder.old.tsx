@@ -2,35 +2,40 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import Breadcrumbs from "../../@design/components/Breadcrumbs/Breadcrumbs";
-import Button from "../../@design/components/Button/Button";
+import Breadcrumbs from "../@design/components/Breadcrumbs/Breadcrumbs";
+import Button from "../@design/components/Button/Button";
 
-import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
+import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
 import {
   batchUpdateFolders,
   newFolder,
   saveFolder,
-} from "../../@modules/api/folders";
-import { batchUpdateRecipes, newRecipe } from "../../@modules/api/recipes";
-import { stripItemID } from "../../@modules/api/utils";
-import { folderStore, useFolder } from "../../@modules/stores/folders";
-import { recipeStore } from "../../@modules/stores/recipes";
-import { Folder, setFolderDefaults } from "../../@modules/types/folder";
-import { Recipe, setRecipeDefaults } from "../../@modules/types/recipes";
-import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
-import useUpdater from "../../@modules/utils/useUpdater";
+} from "../@modules/api/folders";
+import { batchUpdateRecipes, newRecipe } from "../@modules/api/recipes";
+import { stripItemID } from "../@modules/api/utils";
+import { newWorkspace } from "../@modules/api/workspaces";
+import { folderStore, useFolder } from "../@modules/stores/folders";
+import { recipeStore } from "../@modules/stores/recipes";
+import { workspaceStore } from "../@modules/stores/sharedFolders";
+import { Folder, setFolderDefaults } from "../@modules/types/folder";
+import { Recipe, setRecipeDefaults } from "../@modules/types/recipes";
+import { setWorkspaceDefaults } from "../@modules/types/workspaces";
+import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
+import useUpdater from "../@modules/utils/useUpdater";
 
-import AppHeader from "../../components/AppHeader";
-import AppView from "../../components/AppView";
-import IconPickerDialog from "../../components/Dialogs/IconPickerDialog";
-import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
-import RecipeTree from "../../components/RecipeTree/RecipeTree";
+import AppHeader from "../components/AppHeader";
+import AppView from "../components/AppView";
+import IconPickerDialog from "../components/Dialogs/IconPickerDialog";
+import { selectFolder } from "../components/Dialogs/RecipeSelectorDialog";
+import RecipeTree from "../components/RecipeTree/RecipeTree";
+import { WorkspaceItem } from "../components/WorkspaceItem";
 
-export default function RecipesView() {
-  const { folderId } = useParams();
+export default function FolderView() {
+  const { folderId, workspaceId } = useParams();
 
   const { folders } = useRecoilValue(folderStore);
   const { recipes } = useRecoilValue(recipeStore);
+  const { data: workspaces } = useRecoilValue(workspaceStore);
 
   const [folder, setFolder] = useFolder(folderId);
   const updateFolder = useUpdater<Folder>(folder, (f) => {
@@ -63,6 +68,14 @@ export default function RecipesView() {
       setFolderDefaults({
         text: "New Folder",
         parent: folder?._id,
+      })
+    );
+  };
+
+  const makeNewWorkspace = async () => {
+    await newWorkspace(
+      setWorkspaceDefaults({
+        name: "New Workspace",
       })
     );
   };
@@ -160,6 +173,12 @@ export default function RecipesView() {
               </>
             )}
             <Button
+              onClick={makeNewWorkspace}
+              title="New Workspace"
+              variant="icon"
+              iconBefore="create_new_folder"
+            />
+            <Button
               onClick={makeNewFolder}
               title="New Folder"
               variant="icon"
@@ -194,9 +213,22 @@ export default function RecipesView() {
           </div>
         </>
       ) : (
-        <div className="ra-header">
-          <h2 className="ra-title">All Recipes</h2>
-        </div>
+        <></>
+        // <div className="ra-header">
+        //   <h2 className="ra-title">Recipes</h2>
+        // </div>
+      )}
+
+      {!folder && (
+        <>
+          <div className="ra-header ra-title">Shared Folders</div>
+          {Object.entries(workspaces || {}).map(([workspaceId, workspace]) => (
+            <WorkspaceItem key={workspaceId} workspace={workspace} />
+          ))}
+
+          <div className="ra-header ra-title"></div>
+          <div className="ra-header ra-title">Private Folders</div>
+        </>
       )}
 
       <RecipeTree
