@@ -50,8 +50,6 @@ export function getRecipe(params: RecipeRefParams, callback: (recipe?: Recipe) =
     return () => undefined;
   }
 
-  console.log(params);
-
   return onValue(getRecipeRef(params), (snapshot) => {
     callback(formatAndCacheRecipe(snapshot));
   });

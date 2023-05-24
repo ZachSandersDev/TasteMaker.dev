@@ -65,20 +65,20 @@ export function getFoldersLive(callback: (r: Folder[]) => void) {
   });
 }
 
-export const saveFolder = debounce((folder: Folder) => {
-  return set(child(getFolderRef(), folder._id), stripItemID(setFolderDefaults(folder)));
+export const saveFolder = debounce((params: FolderRefParams, folder: Folder) => {
+  return set(getFolderRef(params), stripItemID(setFolderDefaults(folder)));
 }, 500);
 
-export async function newFolder(newFolder: Folder) {
-  return await push(getFolderRef(), stripItemID(newFolder)).key;
+export async function newFolder(params: FolderRefParams, r: Partial<Folder>) {
+  return await push(getFolderRef(params), stripItemID(setFolderDefaults(r))).key;
 }
 
-export async function deleteFolder(folderId: string) {
-  return await remove(child(getFolderRef(), folderId));
+export async function deleteFolder(params: FolderRefParams) {
+  return await remove(getFolderRef(params));
 }
 
-export async function batchUpdateFolders(updates: Record<string, Folder | null>) {
-  return await update(getFolderRef(), updates);
+export async function batchUpdateFolders(params: FolderRefParams, updates: Record<string, Folder | null>) {
+  return await update(getFolderRef(params), updates);
 }
 
 export function formatAndCacheFolder(snapshot: DataSnapshot) {

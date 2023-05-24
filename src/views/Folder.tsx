@@ -4,14 +4,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import Button from "../@design/components/Button/Button";
-import { getFolder, getFoldersWithParent } from "../@modules/api/folders";
+import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
+import { getFolder, getFoldersWithParent, newFolder, saveFolder } from "../@modules/api/folders";
 import { getRecipesWithParent, newRecipe } from "../@modules/api/recipes";
-import { getWorkspace, getWorkspaces } from "../@modules/api/workspaces";
+import { getAllWorkspaces, getWorkspace, newWorkspace, saveWorkspace } from "../@modules/api/workspaces";
 import { authStore } from "../@modules/stores/auth";
 import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
 import { Workspace } from "../@modules/types/workspaces";
 import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
+import useUpdater from "../@modules/utils/useUpdater";
 
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
@@ -26,24 +28,34 @@ export default function FolderView() {
   const { user } = useRecoilValue(authStore);
 
   const workspaceLoader = useCallback<LoaderFunc<Workspace>>(
-    (cb) => getWorkspace({ userId, workspaceId }, cb),
-    [userId, workspaceId, folderId]
+    (cb) => getWorkspace({userId, workspaceId}, cb), 
+    [userId, workspaceId]
   );
 
-  const { loading: workspaceLoading, data: workspace } = useLoader<Workspace>(
+  const { loading: workspaceLoading, data: workspace, setData: setWorkspace } = useLoader<Workspace>(
     workspaceLoader,
     `/workspace/${workspaceId}`
   );
+
+  const updateWorkspace = useUpdater(workspace, (newWorkspace) => {
+    setWorkspace(newWorkspace);
+    saveWorkspace(newWorkspace);
+  });
 
   const folderLoader = useCallback<LoaderFunc<Folder>>(
     (cb) => getFolder({ userId, workspaceId, folderId }, cb),
     [userId, workspaceId, folderId]
   );
 
-  const { loading: folderLoading, data: folder } = useLoader<Folder>(
+  const { loading: folderLoading, data: folder, setData: setFolder } = useLoader<Folder>(
     folderLoader,
     `/folder/${folderId}`
   );
+
+  const updateFolder = useUpdater(folder, (newFolder) => {
+    setFolder(newFolder);
+    saveFolder({ userId, workspaceId, folderId }, newFolder);
+  });
 
   const subFolderLoader = useCallback<LoaderFunc<Folder[]>>(
     (cb) => getFoldersWithParent({ userId, workspaceId }, folderId, cb),
@@ -65,14 +77,15 @@ export default function FolderView() {
     `/recipesWithParent/${folderId}`
   );
 
-  const workspacesLoader = useCallback<LoaderFunc<Workspace[]>>(
-    (cb) => getWorkspaces(cb),
-    [userId, workspaceId, folderId]
+  const allWorkspacesLoader = useCallback<LoaderFunc<Workspace[]>>(
+    (cb) => getAllWorkspaces(cb),
+    [userId, workspaceId]
   );
 
-  const { loading: workspacesLoading, data: workspaces } = useLoader<
-    Workspace[]
-  >(workspacesLoader, "/workspaces");
+  const { loading: allWorkspacesLoading, data: allWorkspaces } = useLoader<Workspace[]>(
+    allWorkspacesLoader,
+    "/workspaces"
+  );
 
   // const { folders } = useRecoilValue(folderStore);
   // const { recipes } = useRecoilValue(recipeStore);
@@ -95,30 +108,11 @@ export default function FolderView() {
   const navigate = useNavigate();
   // const breadcrumbs = useBreadcrumbs(folderId);
 
-  const makeNewRecipe = async () => {
-    await newRecipe({ userId, workspaceId }, { name: "", parent: folder?._id });
-  };
+  const makeNewRecipe = () => newRecipe({ userId, workspaceId }, { name: "", parent: folder?._id });
 
-  // const makeNewFolder = async () => {
-  //   await newFolder(
-  //     setFolderDefaults({
-  //       text: "New Folder",
-  //       parent: folder?._id,
-  //     })
-  //   );
-  // };
+  const makeNewFolder = () => newFolder({ userId, workspaceId }, { text: "", parent: folder?._id }); 
 
-  // const makeNewWorkspace = async () => {
-  //   await newWorkspace(
-  //     setWorkspaceDefaults({
-  //       name: "New Workspace",
-  //     })
-  //   );
-  // };
-
-  // const handleRecipeClick = (recipe: Recipe) => {
-  //   navigate(`/recipe/${recipe._id}`);
-  // };
+  const makeNewWorkspace = () => newWorkspace({ name: "New Workspace" }); 
 
   const handleRecipeClick = (recipe: Recipe) => {
     if (userId && workspaceId) {
@@ -184,9 +178,13 @@ export default function FolderView() {
   //   }
   // };
 
-  // const handleRenameFolder = (text: string) => {
-  //   updateFolder((f) => (f.text = text));
-  // };
+  const handleRenameFolder = (text: string) => {
+    updateFolder((f) => (f.text = text));
+  };
+
+  const handleRenameWorkspace = (text: string) => {
+    updateWorkspace((f) => (f.name = text));
+  };
 
   // const handleChangeFolderIcon = (icon?: string) => {
   //   updateFolder((f) => (f.icon = icon));
@@ -206,7 +204,7 @@ export default function FolderView() {
     workspaceLoading ||
     subFoldersLoading ||
     recipesLoading ||
-    workspacesLoading
+    allWorkspacesLoading
   ) {
     return <Loading />;
   }
@@ -235,18 +233,19 @@ export default function FolderView() {
             />
           </>
         )}
-        <Button
-          onClick={makeNewWorkspace}
-          title="New Workspace"
-          variant="icon"
-          iconBefore="create_new_folder"
-        />
-        <Button
-          onClick={makeNewFolder}
-          title="New Folder"
-          variant="icon"
-          iconBefore="create_new_folder"
-        /> */}
+      */}
+            <Button
+              onClick={makeNewWorkspace}
+              title="New Workspace"
+              variant="icon"
+              iconBefore="create_new_folder"
+            />
+            <Button
+              onClick={makeNewFolder}
+              title="New Folder"
+              variant="icon"
+              iconBefore="create_new_folder"
+            /> 
             <Button
               onClick={makeNewRecipe}
               title="New Recipe"
@@ -258,24 +257,44 @@ export default function FolderView() {
       }
     >
       <div className="ra-header">
-        {workspace ? (
-          <h2 className="ra-title">
-            {workspace ? workspace.name || "Untitled Folder" : "Recipes"}
-          </h2>
-        ) : (
-          <h2 className="ra-title">
-            {folder ? folder.text || "Untitled Folder" : "Recipes"}
-          </h2>
-        )}
+        {workspace && !folder && 
+          <MultilineInput
+            className="ra-title"
+            value={workspace.name || ""}
+            placeholder="Untitled Workspace"
+            onChange={handleRenameWorkspace}
+            variant="naked"
+          />
+        }
+
+        {folder && 
+          <MultilineInput
+            className="ra-title"
+            value={folder.text || ""}
+            placeholder="Untitled Folder"
+            onChange={handleRenameFolder}
+            variant="naked"
+          />
+        }
+
+        {
+          !workspace && !folder &&
+          <MultilineInput
+            className="ra-title"
+            value={"Recipes"}
+            variant="naked"
+            disabled
+          />
+        }
       </div>
 
-      {workspacesLoading || subFoldersLoading || recipesLoading ? (
+      {allWorkspacesLoading || subFoldersLoading || recipesLoading ? (
         <Spinner />
       ) : (
         <>
           {!folder?._id &&
             !workspace?._id &&
-            workspaces?.map((workspace) => (
+            allWorkspaces?.map((workspace) => (
               <WorkspaceItem
                 key={workspace._id}
                 workspace={workspace}

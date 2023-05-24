@@ -1,13 +1,12 @@
-import { child, ref, getDatabase, onValue, DataSnapshot } from "firebase/database";
+import { child, ref, getDatabase, onValue, DataSnapshot, push, set } from "firebase/database";
+import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
 import { authStore } from "../stores/auth";
-
-
 import { Workspace, setWorkspaceDefaults } from "../types/workspaces";
 
 import { app } from "./firebase";
-import { addItemID, formatSnapList } from "./utils";
+import { addItemID, formatSnapList, stripItemID } from "./utils";
 
 export interface WorkspaceRefParams {
   userId?: string,
@@ -33,7 +32,7 @@ function getWorkspaceRef({ userId, workspaceId }: WorkspaceRefParams = {}) {
   return currentRef;
 }
 
-export function getWorkspaces(callback: (workspaces?: Workspace[]) => void) {
+export function getAllWorkspaces(callback: (workspaces?: Workspace[]) => void) {
   return onValue(getWorkspaceRef(), (snapshot) => {
     callback(formatSnapList(snapshot, formatAndCacheWorkspace));
   });
@@ -50,23 +49,19 @@ export function getWorkspace(params: WorkspaceRefParams, callback: (workspace?: 
   });
 }
 
+export const saveWorkspace = debounce((workspace: Workspace) => {
+  return set(getWorkspaceRef(), stripItemID(setWorkspaceDefaults(workspace)));
+}, 500);
 
-// export function getWorkspacesLive(callback: (r: Workspace[]) => void) {
-//   return onValue(getWorkspaceRef(), (snapshot) => {
-//     callback(
-//       addListIDs<Workspace>(snapshot)
-//         .map(setWorkspaceDefaults)
-//     );
-//   });
-// }
+export async function newWorkspace(newWorkspace: Partial<Workspace>) {
+  console.log({
+    ref: getWorkspaceRef(),
+    workspace: stripItemID(setWorkspaceDefaults(newWorkspace))
+  });
 
-// export const saveWorkspace = debounce((workspace: Workspace) => {
-//   return set(child(getWorkspaceRef(), workspace._id), stripItemID(setWorkspaceDefaults(workspace)));
-// }, 500);
 
-// export async function newWorkspace(newWorkspace: Workspace) {
-//   return await push(getWorkspaceRef(), stripItemID(newWorkspace)).key;
-// }
+  return await push(getWorkspaceRef(), stripItemID(setWorkspaceDefaults(newWorkspace))).key;
+}
 
 // export async function deleteWorkspace(workspaceId: string) {
 //   return await remove(child(getWorkspaceRef(), workspaceId));
