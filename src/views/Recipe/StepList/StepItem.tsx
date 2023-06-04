@@ -45,6 +45,7 @@ export default function StepItem({
       value={step}
       dragListener={false}
       dragControls={controls}
+      as="div"
     >
       <SwipeToDelete onDelete={deleteStep} editing={editing}>
         <div className="step-item">

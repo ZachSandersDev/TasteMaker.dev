@@ -41,23 +41,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/workspace/:userId/:workspaceId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <FolderView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/workspace/:userId/:workspaceId/folder/:folderId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <FolderView />
-          </Suspense>
-        ),
-      },
-
-      {
         path: "recipe/:recipeId",
         element: (
           <Suspense fallback={<Loading />}>
@@ -65,15 +48,6 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "/workspace/:userId/:workspaceId/recipe/:recipeId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <RecipeDetailsView />
-          </Suspense>
-        ),
-      },
-
       {
         path: "shopping-lists",
         element: (

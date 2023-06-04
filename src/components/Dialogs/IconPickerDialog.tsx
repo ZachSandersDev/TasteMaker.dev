@@ -48,17 +48,17 @@ export default function IconPickerDialog({
   return (
     <>
       <div className="icon-header">
-        {!imageValue && !emojiValue && !placeholder && !disabled && (
+        {!imageValue && !emojiValue && !placeholder && (
           <Button
-            className="icon-hidden-option"
+            className={classNames("icon-hidden-option", disabled && "disabled")}
             variant="naked"
             iconBefore="mood"
             size="sm"
             onClick={() => {
               setIsOpen(true);
             }}
-            noPadding
             color="var(--color-placeholder)"
+            disabled={disabled}
           >
             Add icon
           </Button>

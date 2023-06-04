@@ -1,34 +1,63 @@
-import { useRecoilValue } from "recoil";
 
-import { useBreadcrumbStack } from "../stores/folders";
-import { recipeStore } from "../stores/recipes";
 
-import useMediaQuery from "./useMediaQuery";
+import isEqual from "lodash/isEqual";
+import { useEffect, useState } from "react";
+
+import { getFolderOnce } from "../api/folders";
+
+
+import { FolderRefParams } from "../api/folders";
+import { Folder } from "../types/folder";
 
 export interface BreadcrumbLink {
   text: string;
   href?: string;
 }
 
-export function useBreadcrumbs(nodeId?: string) {
-  const { recipes } = useRecoilValue(recipeStore);
-  const recipe = recipes.find(r => r._id === nodeId);
+export function useBreadcrumbs(params: FolderRefParams, isRecipe?: boolean) {
+  const [folders, setFolders] = useState<Record<string, Folder>>({});
 
-  const stack = useBreadcrumbStack(recipe ? recipe.parent : nodeId);
-  const isMobile = useMediaQuery("(max-width: 999px)");
+  useEffect(() => {
+    (async () => {
+      const folderRecord = { ...folders };
+      let currentFolder: string | undefined = params.folderId;
 
-  // Filter out curent entry for mobile
-  const filteredCrumbs = isMobile ? stack.filter(s => s._id !== nodeId) : stack;
+      while (currentFolder) {
+        const folder =
+          folderRecord[currentFolder] ||
+          await getFolderOnce({ ...params, folderId: currentFolder });
 
-  const links: BreadcrumbLink[] = filteredCrumbs.map((n) => ({
-    text: n.text || "Untitled Folder",
-    // Don't link curent entry
-    href: n._id === nodeId ? undefined : "/folder/" + n._id,
-  }));
+        if (folder) {
+          folderRecord[folder._id] = folder;
+          currentFolder = folder.parent;
+        } else {
+          throw new Error("Could not fetch folder");
+        }
+      }
 
-  if (recipe && !isMobile) {
-    links.push({ text: recipe.name || "Untitled Recipe", });
-  }
+      if (!isEqual(folderRecord, folders)) {
+        setFolders(folderRecord);
+      }
+    })();
+  }, [params]);
 
-  return links;
+  const breadcrumbs: BreadcrumbLink[] = [];
+
+  let currentFolder: string | undefined = params.folderId;
+  do {
+    if (!currentFolder || !folders[currentFolder]) return [];
+    const folder = folders[currentFolder];
+    breadcrumbs.push({
+      text: folder.text || "Untitled Folder",
+      href: folder._id !== params.folderId || isRecipe ? (`/folder/${folder._id}`) : undefined
+    });
+    currentFolder = folder.parent;
+  } while (currentFolder);
+
+  breadcrumbs.push({
+    text: "Recipes",
+    href: "/"
+  });
+  breadcrumbs.reverse();
+  return breadcrumbs;
 }

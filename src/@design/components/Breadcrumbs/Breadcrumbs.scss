@@ -4,15 +4,17 @@
   padding: 0 var(--spacing);
   font-size: 0.9em;
   flex: 1;
-  // overflow: auto;
+  width: 100%;
   overflow: hidden;
 }
 
 .breadcrumb-link {
   color: var(--color-link);
   text-decoration: none;
+
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 span.breadcrumb-link {

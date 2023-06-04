@@ -55,6 +55,19 @@ export function getFolder(params: FolderRefParams, callback: (folder?: Folder) =
   });
 }
 
+export function getFolderOnce(params: FolderRefParams) {
+  const folderKey = `/folder/${params.folderId}`;
+
+  if (sessionStorage.getItem(folderKey)) {
+    return JSON.parse(sessionStorage.getItem(folderKey) || "");
+  }
+
+  return new Promise<Folder | undefined>((res) => {
+    onValue(getFolderRef(params), (snapshot) => {
+      res(formatAndCacheFolder(snapshot));
+    }, { onlyOnce: true });
+  });
+}
 
 export function getFoldersLive(callback: (r: Folder[]) => void) {
   return onValue(getFolderRef(), (snapshot) => {

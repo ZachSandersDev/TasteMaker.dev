@@ -20,6 +20,7 @@ import {
   saveRecipe,
 } from "../../@modules/api/recipes";
 import { authStore } from "../../@modules/stores/auth";
+import { workspaceStore } from "../../@modules/stores/workspace";
 import { Recipe } from "../../@modules/types/recipes";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
@@ -41,11 +42,9 @@ import StepItem from "./StepList/StepItem";
 import "./RecipeDetails.scss";
 
 export default function RecipeDetailsView() {
-  const { recipeId, userId, workspaceId } = useParams();
+  const { recipeId } = useParams();
+  const { userId, workspaceId } = useRecoilValue(workspaceStore);
   const { user } = useRecoilValue(authStore);
-
-  const navigate = useNavigate();
-  const breadcrumbs = useBreadcrumbs(recipeId);
 
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -70,6 +69,16 @@ export default function RecipeDetailsView() {
       document.title = recipe.name || "Untitled Recipe";
     }
   }, [recipe]);
+
+  const navigate = useNavigate();
+  const breadcrumbs = useBreadcrumbs(
+    {
+      userId,
+      workspaceId,
+      folderId: recipe?.parent || undefined,
+    },
+    true
+  );
 
   const setRecipeField = (
     key: "name" | "servingSize" | "prepTime",
@@ -218,7 +227,11 @@ export default function RecipeDetailsView() {
       header={
         <AppHeader
           subView
-          before={recipe.parent && <Breadcrumbs links={breadcrumbs} />}
+          before={
+            recipe.parent && (
+              <Breadcrumbs links={[...breadcrumbs, { text: recipe.name }]} />
+            )
+          }
         >
           <div className="ra-actions">
             <Button
@@ -357,6 +370,7 @@ export default function RecipeDetailsView() {
             values={recipe.steps}
             onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
             className="ra-list"
+            as="div"
           >
             {recipe.steps.map((step, i) => (
               <StepItem
