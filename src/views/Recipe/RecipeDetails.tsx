@@ -237,7 +237,7 @@ export default function RecipeDetailsView() {
             <Button
               title="Edit"
               onClick={() => setEditing(!editing)}
-              variant={editing ? "chip" : "naked"}
+              variant={editing ? "chip" : "naked-chip"}
             >
               {editing ? "Save" : "Edit"}
             </Button>

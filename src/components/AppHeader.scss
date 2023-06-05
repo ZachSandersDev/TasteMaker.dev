@@ -50,4 +50,9 @@
   width: 100%;
   max-width: var(--app-view-max-size);
   margin: 0 auto;
+
+  > .ra-actions {
+    margin-left: auto;
+    flex: initial;
+  }
 }

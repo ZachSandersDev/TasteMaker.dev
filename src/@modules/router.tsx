@@ -4,6 +4,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import Loading from "../components/Loading";
 import LoginView from "../views/Login";
 import RootView from "../views/RootView";
+import WorkspaceSettings from "../views/WorkspaceSettings";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
 const RecipeDetailsView = React.lazy(
@@ -69,6 +70,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <SettingsView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/workspace/:userId/:workspaceId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <WorkspaceSettings />
           </Suspense>
         ),
       },

@@ -21,6 +21,7 @@ import { Recipe } from "../@modules/types/recipes";
 import { Workspace } from "../@modules/types/workspaces";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
 import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
+import useMediaQuery from "../@modules/utils/useMediaQuery";
 import useUpdater from "../@modules/utils/useUpdater";
 
 import AppHeader from "../components/AppHeader";
@@ -36,6 +37,7 @@ import WorkspacePicker from "../components/WorkspacePicker";
 export default function FolderView() {
   const { folderId } = useParams();
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
+  const isMobile = useMediaQuery("(max-width: 1000px)");
 
   const workspaceLoader = useCallback<LoaderFunc<Workspace>>(
     (cb) => getWorkspace({ userId, workspaceId }, cb),
@@ -138,10 +140,6 @@ export default function FolderView() {
     updateFolder((f) => (f.text = text));
   };
 
-  const handleRenameWorkspace = (text: string) => {
-    updateWorkspace((f) => (f.name = text));
-  };
-
   const handleChangeFolderIcon = (icon?: string) => {
     updateFolder((f) => (f.icon = icon));
   };
@@ -171,7 +169,7 @@ export default function FolderView() {
           subView={folderId !== undefined}
           before={folderId && <Breadcrumbs links={breadcrumbs} />}
         >
-          {!folderId && <WorkspacePicker />}
+          {!folderId && isMobile && <WorkspacePicker />}
 
           <div className="ra-actions">
             {folder?._id && (
@@ -216,36 +214,34 @@ export default function FolderView() {
         disabled={!folder}
       />
 
-      <div className="ra-header">
-        {workspace && !folder && (
-          <MultilineInput
-            className="ra-title"
-            value={workspace.name || ""}
-            placeholder="Untitled Workspace"
-            onChange={handleRenameWorkspace}
-            variant="naked"
-          />
-        )}
+      {workspace && !folder && (
+        <MultilineInput
+          className="ra-title"
+          value={workspace.name || ""}
+          placeholder="Untitled Workspace"
+          variant="naked"
+          disabled
+        />
+      )}
 
-        {folder && (
-          <MultilineInput
-            className="ra-title"
-            value={folder.text || ""}
-            placeholder="Untitled Folder"
-            onChange={handleRenameFolder}
-            variant="naked"
-          />
-        )}
+      {folder && (
+        <MultilineInput
+          className="ra-title"
+          value={folder.text || ""}
+          placeholder="Untitled Folder"
+          onChange={handleRenameFolder}
+          variant="naked"
+        />
+      )}
 
-        {!workspace && !folder && (
-          <MultilineInput
-            className="ra-title"
-            value={"Recipes"}
-            variant="naked"
-            disabled
-          />
-        )}
-      </div>
+      {!workspace && !folder && (
+        <MultilineInput
+          className="ra-title"
+          value={"Recipes"}
+          variant="naked"
+          disabled
+        />
+      )}
 
       {subFoldersLoading || recipesLoading ? (
         <Spinner />

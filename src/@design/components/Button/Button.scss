@@ -10,7 +10,7 @@
   outline: none;
   border: none;
   border-radius: var(--radius);
-  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 0.5);
 
   flex-shrink: 0;
 
@@ -33,6 +33,14 @@
   background-color: var(--color-interface-base);
   color: var(--color-interface-color);
   border-radius: calc(var(--radius) * 4);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+}
+
+.ra-button-naked-chip {
+  // background-color: var(--color-interface-base);
+  // color: var(--color-interface-color);
+  border-radius: calc(var(--radius) * 4);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
 }
 
 .ra-button-icon {

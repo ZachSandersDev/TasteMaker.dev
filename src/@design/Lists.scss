@@ -20,6 +20,17 @@
   gap: calc(var(--spacing) * 0.5);
 }
 
+.ra-padded-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100%;
+  margin: 0;
+  padding: 0 calc(var(--spacing) * 2);
+  gap: var(--spacing);
+}
+
 .ra-option {
   display: flex;
   align-items: center;
