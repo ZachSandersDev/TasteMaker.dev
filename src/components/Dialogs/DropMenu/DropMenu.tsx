@@ -2,8 +2,8 @@ import { ReactElement, useState } from "react";
 
 import Button from "../../../@design/components/Button/Button";
 
-import "./DropMenu.scss";
 import DropMenuDialog from "./DropMenuDialog";
+import "./DropMenu.scss";
 
 export interface DropMenuOption {
   color?: string;
