@@ -7,6 +7,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import Button from "../@design/components/Button/Button";
 import { getAllWorkspaces, newWorkspace } from "../@modules/api/workspaces";
 import { authStore } from "../@modules/stores/auth";
+import { profileStore } from "../@modules/stores/profile";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Workspace } from "../@modules/types/workspaces";
 import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
@@ -19,6 +20,7 @@ import "./WorkspacePicker.scss";
 export default function WorkspacePicker() {
   const [{ workspaceId }, setWorkspace] = useRecoilState(workspaceStore);
   const { user } = useRecoilValue(authStore);
+  const { profile } = useRecoilValue(profileStore);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,7 +70,17 @@ export default function WorkspacePicker() {
       <Button
         className="workspace-picker-button"
         variant="naked"
-        before={<ProfileImage size="sm" id={selectedWorkspace?._id} />}
+        before={
+          <ProfileImage
+            size="sm"
+            imageUrl={
+              selectedWorkspace
+                ? selectedWorkspace.image?.imageUrl
+                : profile?.image?.imageUrl
+            }
+            id={selectedWorkspace?._id}
+          />
+        }
         onClick={() => setIsOpen(true)}
       >
         {selectedWorkspace?.name || "Personal Workspace"}
@@ -83,7 +95,13 @@ export default function WorkspacePicker() {
               </span>
               <div className="workspace-picker-options">
                 <Button
-                  iconBefore="person"
+                  before={
+                    <ProfileImage
+                      size="sm"
+                      imageUrl={profile?.image?.imageUrl}
+                      id={user?.uid}
+                    />
+                  }
                   variant="naked"
                   onClick={() => handleSwitchWorkspace()}
                 >
@@ -94,7 +112,7 @@ export default function WorkspacePicker() {
                 {...allWorkspaces.map((ws) => (
                   <Fragment key={ws._id}>
                     <Button
-                      iconBefore="account_tree"
+                      before={<ProfileImage size="sm" id={ws._id} />}
                       variant="naked"
                       onClick={() => handleSwitchWorkspace(ws._id)}
                     >

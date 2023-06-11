@@ -65,12 +65,12 @@ async function getDefaultAvatarImg(id: string): Promise<Blob | undefined> {
 
   for (let x = 0; x < 100; x += 20) {
     for (let y = 0; y < 100; y += 20) {
-      let hueOffset = Math.floor(rand() * 50);
-      if (rand() > 0.5) hueOffset *= -1;
+      let lightOffset = Math.floor(rand() * 25);
+      if (rand() > 0.5) lightOffset *= -1;
 
-      ctx.fillStyle = `hsl(${baseHue + hueOffset * 0.25}, 80%, ${
-        80 + hueOffset * 0.35
-      }%)`;
+      const hueOffset = Math.floor(rand() * 25);
+
+      ctx.fillStyle = `hsl(${baseHue + hueOffset}, 50%, ${80 + lightOffset}%)`;
       ctx.fillRect(x, y, 20, 20);
     }
   }
@@ -119,9 +119,6 @@ export function ProfileImage({
         style={{}}
       >
         <img src={imageUrl || defaultImage} />
-        {/* <div className="profile-image-upload-wrapper">
-          <i className="material-symbols-rounded"></i>
-        </div> */}
       </label>
       <input
         style={{ display: "none" }}
