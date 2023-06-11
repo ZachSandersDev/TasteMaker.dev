@@ -2,6 +2,7 @@ import { useRecoilValue } from "recoil";
 
 import Button from "../../@design/components/Button/Button";
 
+import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import { newList } from "../../@modules/api/shoppingLists";
 import { listStore } from "../../@modules/stores/shoppingLists";
 
@@ -36,7 +37,12 @@ export default function ShoppingListsView() {
       }
     >
       <header className="ra-header">
-        <h2 className="ra-title">Shopping Lists</h2>
+        <MultilineInput
+          className="ra-title"
+          value="Shopping Lists"
+          variant="naked"
+          disabled
+        />
       </header>
 
       {lists.length ? (

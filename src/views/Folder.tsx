@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import Breadcrumbs from "../@design/components/Breadcrumbs/Breadcrumbs";
-import Button from "../@design/components/Button/Button";
 import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
 import {
   deleteFolder,
@@ -26,7 +25,8 @@ import useUpdater from "../@modules/utils/useUpdater";
 
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
-import IconPickerDialog from "../components/Dialogs/IconPickerDialog";
+import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
+import { pickIcon } from "../components/Dialogs/IconPickerDialog";
 import { selectFolder } from "../components/Dialogs/RecipeSelectorDialog";
 import Loading from "../components/Loading";
 import { RecipeItem } from "../components/RecipeItem";
@@ -140,8 +140,18 @@ export default function FolderView() {
     updateFolder((f) => (f.text = text));
   };
 
-  const handleChangeFolderIcon = (icon?: string) => {
-    updateFolder((f) => (f.icon = icon));
+  const handleChangeFolderIcon = async () => {
+    const { deleted, newEmoji } =
+      (await pickIcon({
+        title: "Folder Icon",
+        emojiValue: folder?.icon,
+        emojiOnly: true,
+      })) || {};
+
+    updateFolder((f) => {
+      if (deleted) f.icon = undefined;
+      if (newEmoji) f.icon = newEmoji;
+    });
   };
 
   const handleMove = async () => {
@@ -172,76 +182,67 @@ export default function FolderView() {
           {!folderId && isMobile && <WorkspacePicker />}
 
           <div className="ra-actions">
-            {folder?._id && (
-              <>
-                <Button
-                  onClick={handleDeleteFolder}
-                  title="Delete Folder"
-                  variant="icon"
-                  iconBefore="delete"
-                />
-                <Button
-                  onClick={handleMove}
-                  title="Move Folder"
-                  variant="icon"
-                  iconBefore="drive_file_move"
-                />
-              </>
-            )}
+            <DropMenu
+              icon="add"
+              options={[
+                {
+                  onClick: makeNewFolder,
+                  text: "New Folder",
+                  icon: "create_new_folder",
+                },
+                { onClick: makeNewRecipe, text: "New Recipe", icon: "notes" },
+              ]}
+            />
 
-            <Button
-              onClick={makeNewFolder}
-              title="New Folder"
-              variant="icon"
-              iconBefore="create_new_folder"
-            />
-            <Button
-              onClick={makeNewRecipe}
-              title="New Recipe"
-              variant="icon"
-              iconBefore="add"
-            />
+            {folder?._id && (
+              <DropMenu
+                options={[
+                  {
+                    onClick: handleChangeFolderIcon,
+                    text: folder.icon ? "Change Icon" : "Add Folder Icon",
+                    icon: "mood",
+                  },
+                  {
+                    onClick: handleDeleteFolder,
+                    text: "Delete Folder",
+                    icon: "delete",
+                  },
+                  {
+                    onClick: handleMove,
+                    text: "Move Folder",
+                    icon: "drive_file_move",
+                  },
+                ]}
+              />
+            )}
           </div>
         </AppHeader>
       }
     >
-      <IconPickerDialog
-        title="Folder Icon"
-        emojiValue={folder?.icon}
-        onEmojiChange={handleChangeFolderIcon}
-        onRemoveIcon={handleChangeFolderIcon}
-        emojiOnly
-        disabled={!folder}
-      />
-
-      {workspace && !folder && (
-        <MultilineInput
-          className="ra-title"
-          value={workspace.name || ""}
-          placeholder="Untitled Workspace"
-          variant="naked"
-          disabled
-        />
+      {folder?.icon && (
+        <span className="ra-icon" onClick={handleChangeFolderIcon}>
+          {folder?.icon}
+        </span>
       )}
 
-      {folder && (
-        <MultilineInput
-          className="ra-title"
-          value={folder.text || ""}
-          placeholder="Untitled Folder"
-          onChange={handleRenameFolder}
-          variant="naked"
-        />
-      )}
-
-      {!workspace && !folder && (
-        <MultilineInput
-          className="ra-title"
-          value={"Recipes"}
-          variant="naked"
-          disabled
-        />
-      )}
+      <div className="ra-header">
+        {folder ? (
+          <MultilineInput
+            className="ra-title"
+            value={folder.text || ""}
+            placeholder="Untitled Folder"
+            onChange={handleRenameFolder}
+            variant="naked"
+          />
+        ) : (
+          <MultilineInput
+            className="ra-title"
+            value={"Recipes"}
+            variant="naked"
+            disabled
+          />
+        )}
+      </div>
 
       {subFoldersLoading || recipesLoading ? (
         <Spinner />

@@ -22,7 +22,7 @@
 .ra-actions-left {
   display: flex;
   justify-content: flex-start;
-  margin-top: var(--spacing);
+  margin-top: calc(var(--spacing) * 2);
   flex: initial;
 }
 
@@ -32,6 +32,18 @@
   color: var(--color-color);
 
   font-family: "Roboto Slab", serif;
+}
+
+.ra-icon {
+  font-size: 1.75em;
+  padding: 0 calc(var(--spacing) * 0.5);
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    overflow: hidden;
+  }
 }
 
 .ra-sub-title {

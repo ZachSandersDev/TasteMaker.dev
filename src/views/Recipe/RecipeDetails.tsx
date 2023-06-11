@@ -30,7 +30,7 @@ import useUpdater from "../../@modules/utils/useUpdater";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
-import IconPickerDialog from "../../components/Dialogs/IconPickerDialog";
+import { pickIcon } from "../../components/Dialogs/IconPickerDialog";
 import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
 import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import ImageBanner from "../../components/ImageUpload";
@@ -152,33 +152,46 @@ export default function RecipeDetailsView() {
     updateRecipe((r) => (r.bannerImage = newImage));
   };
 
-  const handleNewIcon = async (imageFile: File) => {
-    const newImage = await uploadIconImage(imageFile);
-    if (recipe?.iconImage?.imageId) {
-      deleteImage(recipe.iconImage.imageId);
-    }
-    updateRecipe((r) => (r.iconImage = newImage));
-  };
+  const handlePickIcon = async () => {
+    if (!recipe) return;
 
-  const handleNewEmojiIcon = async (emoji: string) => {
-    if (recipe?.iconImage?.imageId) {
-      deleteImage(recipe.iconImage.imageId);
-    }
-    updateRecipe((r) => {
-      delete r.iconImage;
-      r.icon = emoji;
-    });
-  };
+    const { deleted, newEmoji, newImage } =
+      (await pickIcon({
+        title: "Recipe Icon",
+        emojiValue: recipe.icon,
+        imageValue: recipe.iconImage,
+      })) || {};
 
-  const handleRemoveIcons = () => {
+    // If we chose nothing, do nothing
+    if (!deleted && !newEmoji && !newImage) return;
+
+    // Delete existing image if need be
     if (recipe?.iconImage?.imageId) {
       deleteImage(recipe.iconImage.imageId);
     }
 
-    updateRecipe((r) => {
-      delete r.iconImage;
-      delete r.icon;
-    });
+    // New image file was uploaded
+    if (newImage) {
+      const newIconImage = await uploadIconImage(newImage);
+      updateRecipe((r) => {
+        r.iconImage = newIconImage;
+        r.icon = undefined;
+      });
+    }
+
+    // Icon was deleted or an emoji was selected
+    else {
+      updateRecipe((r) => {
+        if (deleted) {
+          r.icon = undefined;
+          r.iconImage = undefined;
+        }
+
+        if (newEmoji) {
+          r.icon = newEmoji;
+        }
+      });
+    }
   };
 
   const handleShareRecipe = async () => {
@@ -248,12 +261,16 @@ export default function RecipeDetailsView() {
                   title="Share"
                   onClick={handleShareRecipe}
                   variant="icon"
-                  size="xm"
                   iconBefore="ios_share"
                 />
 
                 <DropMenu
                   options={[
+                    {
+                      onClick: handlePickIcon,
+                      text: recipe.icon ? "Change Icon" : "Add Recipe Icon",
+                      icon: "mood",
+                    },
                     {
                       text: "Move recipe",
                       onClick: handleMove,
@@ -284,15 +301,15 @@ export default function RecipeDetailsView() {
         />
       }
     >
-      <IconPickerDialog
-        title="Recipe Icon"
-        emojiValue={recipe.icon}
-        imageValue={recipe.iconImage}
-        onEmojiChange={handleNewEmojiIcon}
-        onImageChange={handleNewIcon}
-        onRemoveIcon={handleRemoveIcons}
-        disabled={!editing}
-      />
+      {(recipe?.icon || recipe.iconImage) && (
+        <span className="ra-icon" onClick={handlePickIcon}>
+          {recipe.iconImage ? (
+            <img src={recipe.iconImage.imageUrl} />
+          ) : (
+            recipe.icon
+          )}
+        </span>
+      )}
 
       <div className="ra-header">
         {editing ? (
