@@ -1,4 +1,4 @@
-import { child, ref, getDatabase, push, onValue, get, set, remove, update } from "firebase/database";
+import { child, ref, getDatabase, push, onValue, set, remove, update, query, orderByChild, equalTo, DataSnapshot } from "firebase/database";
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
@@ -7,15 +7,66 @@ import { authStore } from "../stores/auth";
 import { Folder, setFolderDefaults } from "../types/folder";
 
 import { app } from "./firebase";
-import { addItemID, addListIDs, stripItemID } from "./utils";
+import { addItemID, addListIDs, formatSnapList, stripItemID } from "./utils";
 
-function getFolderRef() {
-  const { user } = getRecoil(authStore);
+export interface FolderRefParams {
+  userId?: string,
+  workspaceId?: string,
+  folderId?: string,
+}
 
-  if (!user) throw "User is not logged in";
+function getFolderRef({ userId, workspaceId, folderId }: FolderRefParams = {}) {
+  let currentRef = ref(getDatabase(app));
 
-  const db = ref(getDatabase(app));
-  return child(db, `${user.uid}/folders`);
+  if (userId && workspaceId) {
+    currentRef = child(currentRef, `${userId}/workspaceFolders/${workspaceId}`);
+  } else if (userId) {
+    currentRef = child(currentRef, `${userId}/workspaceFolders/${workspaceId}`);
+  } else {
+    const { user } = getRecoil(authStore);
+    if (!user) throw "User is not logged in";
+
+    currentRef = child(currentRef, `${user.uid}/folders`);
+  }
+
+  if (folderId) {
+    return child(currentRef, folderId);
+  }
+
+  return currentRef;
+}
+
+export function getFoldersWithParent(params: FolderRefParams, parent: string | undefined, callback: (folders: Folder[]) => void) {
+  const foldersRef = query(getFolderRef(params), orderByChild("parent"), equalTo(parent || null));
+
+  return onValue(foldersRef, (snapshot) => {
+    callback(formatSnapList(snapshot, formatAndCacheFolder));
+  });
+}
+
+export function getFolder(params: FolderRefParams, callback: (folder?: Folder) => void) {
+  if (!params.folderId) {
+    callback(undefined);
+    return () => undefined;
+  }
+
+  return onValue(getFolderRef(params), (snapshot) => {
+    callback(formatAndCacheFolder(snapshot));
+  });
+}
+
+export function getFolderOnce(params: FolderRefParams) {
+  const folderKey = `/folder/${params.folderId}`;
+
+  if (sessionStorage.getItem(folderKey)) {
+    return JSON.parse(sessionStorage.getItem(folderKey) || "");
+  }
+
+  return new Promise<Folder | undefined>((res) => {
+    onValue(getFolderRef(params), (snapshot) => {
+      res(formatAndCacheFolder(snapshot));
+    }, { onlyOnce: true });
+  });
 }
 
 export function getFoldersLive(callback: (r: Folder[]) => void) {
@@ -27,23 +78,24 @@ export function getFoldersLive(callback: (r: Folder[]) => void) {
   });
 }
 
-export async function getFolder(folderId: string) {
-  const data = await get(child(getFolderRef(), folderId));
-  return setFolderDefaults(addItemID<Folder>(data));
-}
-
-export const saveFolder = debounce((folder: Folder) => {
-  return set(child(getFolderRef(), folder._id), stripItemID(setFolderDefaults(folder)));
+export const saveFolder = debounce((params: FolderRefParams, folder: Folder) => {
+  return set(getFolderRef(params), stripItemID(setFolderDefaults(folder)));
 }, 500);
 
-export async function newFolder(newFolder: Folder) {
-  return await push(getFolderRef(), stripItemID(newFolder)).key;
+export async function newFolder(params: FolderRefParams, r: Partial<Folder>) {
+  return await push(getFolderRef(params), stripItemID(setFolderDefaults(r))).key;
 }
 
-export async function deleteFolder(folderId: string) {
-  return await remove(child(getFolderRef(), folderId));
+export async function deleteFolder(params: FolderRefParams) {
+  return await remove(getFolderRef(params));
 }
 
-export async function batchUpdateFolders(updates: Record<string, Folder | null>) {
-  return await update(getFolderRef(), updates);
+export async function batchUpdateFolders(params: FolderRefParams, updates: Record<string, Folder | null>) {
+  return await update(getFolderRef(params), updates);
+}
+
+export function formatAndCacheFolder(snapshot: DataSnapshot) {
+  const folder = setFolderDefaults(addItemID<Folder>(snapshot));
+  sessionStorage.setItem(`/folder/${folder._id}`, JSON.stringify(folder));
+  return folder;
 }

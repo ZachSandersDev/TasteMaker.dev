@@ -127,9 +127,8 @@ export default function EditIngredientDialogComponent() {
               onClick={() => setLocalIngredient("")}
               variant="icon"
               size="sm"
-            >
-              clear
-            </Button>
+              iconBefore="clear"
+            />
           }
         />
 

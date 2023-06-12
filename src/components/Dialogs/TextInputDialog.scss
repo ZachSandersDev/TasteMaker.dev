@@ -1,0 +1,7 @@
+.ra-dialog.text-input-dialog {
+  max-width: 30ch;
+
+  .ra-actions {
+    margin-top: calc(var(--spacing) * 2);
+  }
+}

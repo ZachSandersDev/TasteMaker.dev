@@ -4,12 +4,13 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import Loading from "../components/Loading";
 import LoginView from "../views/Login";
 import RootView from "../views/RootView";
+import WorkspaceSettings from "../views/WorkspaceSettings";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
 const RecipeDetailsView = React.lazy(
-  () => import("../views/Recipe/Details/RecipeDetails")
+  () => import("../views/Recipe/RecipeDetails")
 );
-const RecipesView = React.lazy(() => import("../views/Recipe/Recipes"));
+const FolderView = React.lazy(() => import("../views/Folder"));
 const SettingsView = React.lazy(() => import("../views/Settings/SettingsView"));
 const ShoppingListDetailsView = React.lazy(
   () => import("../views/ShoppingList/ShoppingListDetails")
@@ -28,7 +29,15 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <Suspense fallback={<Loading />}>
-            <RecipesView />
+            <FolderView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/folder/:folderId",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <FolderView />
           </Suspense>
         ),
       },
@@ -65,10 +74,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/folder/:folderId",
+        path: "/workspace/:userId/:workspaceId",
         element: (
           <Suspense fallback={<Loading />}>
-            <RecipesView />
+            <WorkspaceSettings />
           </Suspense>
         ),
       },
@@ -80,6 +89,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/public/:userId/recipe/:recipeId",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <PublicRecipeView />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/public/workspace/:userId/:workspaceId/recipe/:recipeId",
     element: (
       <Suspense fallback={<Loading />}>
         <PublicRecipeView />

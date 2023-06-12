@@ -6,6 +6,7 @@ import classNames from "../@modules/utils/classNames";
 import useMediaQuery from "../@modules/utils/useMediaQuery";
 
 import "./AppNav.scss";
+import WorkspacePicker from "./WorkspacePicker";
 
 export default function AppNav() {
   const { pathname } = useLocation();
@@ -19,6 +20,8 @@ export default function AppNav() {
           <div className="ra-app-title">TasteMaker.dev</div>
         </div>
       )}
+
+      {!isMobile && <WorkspacePicker />}
 
       <Link
         to="/"

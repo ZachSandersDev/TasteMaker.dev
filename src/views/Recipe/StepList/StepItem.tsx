@@ -1,9 +1,9 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import MultilineInput from "../../../../@design/components/MultilineInput/MultilineInput";
-import { Recipe, Step } from "../../../../@modules/types/recipes";
+import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
+import { Recipe, Step } from "../../../@modules/types/recipes";
 
-import SwipeToDelete from "../../../../components/SwipeToDelete";
+import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./StepItem.scss";
 
@@ -45,6 +45,7 @@ export default function StepItem({
       value={step}
       dragListener={false}
       dragControls={controls}
+      as="div"
     >
       <SwipeToDelete onDelete={deleteStep} editing={editing}>
         <div className="step-item">

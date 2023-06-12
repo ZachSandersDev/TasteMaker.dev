@@ -6,8 +6,33 @@
   --background: var(--color-background);
 }
 
+.icon-header {
+  display: flex;
+  width: 100%;
+
+  .icon-hidden-option {
+    transition: opacity 0.25s;
+    @media (min-width: 1000px) {
+      opacity: 0;
+    }
+  }
+
+  &:hover {
+    .icon-hidden-option:not(.disabled) {
+      opacity: 1;
+    }
+  }
+
+  .icon-hidden-option.disabled {
+    cursor: default;
+    visibility: hidden;
+  }
+}
+
 .icon-picker-button {
   font-size: 2em;
+  width: 40px;
+  height: 40px;
 
   img {
     width: 50px;
@@ -36,9 +61,8 @@
   }
 
   .ra-actions.center-actions {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex: 1;
+    justify-content: flex-start;
 
     .ra-button-icon {
       color: var(--color-nav-color);

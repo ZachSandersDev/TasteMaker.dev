@@ -1,9 +1,7 @@
 import { Unsubscribe } from "firebase/database";
 
-import { listenForFolders } from "./folders";
 import { listenForIngredients } from "./ingredients";
 import { listenForMyProfile } from "./profile";
-import { listenForRecipes } from "./recipes";
 import { listenForLists } from "./shoppingLists";
 
 const unsubscribers: Unsubscribe[] = [];
@@ -14,11 +12,13 @@ export function loadAllData() {
   }
 
   unsubscribers.push(
-    listenForRecipes(),
-    listenForFolders(),
+    // listenForRecipes(),
+    // listenForFolders(),
     listenForLists(),
     listenForIngredients(),
-    listenForMyProfile()
+    listenForMyProfile(),
+
+    // listenForWorkspaces()
   );
 }
 

@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 import { Folder } from "../../@modules/types/folder";
 import classNames from "../../@modules/utils/classNames";
 
@@ -15,15 +13,11 @@ export const FolderItem = ({
   onClick,
 }: FolderItemProps) => {
   return (
-    <motion.div
-      layout="position"
-      className={classNames("ra-option", className)}
-      onClick={onClick}
-    >
+    <div className={classNames("ra-option", className)} onClick={onClick}>
       <span className="ra-option-icon">
         {icon || <i className="material-symbols-rounded">folder</i>}
       </span>
       <span>{text}</span>
-    </motion.div>
+    </div>
   );
 };

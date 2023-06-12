@@ -1,0 +1,18 @@
+.workspace-picker-button {
+  @media (min-width: 1000px) {
+    font-size: 1em;
+    font-weight: 700;
+    margin-bottom: var(--spacing);
+    width: 100%;
+  }
+}
+
+.workspace-picker {
+  max-width: 300px;
+}
+
+.workspace-picker-options {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  align-items: center;
+}

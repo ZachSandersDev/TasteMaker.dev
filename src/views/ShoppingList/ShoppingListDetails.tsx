@@ -91,7 +91,7 @@ export default function ShoppingListDetailsView() {
             <Button
               title="Edit"
               onClick={() => setEditing(!editing)}
-              variant={editing ? "chip" : "naked"}
+              variant={editing ? "chip" : "naked-chip"}
             >
               {editing ? "Save" : "Edit"}
             </Button>
@@ -100,35 +100,28 @@ export default function ShoppingListDetailsView() {
               title="Import ingredients from recipe"
               onClick={addRecipe}
               variant="icon"
-            >
-              format_list_bulleted_add
-            </Button>
+              iconBefore="format_list_bulleted_add"
+            />
 
             <Button
               title="Delete list"
               onClick={handleDeleteList}
               variant="icon"
-            >
-              delete
-            </Button>
+              iconBefore="delete"
+            />
           </div>
         </AppHeader>
       }
     >
-      <div className="ra-view-header">
-        {editing ? (
-          <MultilineInput
-            className="ra-title"
-            value={list.name}
-            placeholder="Untitled Shopping List"
-            onChange={(v) => setListName(v)}
-            variant="naked"
-          />
-        ) : (
-          <span className="ra-title">
-            {list.name || "Untitled Shopping List"}
-          </span>
-        )}
+      <div className="ra-header">
+        <MultilineInput
+          className="ra-title"
+          value={list.name}
+          placeholder="Untitled Shopping List"
+          onChange={(v) => setListName(v)}
+          variant="naked"
+          disabled={!editing}
+        />
       </div>
 
       <ShoppingIngredientList

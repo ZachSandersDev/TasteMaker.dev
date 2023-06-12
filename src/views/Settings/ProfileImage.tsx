@@ -41,13 +41,12 @@ export function ProfileImage({
           size
         )}
         htmlFor={`profile-image-${id.current}`}
-        style={{
-          backgroundImage: profile?.image?.imageUrl
-            ? `url("${profile.image.imageUrl}")`
-            : undefined,
-        }}
+        style={{}}
       >
-        <i className="material-symbols-rounded"></i>
+        {profile?.image?.imageUrl && <img src={profile.image.imageUrl} />}
+        <div className="profile-image-upload-wrapper">
+          <i className="material-symbols-rounded"></i>
+        </div>
       </label>
       <input
         style={{ display: "none" }}

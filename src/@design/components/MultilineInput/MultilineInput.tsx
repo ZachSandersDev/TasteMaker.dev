@@ -9,7 +9,7 @@ export interface MultilineInputProps {
   className?: string;
   value: string;
   placeholder?: string;
-  onChange: (newValue: string) => void;
+  onChange?: (newValue: string) => void;
   disabled?: boolean;
   onKeyDown?: (e: React.KeyboardEvent) => void;
   onKeyUp?: (e: React.KeyboardEvent) => void;
@@ -51,7 +51,7 @@ export const MultilineInput = forwardRef<
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           disabled={disabled}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange?.(e.target.value)}
           ref={ref}
         />
       </div>

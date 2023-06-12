@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+import { IconPickerResult, IconPickerState } from "../../components/Dialogs/IconPickerDialog";
 import { Recipe } from "../types/recipes";
 
 export interface DialogState<T, P> {
@@ -15,5 +16,15 @@ export const RecipeSelectorDialogAtom = atom<DialogState<Recipe | string, { fold
 
 export const EditIngredientDialog = atom<DialogState<string, string>>({
   key: "editIngredientDialog",
+  default: {},
+});
+
+export const TextInputDialog = atom<DialogState<string, { title: string, placeholder: string, value?: string }>>({
+  key: "textInputDialog",
+  default: {},
+});
+
+export const IconPickerDialog = atom<DialogState<IconPickerResult, IconPickerState>>({
+  key: "iconPickerDialog",
   default: {},
 });

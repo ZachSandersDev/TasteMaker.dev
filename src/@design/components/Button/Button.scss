@@ -10,7 +10,7 @@
   outline: none;
   border: none;
   border-radius: var(--radius);
-  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 0.5);
 
   flex-shrink: 0;
 
@@ -33,6 +33,14 @@
   background-color: var(--color-interface-base);
   color: var(--color-interface-color);
   border-radius: calc(var(--radius) * 4);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+}
+
+.ra-button-naked-chip {
+  // background-color: var(--color-interface-base);
+  // color: var(--color-interface-color);
+  border-radius: calc(var(--radius) * 4);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
 }
 
 .ra-button-icon {
@@ -68,6 +76,7 @@
 .ra-button-size-sm {
   font-size: 0.8em;
   padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+  gap: calc(var(--spacing) * 0.5);
 
   &.ra-button-icon {
     font-size: 1em;
@@ -75,17 +84,23 @@
     width: 25px;
     height: 25px;
   }
+
+  &.ra-button-chip {
+    font-size: 0.75em;
+    padding: calc(var(--spacing) * 0.5);
+  }
+
+  > .ra-button-icon-before,
+  > .ra-button-icon-after {
+    font-size: 1.25em;
+  }
 }
 
 .ra-button-size-xm {
   font-size: 0.8em;
-  // padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
 
   &.ra-button-icon {
     font-size: 1.2em;
-    // padding: calc(var(--spacing) * 0.5);
-    // width: 25px;
-    // height: 25px;
   }
 }
 

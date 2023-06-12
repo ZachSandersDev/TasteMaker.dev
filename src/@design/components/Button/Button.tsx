@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 import classNames from "../../../@modules/utils/classNames";
 
@@ -10,7 +10,8 @@ export interface ButtonProps
     HTMLButtonElement
   > {
   size?: "lg" | "md" | "xm" | "sm";
-  variant?: "chip" | "naked" | "filled" | "icon";
+  variant?: "chip" | "naked" | "naked-chip" | "filled" | "icon";
+  before?: ReactNode;
   iconBefore?: string;
   iconAfter?: string;
   color?: string;
@@ -20,6 +21,7 @@ export interface ButtonProps
 export default function Button({
   size = "md",
   variant = "filled",
+  before,
   iconBefore,
   iconAfter,
   color,
@@ -40,14 +42,16 @@ export default function Button({
       style={{ color }}
       {...rest}
     >
-      {iconBefore && (
+      {before && <i className="ra-button-icon-before">{before}</i>}
+
+      {variant !== "icon" && iconBefore && (
         <i className="material-symbols-rounded ra-button-icon-before">
           {iconBefore}
         </i>
       )}
 
-      {variant === "icon" ? (
-        <i className="material-symbols-rounded">{children}</i>
+      {variant === "icon" && iconBefore ? (
+        <i className="material-symbols-rounded">{iconBefore}</i>
       ) : (
         children
       )}

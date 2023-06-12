@@ -18,17 +18,17 @@
     --app-nav-size: 90px;
   }
 
-  --color-nav-background: rgba(249, 250, 244, 0.5);
+  --color-nav-background: rgba(248, 248, 247, 0.5);
   --color-nav-color: hsl(0, 0%, 71%);
   --color-nav-active: black;
 
   --color-link: hsl(219, 84%, 63%);
 
-  --color-background: hsl(70, 37%, 97%);
+  --color-background: rgb(248, 248, 247);
   --color-color: hsl(82, 3%, 20%);
   --color-disabled: hsl(82, 3%, 60%);
 
-  --color-input-background: hsl(219, 10%, 95%);
+  --color-input-background: hsl(219, 10%, 92%);
   --color-interface-base: hsl(219, 40%, 75%);
   --color-interface-active: hsl(219, 40%, 85%);
   --color-input-color: black;
@@ -41,16 +41,13 @@
 
   @media (prefers-color-scheme: dark) {
     --color-nav-background: rgba(0, 0, 0, 0.6);
-    // --color-nav-background: rgba(18, 24, 33, 0.6);
     --color-nav-color: rgb(125, 125, 125);
     --color-nav-active: white;
 
     --color-background: black;
-    // --color-background: hsl(214, 31%, 10%);
     --color-color: hsl(165, 3%, 90%);
 
     --color-input-background: hsl(214, 31%, 10%);
-    // --color-input-background: #2a3642;
 
     --color-interface-base: hsl(220, 35%, 30%);
     --color-interface-active: hsl(219, 29%, 35%);
@@ -61,6 +58,7 @@
   }
 
   @media (min-width: 1000px) {
+    --app-header-height: 40px;
     --app-nav-size: 25ch;
   }
 

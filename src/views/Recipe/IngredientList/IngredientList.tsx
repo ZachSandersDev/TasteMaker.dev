@@ -1,6 +1,6 @@
 import { Reorder } from "framer-motion";
 
-import { Ingredient, Recipe } from "../../../../@modules/types/recipes";
+import { Ingredient, Recipe } from "../../../@modules/types/recipes";
 
 import IngredientItem from "./IngredientItem";
 

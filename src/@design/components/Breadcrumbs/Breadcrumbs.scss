@@ -1,18 +1,22 @@
 .breadcrumbs {
-  display: flex;
-  gap: var(--spacing);
-  padding: 0 var(--spacing);
   font-size: 0.9em;
   flex: 1;
-  // overflow: auto;
+  width: 100%;
+
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .breadcrumb-link {
   color: var(--color-link);
   text-decoration: none;
+
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
+
+  display: inline;
 }
 
 span.breadcrumb-link {
@@ -22,6 +26,9 @@ span.breadcrumb-link {
 }
 
 .breadcrumb-divider {
+  display: inline;
+  padding: 0 calc(var(--spacing) * 0.5);
+
   &:last-child {
     display: none;
   }

@@ -3,7 +3,7 @@ import { ImageField } from "./imageField";
 export interface Recipe {
   _id: string;
   name: string;
-  icon: string;
+  icon?: string | null;
   parent?: string | null;
 
   servingSize?: string
@@ -34,7 +34,7 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
   const defaultedRecipe: Recipe = {
     _id: recipie._id || "",
     name: recipie.name || "",
-    icon: recipie.icon || "",
+    icon: recipie.icon || null,
     parent: recipie.parent || null,
 
     servingSize: recipie.servingSize || "",

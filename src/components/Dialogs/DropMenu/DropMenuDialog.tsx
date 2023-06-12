@@ -1,15 +1,19 @@
+import classNames from "../../../@modules/utils/classNames";
+
 import { DropMenuOption } from "./DropMenu";
 
 export interface DropMenuDialogProps {
   options: DropMenuOption[];
   onSelect: (option: DropMenuOption) => void;
   onClose: () => void;
+  selected?: string;
 }
 
 export default function DropMenuDialog({
   options,
   onSelect,
   onClose,
+  selected,
 }: DropMenuDialogProps) {
   return (
     <>
@@ -17,7 +21,10 @@ export default function DropMenuDialog({
         {options.map((o) => (
           <button
             key={o.icon + o.text}
-            className="drop-menu-item"
+            className={classNames(
+              "drop-menu-item",
+              selected === o.text && "selected"
+            )}
             onClick={() => onSelect(o)}
             style={{ color: o.color || "" }}
           >

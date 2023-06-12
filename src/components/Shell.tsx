@@ -9,8 +9,10 @@ import { recipeStore } from "../@modules/stores/recipes";
 import { listStore } from "../@modules/stores/shoppingLists";
 
 import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
+import IconPickerDialog from "./Dialogs/IconPickerDialog";
 import ImportRecipeDialog from "./Dialogs/ImportRecipeDialog";
 import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
+import TextInputDialog from "./Dialogs/TextInputDialog";
 import Loading from "./Loading";
 
 export default function Shell() {
@@ -44,6 +46,8 @@ export default function Shell() {
       <RecipeSelectorDialog />
       <EditIngredientDialog />
       <ImportRecipeDialog />
+      <TextInputDialog />
+      <IconPickerDialog />
     </>
   );
 }

@@ -1,18 +1,22 @@
-import { Recipe } from "../@modules/types/recipes";
+import { Workspace } from "../@modules/types/workspaces";
 import classNames from "../@modules/utils/classNames";
 
-export type RecipeItemProps = {
+export type WorkspaceItemProps = {
   onClick?: (e: React.MouseEvent) => void;
-  recipe: Recipe;
+  workspace: Workspace;
   disabled?: boolean;
 };
 
-export const RecipeItem = ({ onClick, recipe, disabled }: RecipeItemProps) => {
+export const WorkspaceItem = ({
+  onClick,
+  workspace,
+  disabled,
+}: WorkspaceItemProps) => {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick && !disabled) onClick(e);
   };
 
-  if (!recipe) {
+  if (!workspace) {
     return null;
   }
 
@@ -22,13 +26,13 @@ export const RecipeItem = ({ onClick, recipe, disabled }: RecipeItemProps) => {
       onClick={handleClick}
     >
       <span className="ra-option-icon">
-        {recipe.iconImage ? (
-          <img src={recipe.iconImage.imageUrl} />
+        {workspace.image ? (
+          <img src={workspace.image.imageUrl} />
         ) : (
-          recipe.icon || <i className="material-symbols-rounded">notes</i>
+          workspace.icon || <i className="material-symbols-rounded">notes</i>
         )}
       </span>
-      <span>{recipe.name || "Untitled Recipe"}</span>
+      <span>{workspace.name || "Untitled Workspace"}</span>
     </div>
   );
 };

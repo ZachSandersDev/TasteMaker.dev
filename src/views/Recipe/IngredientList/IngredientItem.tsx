@@ -1,11 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import MultilineInput from "../../../../@design/components/MultilineInput/MultilineInput";
-import { Ingredient } from "../../../../@modules/types/recipes";
+import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
+import { Ingredient } from "../../../@modules/types/recipes";
 
-import classNames from "../../../../@modules/utils/classNames";
-import { editIngredient } from "../../../../components/Dialogs/EditIngredientDialog";
-import SwipeToDelete from "../../../../components/SwipeToDelete";
+import classNames from "../../../@modules/utils/classNames";
+import { editIngredient } from "../../../components/Dialogs/EditIngredientDialog";
+import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./IngredientItem.scss";
 

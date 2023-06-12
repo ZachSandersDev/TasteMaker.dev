@@ -17,8 +17,8 @@ export function listenForMyProfile() {
     setRecoil(profileStore, (state) => ({ ...state, loading: true }));
   }
 
-  const listener = getMyProfileLive((profiles) => {
-    setRecoil(profileStore, (state) => ({ ...state, profiles, loading: false }));
+  const listener = getMyProfileLive((profile) => {
+    setRecoil(profileStore, (state) => ({ ...state, profile, loading: false }));
   });
 
   return () => {

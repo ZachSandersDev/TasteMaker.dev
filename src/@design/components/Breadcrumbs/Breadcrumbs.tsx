@@ -21,9 +21,8 @@ export default function Breadcrumbs({ links }: BreadcrumbsProps) {
         onClick={() => navigate(parent?.href || "/")}
         variant="icon"
         size="xm"
-      >
-        arrow_back_ios_new
-      </Button>
+        iconBefore="arrow_back_ios_new"
+      />
 
       {!!filteredLinks.filter((l) => l.href).length && (
         <div className="breadcrumbs">

@@ -1,17 +1,9 @@
-.ra-view-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: var(--spacing);
-  margin-bottom: calc(var(--spacing) * 2);
-}
-
 .ra-header {
   display: flex;
   align-items: center;
   width: 100%;
-  padding-bottom: calc(var(--spacing) * 2);
   gap: var(--spacing);
+  padding-bottom: calc(var(--spacing) * 2);
 }
 
 .ra-actions,
@@ -30,7 +22,7 @@
 .ra-actions-left {
   display: flex;
   justify-content: flex-start;
-  margin-top: var(--spacing);
+  margin-top: calc(var(--spacing) * 2);
   flex: initial;
 }
 
@@ -40,6 +32,18 @@
   color: var(--color-color);
 
   font-family: "Roboto Slab", serif;
+}
+
+.ra-icon {
+  font-size: 1.75em;
+  padding: 0 calc(var(--spacing) * 0.5);
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    overflow: hidden;
+  }
 }
 
 .ra-sub-title {
