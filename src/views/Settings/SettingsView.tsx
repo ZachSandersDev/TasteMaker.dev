@@ -8,9 +8,8 @@ import { profileStore } from "../../@modules/stores/profile";
 import useUpdater from "../../@modules/utils/useUpdater";
 import AppView from "../../components/AppView";
 
-import { ProfileImage } from "./ProfileImage";
-
 import "./SettingsView.scss";
+import { ProfileImage } from "../../components/ProfileImage";
 
 export default function SettingsView() {
   const [{ profile }, setProfileState] = useRecoilState(profileStore);
@@ -34,7 +33,11 @@ export default function SettingsView() {
       </header>
 
       <div className="profile-image-container">
-        <ProfileImage size="lg" onChange={handleNewProfileImage} />
+        <ProfileImage
+          size="lg"
+          imageUrl={profile?.image?.imageUrl}
+          onChange={handleNewProfileImage}
+        />
         <MultilineInput
           className="ra-title"
           value={profile?.displayName || ""}

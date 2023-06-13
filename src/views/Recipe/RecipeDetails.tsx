@@ -1,5 +1,5 @@
 import { Reorder } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
@@ -22,10 +22,8 @@ import {
 import { authStore } from "../../@modules/stores/auth";
 import { workspaceStore } from "../../@modules/stores/workspace";
 import { Recipe } from "../../@modules/types/recipes";
+import { useSWR } from "../../@modules/utils/cache.react";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
-
-import useLoader, { LoaderFunc } from "../../@modules/utils/useLoader";
-import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
@@ -48,21 +46,15 @@ export default function RecipeDetailsView() {
 
   const [editing, setEditing] = useState<boolean>(false);
 
-  const recipeLoader = useCallback<LoaderFunc<Recipe>>(
-    (cb) => getRecipe({ userId, workspaceId, recipeId }, cb),
-    [userId, workspaceId, recipeId]
-  );
-
   const {
     loading: recipeLoading,
-    data: recipe,
-    setData: setRecipe,
-  } = useLoader<Recipe>(recipeLoader, `/recipe/${recipeId}`);
-
-  const updateRecipe = useUpdater<Recipe>(recipe, (r) => {
-    setRecipe(r);
-    saveRecipe({ userId, workspaceId, recipeId }, r);
-  });
+    value: recipe,
+    updateValue: updateRecipe,
+  } = useSWR<Recipe>(
+    `${userId}/${workspaceId}/recipes/${recipeId}`,
+    () => getRecipe({ userId, workspaceId, recipeId }),
+    (r) => saveRecipe({ userId, workspaceId, recipeId }, r)
+  );
 
   useEffect(() => {
     if (recipe) {

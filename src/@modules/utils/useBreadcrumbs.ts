@@ -1,13 +1,10 @@
-
-
 import isEqual from "lodash/isEqual";
 import { useEffect, useState } from "react";
 
-import { getFolderOnce } from "../api/folders";
-
-
-import { FolderRefParams } from "../api/folders";
+import { FolderRefParams, getFolder } from "../api/folders";
 import { Folder } from "../types/folder";
+
+import { swrOnce } from "./cache";
 
 export interface BreadcrumbLink {
   text: string;
@@ -25,7 +22,9 @@ export function useBreadcrumbs(params: FolderRefParams, isRecipe?: boolean) {
       while (currentFolder) {
         const folder =
           folderRecord[currentFolder] ||
-          await getFolderOnce({ ...params, folderId: currentFolder });
+          (await swrOnce(`/folders/${currentFolder}`, () =>
+            getFolder({ ...params, folderId: currentFolder })
+          ));
 
         if (folder) {
           folderRecord[folder._id] = folder;
@@ -49,14 +48,17 @@ export function useBreadcrumbs(params: FolderRefParams, isRecipe?: boolean) {
     const folder = folders[currentFolder];
     breadcrumbs.push({
       text: folder.text || "Untitled Folder",
-      href: folder._id !== params.folderId || isRecipe ? (`/folder/${folder._id}`) : undefined
+      href:
+        folder._id !== params.folderId || isRecipe
+          ? `/folder/${folder._id}`
+          : undefined,
     });
     currentFolder = folder.parent;
   } while (currentFolder);
 
   breadcrumbs.push({
     text: "Recipes",
-    href: "/"
+    href: "/",
   });
   breadcrumbs.reverse();
   return breadcrumbs;

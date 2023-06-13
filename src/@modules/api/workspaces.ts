@@ -1,19 +1,32 @@
-import { child, ref, getDatabase, onValue, DataSnapshot, push, set, update } from "firebase/database";
+import {
+  child,
+  ref,
+  getDatabase,
+  onValue,
+  DataSnapshot,
+  push,
+  set,
+  update,
+} from "firebase/database";
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
 import { authStore } from "../stores/auth";
-import { Workspace, setWorkspaceDefaults } from "../types/workspaces";
+import {
+  JoinedWorkspace,
+  Workspace,
+  setWorkspaceDefaults,
+} from "../types/workspaces";
 
 import { app } from "./firebase";
 import { addItemID, formatSnapList, stripItemID } from "./utils";
 
 export interface WorkspaceRefParams {
-  userId?: string,
-  workspaceId?: string,
+  userId?: string;
+  workspaceId?: string;
 }
 
-function getUserId({ userId, workspaceId }: WorkspaceRefParams = {}) {
+function getUserId({ userId }: WorkspaceRefParams = {}) {
   if (userId) return userId;
 
   const { user } = getRecoil(authStore);
@@ -33,29 +46,68 @@ function getWorkspaceRef(params: WorkspaceRefParams = {}) {
   return currentRef;
 }
 
-export function getAllWorkspaces(callback: (workspaces?: Workspace[]) => void) {
-  return onValue(getWorkspaceRef(), (snapshot) => {
-    callback(formatSnapList(snapshot, formatAndCacheWorkspace));
+function getJoinedWorkspacesRef() {
+  const userId = getUserId();
+  return child(ref(getDatabase(app)), `${userId}/joinedWorkspaces`);
+}
+
+export function getMyWorkspaces(): Promise<Workspace[] | undefined> {
+  return new Promise((resolve) => {
+    onValue(
+      getWorkspaceRef(),
+      (snapshot) => {
+        resolve(formatSnapList(snapshot, formatWorkspace));
+      },
+      { onlyOnce: true }
+    );
   });
 }
 
-export function getWorkspace(params: WorkspaceRefParams, callback: (workspace?: Workspace) => void) {
+export function getJoinedWorkspaces(): Promise<JoinedWorkspace[]> {
+  return new Promise((resolve) => {
+    onValue(
+      getJoinedWorkspacesRef(),
+      (snapshot) => {
+        resolve(formatSnapList(snapshot, formatJoinedWorkspace));
+      },
+      { onlyOnce: true }
+    );
+  });
+}
+
+export function getWorkspace(
+  params: WorkspaceRefParams
+): Promise<Workspace | undefined> {
   if (!params.workspaceId) {
-    callback(undefined);
-    return () => undefined;
+    return Promise.resolve(undefined);
   }
 
-  return onValue(getWorkspaceRef(params), (snapshot) => {
-    callback(formatAndCacheWorkspace(snapshot));
+  return new Promise((resolve) => {
+    onValue(
+      getWorkspaceRef(params),
+      (snapshot) => {
+        resolve(formatWorkspace(snapshot));
+      },
+      { onlyOnce: true }
+    );
   });
 }
 
-export const saveWorkspace = debounce((params: WorkspaceRefParams, workspace: Workspace) => {
-  return set(getWorkspaceRef(params), stripItemID(setWorkspaceDefaults(workspace)));
-}, 500);
+export const saveWorkspace = debounce(
+  (params: WorkspaceRefParams, workspace: Workspace) => {
+    return set(
+      getWorkspaceRef(params),
+      stripItemID(setWorkspaceDefaults(workspace))
+    );
+  },
+  500
+);
 
 export async function newWorkspace(newWorkspace: Partial<Workspace>) {
-  return await push(getWorkspaceRef(), stripItemID(setWorkspaceDefaults(newWorkspace))).key;
+  return await push(
+    getWorkspaceRef(),
+    stripItemID(setWorkspaceDefaults(newWorkspace))
+  ).key;
 }
 
 export async function deleteWorkspace(params: WorkspaceRefParams) {
@@ -66,19 +118,20 @@ export async function deleteWorkspace(params: WorkspaceRefParams) {
   const batch = {
     [`${userId}/workspaces/${params.workspaceId}`]: null,
     [`${userId}/workspaceFolders/${params.workspaceId}`]: null,
-    [`${userId}/workspaceRecipes/${params.workspaceId}`]: null
+    [`${userId}/workspaceRecipes/${params.workspaceId}`]: null,
   };
 
   return await update(ref(getDatabase(app)), batch);
 }
 
-
 // export async function batchUpdateWorkspaces(updates: Record<string, Workspace | null>) {
 //   return await update(getWorkspaceRef(), updates);
 // }
 
-export function formatAndCacheWorkspace(snapshot: DataSnapshot) {
-  const workspace = setWorkspaceDefaults(addItemID<Workspace>(snapshot));
-  sessionStorage.setItem(`/workspace/${workspace._id}`, JSON.stringify(workspace));
-  return workspace;
+export function formatWorkspace(snapshot: DataSnapshot) {
+  return setWorkspaceDefaults(addItemID<Workspace>(snapshot));
+}
+
+export function formatJoinedWorkspace(snapshot: DataSnapshot) {
+  return addItemID<JoinedWorkspace>(snapshot);
 }

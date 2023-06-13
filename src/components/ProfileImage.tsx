@@ -7,7 +7,9 @@ import "./ProfileImage.scss";
 
 export interface ProfileImageProps {
   onChange?: (image: File) => void;
+  onClick?: () => void;
   size?: "lg" | "md" | "sm";
+  emoji?: string | null;
   imageUrl?: string;
   id?: string;
 }
@@ -80,7 +82,9 @@ async function getDefaultAvatarImg(id: string): Promise<Blob | undefined> {
 
 export function ProfileImage({
   onChange,
+  onClick,
   size = "md",
+  emoji,
   imageUrl,
   id,
 }: ProfileImageProps) {
@@ -93,7 +97,6 @@ export function ProfileImage({
 
     (async () => {
       const newDefImage = await getDefaultAvatarImg(id);
-      console.log(newDefImage);
       if (!newDefImage) return;
 
       setDefaultImage(URL.createObjectURL(newDefImage));
@@ -106,28 +109,44 @@ export function ProfileImage({
     onChange?.(imageFile);
   };
 
+  if (onChange) {
+    return (
+      <>
+        <label
+          className={classNames(
+            "profile-image",
+            !!onChange && "editing",
+            imageUrl && "image",
+            size
+          )}
+          htmlFor={`profile-image-${htmlForID.current}`}
+          style={{}}
+        >
+          <img src={imageUrl || defaultImage} />
+        </label>
+        <input
+          style={{ display: "none" }}
+          type="file"
+          id={`profile-image-${htmlForID.current}`}
+          accept="image/*"
+          onChange={handleFileChange}
+          disabled={!onChange}
+        />
+      </>
+    );
+  }
+
   return (
-    <>
-      <label
-        className={classNames(
-          "profile-image",
-          !!onChange && "editing",
-          imageUrl && "image",
-          size
-        )}
-        htmlFor={`profile-image-${htmlForID.current}`}
-        style={{}}
-      >
-        <img src={imageUrl || defaultImage} />
-      </label>
-      <input
-        style={{ display: "none" }}
-        type="file"
-        id={`profile-image-${htmlForID.current}`}
-        accept="image/*"
-        onChange={handleFileChange}
-        disabled={!onChange}
-      />
-    </>
+    <div
+      className={classNames(
+        "profile-image",
+        emoji && "emoji",
+        imageUrl && "image",
+        size
+      )}
+      onClick={onClick}
+    >
+      {emoji ? <span>{emoji}</span> : <img src={imageUrl || defaultImage} />}
+    </div>
   );
 }

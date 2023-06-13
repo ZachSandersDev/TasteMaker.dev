@@ -1,34 +1,37 @@
-import { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useSetRecoilState } from "recoil";
 
 import Button from "../@design/components/Button/Button";
 import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
-import { getWorkspace, saveWorkspace } from "../@modules/api/workspaces";
+import { deleteImage, uploadIconImage } from "../@modules/api/files";
+import {
+  deleteWorkspace,
+  getWorkspace,
+  saveWorkspace,
+} from "../@modules/api/workspaces";
+import { workspaceStore } from "../@modules/stores/workspace";
 import { Workspace } from "../@modules/types/workspaces";
-import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
-import useUpdater from "../@modules/utils/useUpdater";
+import { useSWR } from "../@modules/utils/cache.react";
 
+import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
+import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
+import { pickIcon } from "../components/Dialogs/IconPickerDialog";
 import { getText } from "../components/Dialogs/TextInputDialog";
 import Loading from "../components/Loading";
+import { ProfileImage } from "../components/ProfileImage";
 
 export default function WorkspaceSettings() {
   const { userId, workspaceId } = useParams();
+  const setWorkspace = useSetRecoilState(workspaceStore);
+  const navigate = useNavigate();
 
-  const workspaceLoader = useCallback<LoaderFunc<Workspace>>(
-    (cb) => getWorkspace({ userId, workspaceId }, cb),
-    [userId, workspaceId]
+  const { value: workspace, updateValue: updateWorkspace } = useSWR<Workspace>(
+    `${userId}/${workspaceId}/workspaces/${workspaceId}`,
+    () => getWorkspace({ userId, workspaceId }),
+    (w) => saveWorkspace({ userId, workspaceId }, w)
   );
-
-  const { data: workspace, setData: setWorkspace } = useLoader<Workspace>(
-    workspaceLoader,
-    `/workspace/${workspaceId}`
-  );
-
-  const updateWorkspace = useUpdater(workspace, (newWorkspace) => {
-    setWorkspace(newWorkspace);
-    saveWorkspace({ userId, workspaceId }, newWorkspace);
-  });
 
   const handleNewEditor = async () => {
     if (!workspace) return;
@@ -46,12 +49,88 @@ export default function WorkspaceSettings() {
     updateWorkspace((f) => (f.name = text));
   };
 
+  const handlePickIcon = async () => {
+    if (!workspace) return;
+
+    const { deleted, newEmoji, newImage } =
+      (await pickIcon({
+        title: "Workspace Icon",
+        emojiValue: workspace.icon,
+        imageValue: workspace.image,
+      })) || {};
+
+    // If we chose nothing, do nothing
+    if (!deleted && !newEmoji && !newImage) return;
+
+    // Delete existing image if need be
+    if (workspace?.image?.imageId) {
+      deleteImage(workspace.image.imageId);
+    }
+
+    // New image file was uploaded
+    if (newImage) {
+      const newIconImage = await uploadIconImage(newImage);
+      updateWorkspace((r) => {
+        r.image = newIconImage;
+        r.icon = undefined;
+      });
+    }
+
+    // Icon was deleted or an emoji was selected
+    else {
+      updateWorkspace((r) => {
+        if (deleted) {
+          r.icon = undefined;
+          r.image = undefined;
+        }
+
+        if (newEmoji) {
+          r.icon = newEmoji;
+        }
+      });
+    }
+  };
+
+  const handleDeleteWorkspace = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this workspace?"
+    );
+    if (!confirmed) return;
+
+    deleteWorkspace({ userId, workspaceId });
+
+    navigate("/");
+    setWorkspace({});
+  };
+
   if (!workspace) {
     return <Loading />;
   }
 
   return (
-    <AppView>
+    <AppView
+      header={
+        <AppHeader subView={true}>
+          <div className="ra-actions">
+            <DropMenu
+              options={[
+                {
+                  onClick: handleDeleteWorkspace,
+                  text: "Delete Workspace",
+                  icon: "delete",
+                },
+              ]}
+            />
+          </div>
+        </AppHeader>
+      }
+    >
+      <ProfileImage
+        emoji={workspace.icon}
+        imageUrl={workspace.image?.imageUrl}
+        id={workspace._id}
+        onClick={handlePickIcon}
+      />
       <header className="ra-header">
         <MultilineInput
           className="ra-title"
@@ -80,26 +159,6 @@ export default function WorkspaceSettings() {
           </Button>
         </div>
       </section>
-
-      {/* 
-      <div className="profile-image-container">
-        <ProfileImage size="lg" onChange={handleNewProfileImage} />
-        <MultilineInput
-          className="ra-title"
-          value={profile?.displayName || ""}
-          placeholder="Anonymous User"
-          onChange={(name) => updateProfile((p) => (p.displayName = name))}
-          variant="naked"
-        />
-      </div>
-
-      <button
-        className="settings-option"
-        style={{ color: "var(--color-danger)" }}
-        onClick={doLogout}
-      >
-        Log out
-      </button> */}
     </AppView>
   );
 }

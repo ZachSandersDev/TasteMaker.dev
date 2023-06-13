@@ -1,44 +1,35 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router";
 
 import { getProfile } from "../@modules/api/profile";
 import { getRecipe } from "../@modules/api/recipes";
 import { Profile } from "../@modules/types/profile";
 import { Recipe } from "../@modules/types/recipes";
-import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
+import { useSWR } from "../@modules/utils/cache.react";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import ImageUpload from "../components/ImageUpload";
 
 import Loading from "../components/Loading";
 
+import { ProfileImage } from "../components/ProfileImage";
+
 import IngredientList from "./Recipe/IngredientList/IngredientList";
 import StepItem from "./Recipe/StepList/StepItem";
 
-import { ProfileImage } from "./Settings/ProfileImage";
 import "./Recipe/RecipeDetails.scss";
 
 export default function PublicRecipeView() {
   const { userId, recipeId, workspaceId } = useParams();
 
-  const recipeLoader = useCallback<LoaderFunc<Recipe>>(
-    (cb) => getRecipe({ userId, workspaceId, recipeId }, cb),
-    [userId, workspaceId, recipeId]
+  const { loading, value: recipe } = useSWR<Recipe>(
+    `${userId}/${workspaceId}/recipes/${recipeId}`,
+    () => getRecipe({ userId, workspaceId, recipeId })
   );
 
-  const { loading, data: recipe } = useLoader(
-    recipeLoader,
-    `/recipe/${recipeId}`
-  );
-
-  const profileLoader = useCallback<LoaderFunc<Profile>>(
-    (cb) => getProfile(userId || "", cb),
-    [userId]
-  );
-
-  const { loading: profileLoading, data: profile } = useLoader(
-    profileLoader,
-    `/profile/${userId}`
+  const { loading: profileLoading, value: profile } = useSWR<Profile>(
+    `${userId}/${workspaceId}/profiles/${userId}`,
+    () => getProfile(userId || "")
   );
 
   useEffect(() => {
@@ -72,7 +63,11 @@ export default function PublicRecipeView() {
       before={<ImageUpload editing={false} image={recipe.bannerImage} />}
     >
       <div className="ra-header">
-        <ProfileImage size="md" profile={profile} />
+        <ProfileImage
+          size="md"
+          imageUrl={profile?.image?.imageUrl}
+          id={profile?.displayName || ""}
+        />
       </div>
 
       <span className="ra-title">{recipe.name || "Untitled Recipe"}</span>

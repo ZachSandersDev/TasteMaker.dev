@@ -32,8 +32,18 @@ function getProfileRef(userId: string) {
   return child(db, `${userId}/profile`);
 }
 
-export function getProfile(userId: string, callback: (r: Profile) => void) {
-  return onValue(getProfileRef(userId), (snapshot) => {
-    callback(snapshot.val());
+export function getProfile(userId: string): Promise<Profile | undefined> {
+  if (!userId) {
+    return Promise.resolve(undefined);
+  }
+
+  return new Promise((resolve) => {
+    onValue(
+      getProfileRef(userId),
+      (snapshot) => {
+        resolve(snapshot.val());
+      },
+      { onlyOnce: true }
+    );
   });
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useRecoilValue } from "recoil";
@@ -13,15 +13,12 @@ import {
   saveFolder,
 } from "../@modules/api/folders";
 import { getRecipesWithParent, newRecipe } from "../@modules/api/recipes";
-import { getWorkspace, saveWorkspace } from "../@modules/api/workspaces";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
-import { Workspace } from "../@modules/types/workspaces";
+import { useSWR } from "../@modules/utils/cache.react";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
-import useLoader, { LoaderFunc } from "../@modules/utils/useLoader";
 import useMediaQuery from "../@modules/utils/useMediaQuery";
-import useUpdater from "../@modules/utils/useUpdater";
 
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
@@ -39,56 +36,24 @@ export default function FolderView() {
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
   const isMobile = useMediaQuery("(max-width: 1000px)");
 
-  const workspaceLoader = useCallback<LoaderFunc<Workspace>>(
-    (cb) => getWorkspace({ userId, workspaceId }, cb),
-    [userId, workspaceId]
-  );
-
-  const {
-    loading: workspaceLoading,
-    data: workspace,
-    setData: setWorkspace,
-  } = useLoader<Workspace>(workspaceLoader, `/workspace/${workspaceId}`);
-
-  const updateWorkspace = useUpdater(workspace, (newWorkspace) => {
-    setWorkspace(newWorkspace);
-    saveWorkspace({ userId, workspaceId }, newWorkspace);
-  });
-
-  const folderLoader = useCallback<LoaderFunc<Folder>>(
-    (cb) => getFolder({ userId, workspaceId, folderId }, cb),
-    [userId, workspaceId, folderId]
-  );
-
   const {
     loading: folderLoading,
-    data: folder,
-    setData: setFolder,
-  } = useLoader<Folder>(folderLoader, `/folder/${folderId}`);
-
-  const updateFolder = useUpdater(folder, (newFolder) => {
-    setFolder(newFolder);
-    saveFolder({ userId, workspaceId, folderId }, newFolder);
-  });
-
-  const subFolderLoader = useCallback<LoaderFunc<Folder[]>>(
-    (cb) => getFoldersWithParent({ userId, workspaceId }, folderId, cb),
-    [userId, workspaceId, folderId]
+    value: folder,
+    updateValue: updateFolder,
+  } = useSWR<Folder>(
+    `${userId}/${workspaceId}/folders/${folderId}`,
+    () => getFolder({ userId, workspaceId, folderId }),
+    (newFolder) => saveFolder({ userId, workspaceId, folderId }, newFolder)
   );
 
-  const { loading: subFoldersLoading, data: subFolders } = useLoader<Folder[]>(
-    subFolderLoader,
-    `/foldersWithParent/${folderId}`
+  const { loading: subFoldersLoading, value: subFolders } = useSWR<Folder[]>(
+    `${userId}/${workspaceId}/foldersWithParent/${folderId}`,
+    () => getFoldersWithParent({ userId, workspaceId }, folderId)
   );
 
-  const recipeLoader = useCallback<LoaderFunc<Recipe[]>>(
-    (cb) => getRecipesWithParent({ userId, workspaceId }, folderId, cb),
-    [userId, workspaceId, folderId]
-  );
-
-  const { loading: recipesLoading, data: recipes } = useLoader<Recipe[]>(
-    recipeLoader,
-    `/recipesWithParent/${folderId}`
+  const { loading: recipesLoading, value: recipes } = useSWR<Recipe[]>(
+    `${userId}/${workspaceId}/recipesWithParent/${folderId}`,
+    () => getRecipesWithParent({ userId, workspaceId }, folderId)
   );
 
   useEffect(() => {
@@ -163,12 +128,7 @@ export default function FolderView() {
     }
   };
 
-  if (
-    folderLoading ||
-    workspaceLoading ||
-    subFoldersLoading ||
-    recipesLoading
-  ) {
+  if (folderLoading || subFoldersLoading || recipesLoading) {
     return <Loading />;
   }
 
