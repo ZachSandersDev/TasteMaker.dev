@@ -42,7 +42,9 @@ export default function WorkspaceSettings() {
     });
     if (!newMemberEmail) return;
 
-    updateWorkspace((ws) => ws.editorEmails.push(newMemberEmail));
+    updateWorkspace(
+      (ws) => (ws.editorEmails[newMemberEmail.replace(".", ",")] = true)
+    );
   };
 
   const handleRenameWorkspace = (text: string) => {
@@ -148,8 +150,8 @@ export default function WorkspaceSettings() {
 
         <ul className="ra-padded-list">
           <li>You</li>
-          {...workspace.editorEmails.map((email) => (
-            <li key={email}>{email}</li>
+          {...Object.keys(workspace.editorEmails).map((email) => (
+            <li key={email}>{email.replace(",", ".")}</li>
           ))}
         </ul>
 

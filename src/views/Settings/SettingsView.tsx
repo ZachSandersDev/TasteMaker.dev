@@ -1,9 +1,9 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import { deleteImage, uploadProfileImage } from "../../@modules/api/files";
 import { saveProfile } from "../../@modules/api/profile";
-import { doLogout } from "../../@modules/stores/auth";
+import { authStore, doLogout } from "../../@modules/stores/auth";
 import { profileStore } from "../../@modules/stores/profile";
 import useUpdater from "../../@modules/utils/useUpdater";
 import AppView from "../../components/AppView";
@@ -12,6 +12,7 @@ import "./SettingsView.scss";
 import { ProfileImage } from "../../components/ProfileImage";
 
 export default function SettingsView() {
+  const { user } = useRecoilValue(authStore);
   const [{ profile }, setProfileState] = useRecoilState(profileStore);
   const updateProfile = useUpdater(profile || {}, (newProfile) => {
     setProfileState((state) => ({ ...state, profile: newProfile }));
@@ -37,6 +38,7 @@ export default function SettingsView() {
           size="lg"
           imageUrl={profile?.image?.imageUrl}
           onChange={handleNewProfileImage}
+          id={user?.uid}
         />
         <MultilineInput
           className="ra-title"

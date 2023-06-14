@@ -15,9 +15,9 @@ import Loading from "../components/Loading";
 import { ProfileImage } from "../components/ProfileImage";
 
 import IngredientList from "./Recipe/IngredientList/IngredientList";
-import StepItem from "./Recipe/StepList/StepItem";
 
 import "./Recipe/RecipeDetails.scss";
+import StepItem from "./Recipe/StepList/StepItem";
 
 export default function PublicRecipeView() {
   const { userId, recipeId, workspaceId } = useParams();
@@ -87,7 +87,7 @@ export default function PublicRecipeView() {
         )}
 
         <div>
-          {recipe.ingredients.length && (
+          {!!recipe.ingredients.length && (
             <header className="ra-header">
               <h3>Ingredients</h3>
             </header>
@@ -97,7 +97,7 @@ export default function PublicRecipeView() {
         </div>
 
         <div>
-          {recipe.steps.length && (
+          {!!recipe.steps.length && (
             <header className="ra-header">
               <h3>Steps</h3>
             </header>

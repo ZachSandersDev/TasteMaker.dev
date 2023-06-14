@@ -46,7 +46,7 @@
     height: 100%;
     width: var(--app-nav-size);
     padding: calc(var(--spacing));
-    gap: calc(var(--spacing) * 0.5);
+    gap: calc(var(--spacing) * 1);
     box-shadow: none;
     border-right: 2px solid var(--color-interface-active);
     background-color: var(--color-nav-background);

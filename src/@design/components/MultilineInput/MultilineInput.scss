@@ -1,6 +1,5 @@
 .multiline-input {
   display: grid;
-  // flex: 1 0;
 }
 
 .multiline-input::after {
@@ -9,12 +8,12 @@
   visibility: hidden;
 }
 
-.multiline-input > textarea {
+.multiline-input-area {
   resize: none;
   overflow: hidden;
 }
 
-.multiline-input > textarea,
+.multiline-input-area,
 .multiline-input::after {
   /* Place on top of each other */
   grid-area: 1 / 1 / 2 / 2;
@@ -29,7 +28,7 @@
   transition: box-shadow 0.25s;
 }
 
-.multiline-input.filled > textarea,
+.multiline-input.filled > .multiline-input-area,
 .multiline-input.filled::after {
   background-color: var(--color-input-background);
   color: var(--color-color);
@@ -45,24 +44,24 @@
   }
 }
 
-.multiline-input.filled > textarea:not(:disabled):hover {
+.multiline-input.filled > textarea.multiline-input-area:hover {
   box-shadow: inset 0 0 0 1px var(--color-interface-base);
 }
 
-.multiline-input.filled > textarea:not(:disabled):focus {
+.multiline-input.filled > textarea.multiline-input-area:focus {
   box-shadow: inset 0 0 0 2px var(--color-interface-active);
 }
 
-.multiline-input.naked > textarea,
+.multiline-input.naked > .multiline-input-area,
 .multiline-input.naked::after {
   padding: calc(var(--spacing) * 0.5);
   border-radius: calc(var(--spacing) * 0.5);
 }
 
-.multiline-input.naked > textarea:not(:disabled):hover {
+.multiline-input.naked > textarea.multiline-input-area:hover {
   box-shadow: inset 0 0 0 3px var(--color-interface-base);
 }
 
-.multiline-input.naked > textarea:not(:disabled):focus {
+.multiline-input.naked > textarea.multiline-input-area:focus {
   box-shadow: inset 0 0 0 3px var(--color-interface-active);
 }

@@ -43,17 +43,20 @@ export const MultilineInput = forwardRef<
         )}
         data-replicated-value={value}
       >
-        <textarea
-          rows={1}
-          className={className}
-          placeholder={placeholder}
-          value={value}
-          onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-          disabled={disabled}
-          onChange={(e) => onChange?.(e.target.value)}
-          ref={ref}
-        />
+        {disabled ? (
+          <div className="multiline-input-area">{value}</div>
+        ) : (
+          <textarea
+            rows={1}
+            className={classNames(className, "multiline-input-area")}
+            placeholder={placeholder}
+            value={value}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp}
+            onChange={(e) => onChange?.(e.target.value)}
+            ref={ref}
+          />
+        )}
       </div>
     );
   }

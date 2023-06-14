@@ -5,18 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import Button from "../@design/components/Button/Button";
-import {
-  getJoinedWorkspaces,
-  getMyWorkspaces,
-  getWorkspace,
-  newWorkspace,
-} from "../@modules/api/workspaces";
+import { newWorkspace } from "../@modules/api/workspaces";
+import { useAllWorkspaces } from "../@modules/hooks/useAllWorkspaces";
 import { authStore } from "../@modules/stores/auth";
 import { profileStore } from "../@modules/stores/profile";
 import { workspaceStore } from "../@modules/stores/workspace";
-import { JoinedWorkspace, Workspace } from "../@modules/types/workspaces";
-
-import { useSWR } from "../@modules/utils/cache.react";
 
 import { ProfileImage } from "./ProfileImage";
 import Spinner from "./Spinner";
@@ -32,23 +25,7 @@ export default function WorkspacePicker() {
 
   const navigate = useNavigate();
 
-  const { loading: myWorkspacesLoading, value: myWorkspaces } = useSWR<
-    Workspace[]
-  >(`${user?.uid}/workspaces`, () => getMyWorkspaces());
-
-  const { value: joinedWorkspaceIds } = useSWR<JoinedWorkspace[]>(
-    `${user?.uid}/joinedWorkspaceIds`,
-    () => getJoinedWorkspaces()
-  );
-
-  const { loading: joinedWorkspacesLoading, value: joinedWorkspaces } = useSWR<
-    Workspace[]
-  >(`${user?.uid}/joinedWorkspaces`, () => {
-    if (!joinedWorkspaceIds) return Promise.resolve([]);
-    return Promise.all(
-      joinedWorkspaceIds.map((params) => getWorkspace(params))
-    ).then((workspaces) => workspaces.filter((w): w is Workspace => !!w));
-  });
+  const { workspaces, loading } = useAllWorkspaces();
 
   const handleSwitchWorkspace = (userId?: string, workspaceId?: string) => {
     if (!workspaceId) {
@@ -73,32 +50,11 @@ export default function WorkspacePicker() {
     }
   };
 
-  if (myWorkspacesLoading || joinedWorkspacesLoading) {
+  if (loading) {
     return <Spinner />;
   }
 
-  if (!myWorkspaces && !joinedWorkspaces) {
-    return null;
-  }
-
-  const allWorkspaces = [
-    ...(myWorkspaces || []).map((ws) => ({
-      uid: user?.uid,
-      ws,
-    })),
-    ...(joinedWorkspaces || []).map((ws) => {
-      const joinedWorkspaceParams = joinedWorkspaceIds?.find(
-        (jws) => jws.workspaceId === ws._id
-      );
-
-      return {
-        uid: joinedWorkspaceParams?.userId,
-        ws,
-      };
-    }),
-  ];
-
-  const selectedWorkspace = allWorkspaces.find(
+  const selectedWorkspace = workspaces.find(
     ({ ws }) => ws._id === workspaceId
   )?.ws;
 
@@ -116,7 +72,7 @@ export default function WorkspacePicker() {
                 ? selectedWorkspace.image?.imageUrl
                 : profile?.image?.imageUrl
             }
-            id={selectedWorkspace?._id}
+            id={selectedWorkspace?._id || user?.uid}
           />
         }
         onClick={() => setIsOpen(true)}
@@ -147,7 +103,7 @@ export default function WorkspacePicker() {
                 </Button>
                 <div />
 
-                {...allWorkspaces.map(({ uid, ws }) => (
+                {...workspaces.map(({ uid, ws }) => (
                   <Fragment key={ws._id}>
                     <Button
                       before={
@@ -163,12 +119,14 @@ export default function WorkspacePicker() {
                     >
                       {ws.name || "Untitled Workspace"}
                     </Button>
-                    <Button
-                      iconBefore="settings"
-                      variant="icon"
-                      size="sm"
-                      onClick={() => handleWorkspaceSettings(ws._id)}
-                    />
+                    {uid === user?.uid && (
+                      <Button
+                        iconBefore="settings"
+                        variant="icon"
+                        size="sm"
+                        onClick={() => handleWorkspaceSettings(ws._id)}
+                      />
+                    )}
                   </Fragment>
                 ))}
               </div>

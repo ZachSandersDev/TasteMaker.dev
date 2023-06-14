@@ -8,12 +8,12 @@ export interface JoinedWorkspace {
 
 export interface Workspace {
   _id: string;
-  
+
   name?: string | null;
   icon?: string | null;
   image?: ImageField | null;
 
-  editorEmails: string[];
+  editorEmails: Record<string, boolean>;
 }
 
 export function setWorkspaceDefaults(workspace: Partial<Workspace>) {
@@ -24,7 +24,7 @@ export function setWorkspaceDefaults(workspace: Partial<Workspace>) {
     icon: workspace.icon || null,
     image: workspace.image || null,
 
-    editorEmails: []
+    editorEmails: workspace.editorEmails || {},
   };
 
   return newWorkspace;

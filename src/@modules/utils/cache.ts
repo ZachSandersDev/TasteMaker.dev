@@ -66,11 +66,17 @@ export function swr<T>(
   }
 
   setIsLoading(cacheKey);
-  loader().then((value) => {
-    setCachedValue(cacheKey, value);
-    notifyListeners(cacheKey, value);
-    callback(value);
-  });
+  loader()
+    .then((value) => {
+      // console.log("swr", cacheKey, value);
+
+      setCachedValue(cacheKey, value);
+      notifyListeners(cacheKey, value);
+      callback(value);
+    })
+    .catch((error) => {
+      // console.log("swr", cacheKey, error);
+    });
 }
 
 export function swrOnce<T>(

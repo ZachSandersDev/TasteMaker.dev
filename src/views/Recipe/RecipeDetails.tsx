@@ -343,7 +343,7 @@ export default function RecipeDetailsView() {
         )}
 
         <div>
-          {(recipe.ingredients.length || editing) && (
+          {(!!recipe.ingredients.length || editing) && (
             <header className="ra-header">
               <h3>Ingredients</h3>
             </header>
@@ -368,7 +368,7 @@ export default function RecipeDetailsView() {
         </div>
 
         <div>
-          {(recipe.steps.length || editing) && (
+          {(!!recipe.steps.length || editing) && (
             <header className="ra-header">
               <h3>Steps</h3>
             </header>

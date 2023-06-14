@@ -89,6 +89,10 @@ export function getRecipe(
       (snapshot) => {
         resolve(formatRecipe(snapshot));
       },
+      (error) => {
+        console.error(error);
+        resolve(undefined);
+      },
       { onlyOnce: true }
     );
   });

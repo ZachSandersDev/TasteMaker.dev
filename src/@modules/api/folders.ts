@@ -71,6 +71,10 @@ export function getFoldersWithParent(
         );
         resolve(folders);
       },
+      (error) => {
+        console.error(error);
+        resolve([]);
+      },
       { onlyOnce: true }
     );
   });
