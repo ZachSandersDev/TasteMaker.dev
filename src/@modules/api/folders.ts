@@ -15,6 +15,7 @@ import {
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
+import { getFolderCacheKey } from "../hooks/folders";
 import { authStore } from "../stores/auth";
 
 import { Folder, setFolderDefaults } from "../types/folder";
@@ -67,7 +68,7 @@ export function getFoldersWithParent(
       (snapshot) => {
         const folders = formatSnapList(snapshot, formatFolder);
         folders.forEach((folder) =>
-          setCachedValue(`/folders/${folder._id}`, folder)
+          setCachedValue(getFolderCacheKey(params), folder)
         );
         resolve(folders);
       },

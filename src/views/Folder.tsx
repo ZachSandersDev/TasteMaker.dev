@@ -8,11 +8,12 @@ import MultilineInput from "../@design/components/MultilineInput/MultilineInput"
 import {
   deleteFolder,
   getFolder,
-  getFoldersWithParent,
   newFolder,
   saveFolder,
 } from "../@modules/api/folders";
-import { getRecipesWithParent, newRecipe } from "../@modules/api/recipes";
+import { newRecipe } from "../@modules/api/recipes";
+import { useFoldersWithParent } from "../@modules/hooks/folders";
+import { useRecipesWithParent } from "../@modules/hooks/recipes";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
@@ -25,9 +26,9 @@ import AppView from "../components/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { pickIcon } from "../components/Dialogs/IconPickerDialog";
 import { selectFolder } from "../components/Dialogs/RecipeSelectorDialog";
+import { FolderItem } from "../components/FolderItem";
 import Loading from "../components/Loading";
 import { RecipeItem } from "../components/RecipeItem";
-import { FolderItem } from "../components/RecipeTree/FolderItem";
 import Spinner from "../components/Spinner";
 import WorkspacePicker from "../components/WorkspacePicker";
 
@@ -46,14 +47,15 @@ export default function FolderView() {
     (newFolder) => saveFolder({ userId, workspaceId, folderId }, newFolder)
   );
 
-  const { loading: subFoldersLoading, value: subFolders } = useSWR<Folder[]>(
-    `${userId}/${workspaceId}/foldersWithParent/${folderId}`,
-    () => getFoldersWithParent({ userId, workspaceId }, folderId)
-  );
+  const { foldersLoading, folders, revalidateFolders } = useFoldersWithParent({
+    userId,
+    workspaceId,
+    folderId,
+  });
 
-  const { loading: recipesLoading, value: recipes } = useSWR<Recipe[]>(
-    `${userId}/${workspaceId}/recipesWithParent/${folderId}`,
-    () => getRecipesWithParent({ userId, workspaceId }, folderId)
+  const { recipesLoading, recipes, revalidateRecipes } = useRecipesWithParent(
+    { userId, workspaceId },
+    folderId
   );
 
   useEffect(() => {
@@ -65,16 +67,24 @@ export default function FolderView() {
   }, [folder]);
 
   const navigate = useNavigate();
-  const breadcrumbs = useBreadcrumbs({ userId, workspaceId, folderId });
+  const { breadcrumbs, revalidateBreadcrumbs } = useBreadcrumbs({
+    userId,
+    workspaceId,
+    folderId,
+  });
 
-  const makeNewRecipe = () =>
-    newRecipe({ userId, workspaceId }, { name: "", parent: folder?._id });
+  const makeNewRecipe = async () => {
+    await newRecipe({ userId, workspaceId }, { name: "", parent: folder?._id });
+    revalidateRecipes();
+  };
 
-  const makeNewFolder = () =>
-    newFolder(
+  const makeNewFolder = async () => {
+    await newFolder(
       { userId, workspaceId },
       { text: "New Folder", parent: folder?._id }
     );
+    revalidateFolders();
+  };
 
   const handleRecipeClick = (recipe: Recipe) => {
     navigate(`/recipe/${recipe._id}`);
@@ -122,13 +132,14 @@ export default function FolderView() {
   const handleMove = async () => {
     if (!folder?._id) return;
 
-    const newParent = await selectFolder(folder._id);
+    const newParent = await selectFolder(folder._id, { userId, workspaceId });
     if (newParent) {
-      updateFolder((f) => (f.parent = newParent));
+      updateFolder((f) => (f.parent = newParent.folderId));
+      revalidateBreadcrumbs();
     }
   };
 
-  if (folderLoading || subFoldersLoading || recipesLoading) {
+  if (folderLoading || foldersLoading || recipesLoading) {
     return <Loading />;
   }
 
@@ -204,11 +215,11 @@ export default function FolderView() {
         )}
       </div>
 
-      {subFoldersLoading || recipesLoading ? (
+      {foldersLoading || recipesLoading ? (
         <Spinner />
       ) : (
         <>
-          {subFolders?.map((subFolder) => (
+          {folders?.map((subFolder) => (
             <FolderItem
               key={subFolder._id}
               folder={subFolder}

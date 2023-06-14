@@ -1,10 +1,8 @@
 import { Reorder, useDragControls } from "framer-motion";
 import { KeyboardEvent, forwardRef } from "react";
-import { useRecoilValue } from "recoil";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
-import { recipeStore } from "../../../@modules/stores/recipes";
-import { Recipe } from "../../../@modules/types/recipes";
+import { useRecipeList } from "../../../@modules/hooks/recipes";
 import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
 
 import classNames from "../../../@modules/utils/classNames";
@@ -23,13 +21,9 @@ export const ShoppingIngredientItem = forwardRef<
   HTMLTextAreaElement,
   ShoppingIngredientItemProp
 >(({ ingredient, index, onDelete, onUpdate, onKeyDown, editing }, ref) => {
-  const { recipes } = useRecoilValue(recipeStore);
-  const includedInRecipes =
-    ingredient.recipeIds
-      ?.map((id) => recipes.find((r) => r._id === id))
-      .filter((r): r is Recipe => !!r) || [];
-
   const controls = useDragControls();
+
+  const { recipeList } = useRecipeList(ingredient.fromRecipes || []);
 
   const setComplete = (
     ingredient: ShoppingListIngredient,
@@ -72,12 +66,12 @@ export const ShoppingIngredientItem = forwardRef<
               <span className="sil-item-text">{ingredient.ingredient}</span>
             </label>
           </div>
-          {!!includedInRecipes.length && (
+          {!!recipeList.length && (
             <span className="sil-included-in">
-              {includedInRecipes.map((r, i) => (
+              {recipeList.map((r, i) => (
                 <span key={r._id}>
                   {r.name}
-                  {i !== includedInRecipes.length - 1 && ", "}
+                  {i !== recipeList.length - 1 && ", "}
                 </span>
               ))}
             </span>
@@ -156,9 +150,9 @@ export const ShoppingIngredientItem = forwardRef<
               <span className="sil-item-text">{ingredient.ingredient}</span>
             )}
           </div>
-          {!!includedInRecipes.length && (
+          {!!recipeList.length && (
             <span className="sil-included-in">
-              {includedInRecipes.map((r) => r.name).join(", ")}
+              {recipeList.map((r) => r.name).join(", ")}
             </span>
           )}
         </div>

@@ -1,23 +1,20 @@
-import { useRecoilValue } from "recoil";
-
 import Button from "../../@design/components/Button/Button";
 
 import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
 import { newList } from "../../@modules/api/shoppingLists";
-import { listStore } from "../../@modules/stores/shoppingLists";
 
+import { useShoppingLists } from "../../@modules/hooks/shoppingLists";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import { ShoppingListItem } from "../../components/ShoppingListItem";
 
 export default function ShoppingListsView() {
-  const { lists } = useRecoilValue(listStore);
+  const { shoppingLists } = useShoppingLists();
 
   const makeNewShoppingList = async () => {
     await newList({
       _id: "",
       name: "Untitled Shopping List",
-      recipeIds: [],
       ingredients: [],
     });
   };
@@ -45,9 +42,9 @@ export default function ShoppingListsView() {
         />
       </header>
 
-      {lists.length ? (
+      {shoppingLists?.length ? (
         <div className="ra-option-list">
-          {lists.map((l) => (
+          {shoppingLists?.map((l) => (
             <ShoppingListItem key={l._id} shoppingList={l} />
           ))}
         </div>

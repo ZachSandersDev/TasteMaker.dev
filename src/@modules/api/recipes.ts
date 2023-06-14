@@ -15,6 +15,7 @@ import {
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
 
+import { getRecipeCacheKey } from "../hooks/recipes";
 import { authStore } from "../stores/auth";
 
 import { Recipe, setRecipeDefaults } from "../types/recipes";
@@ -67,7 +68,7 @@ export function getRecipesWithParent(
       (snapshot) => {
         const recipes = formatSnapList(snapshot, formatRecipe);
         recipes.forEach((recipe) =>
-          setCachedValue(`/recipes/${recipe._id}`, recipe)
+          setCachedValue(getRecipeCacheKey(params), recipe)
         );
         resolve(recipes);
       },

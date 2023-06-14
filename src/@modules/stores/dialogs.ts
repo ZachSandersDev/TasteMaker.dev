@@ -1,15 +1,28 @@
 import { atom } from "recoil";
 
-import { IconPickerResult, IconPickerState } from "../../components/Dialogs/IconPickerDialog";
-import { Recipe } from "../types/recipes";
+import {
+  IconPickerResult,
+  IconPickerState,
+} from "../../components/Dialogs/IconPickerDialog";
+import { RecipeSelectorResult } from "../../components/Dialogs/RecipeSelectorDialog";
+import { WorkspaceRefParams } from "../api/workspaces";
 
 export interface DialogState<T, P> {
   resolve?: (r?: T) => void;
   reject?: (e: Error) => void;
-  payload?: P
+  payload?: P;
 }
 
-export const RecipeSelectorDialogAtom = atom<DialogState<Recipe | string, { folderOnly?: boolean; disablePathUnder?: string }>>({
+export const RecipeSelectorDialog = atom<
+  DialogState<
+    RecipeSelectorResult,
+    {
+      folderOnly?: boolean;
+      disablePathUnder?: string;
+      params?: WorkspaceRefParams;
+    }
+  >
+>({
   key: "recipeSelectorDialog",
   default: {},
 });
@@ -19,12 +32,16 @@ export const EditIngredientDialog = atom<DialogState<string, string>>({
   default: {},
 });
 
-export const TextInputDialog = atom<DialogState<string, { title: string, placeholder: string, value?: string }>>({
+export const TextInputDialog = atom<
+  DialogState<string, { title: string; placeholder: string; value?: string }>
+>({
   key: "textInputDialog",
   default: {},
 });
 
-export const IconPickerDialog = atom<DialogState<IconPickerResult, IconPickerState>>({
+export const IconPickerDialog = atom<
+  DialogState<IconPickerResult, IconPickerState>
+>({
   key: "iconPickerDialog",
   default: {},
 });

@@ -4,9 +4,6 @@ import { useRecoilValue } from "recoil";
 
 import router from "../@modules/router";
 import { authStore, listenForAuth } from "../@modules/stores/auth";
-import { folderStore } from "../@modules/stores/folders";
-import { recipeStore } from "../@modules/stores/recipes";
-import { listStore } from "../@modules/stores/shoppingLists";
 
 import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
 import IconPickerDialog from "./Dialogs/IconPickerDialog";
@@ -17,9 +14,6 @@ import Loading from "./Loading";
 
 export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
-  const { loading: recipesLoading } = useRecoilValue(recipeStore);
-  const { loading: listsLoading } = useRecoilValue(listStore);
-  const { loading: foldersLoading } = useRecoilValue(folderStore);
 
   useEffect(() => {
     listenForAuth();
@@ -31,12 +25,7 @@ export default function Shell() {
     }
   }, [userLoading, user]);
 
-  if (
-    (!user && userLoading) ||
-    recipesLoading ||
-    listsLoading ||
-    foldersLoading
-  ) {
+  if (!user && userLoading) {
     return <Loading />;
   }
 

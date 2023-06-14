@@ -1,5 +1,5 @@
-import { Folder } from "../../@modules/types/folder";
-import classNames from "../../@modules/utils/classNames";
+import { Folder } from "../@modules/types/folder";
+import classNames from "../@modules/utils/classNames";
 
 export type FolderItemProps = {
   className?: string;

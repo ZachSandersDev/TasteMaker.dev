@@ -63,7 +63,7 @@ export default function RecipeDetailsView() {
   }, [recipe]);
 
   const navigate = useNavigate();
-  const breadcrumbs = useBreadcrumbs(
+  const { breadcrumbs } = useBreadcrumbs(
     {
       userId,
       workspaceId,
@@ -109,7 +109,7 @@ export default function RecipeDetailsView() {
   const handleMove = async () => {
     const newParent = await selectFolder();
     if (newParent) {
-      updateRecipe((r) => (r.parent = newParent));
+      updateRecipe((r) => (r.parent = newParent.folderId));
     }
   };
 

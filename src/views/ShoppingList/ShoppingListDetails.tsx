@@ -5,12 +5,13 @@ import { v4 as uuid } from "uuid";
 import Button from "../../@design/components/Button/Button";
 
 import MultilineInput from "../../@design/components/MultilineInput/MultilineInput";
-import { deleteList, saveList } from "../../@modules/api/shoppingLists";
-import { useList } from "../../@modules/stores/shoppingLists";
+import { getRecipe } from "../../@modules/api/recipes";
+import { deleteList } from "../../@modules/api/shoppingLists";
+import { getRecipeCacheKey } from "../../@modules/hooks/recipes";
+import { useShoppingList } from "../../@modules/hooks/shoppingLists";
 import { Ingredient } from "../../@modules/types/recipes";
-import { ShoppingList } from "../../@modules/types/shoppingLists";
+import { swrOnce } from "../../@modules/utils/cache";
 import mergeIngredients from "../../@modules/utils/mergeIngredients";
-import useUpdater from "../../@modules/utils/useUpdater";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
@@ -19,24 +20,24 @@ import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import { ShoppingIngredientList } from "./IngredientList/ShoppingIngredientList";
 
 export default function ShoppingListDetailsView() {
-  const { listId } = useParams();
+  const { listId = "" } = useParams();
   const navigate = useNavigate();
   const [editing, setEditing] = useState<boolean>(false);
 
-  const [list, setList] = useList(listId as string);
-  const updateList = useUpdater<ShoppingList>(list, (l) => {
-    setList(l);
-    saveList(l);
-  });
+  const { shoppingList, updateShoppingList } = useShoppingList(listId);
 
   const addRecipe = async () => {
     try {
-      const newRecipe = await selectRecipe();
+      const newRecipeParams = await selectRecipe();
+      if (!newRecipeParams) return;
+
+      const newRecipe = await swrOnce(getRecipeCacheKey(newRecipeParams), () =>
+        getRecipe(newRecipeParams)
+      );
       if (!newRecipe) return;
 
-      updateList((l) => {
-        l.recipeIds.push(newRecipe._id);
-        mergeIngredients(newRecipe, l);
+      updateShoppingList((l) => {
+        mergeIngredients(newRecipeParams, newRecipe, l);
       });
     } catch (err) {
       console.error(err);
@@ -44,11 +45,11 @@ export default function ShoppingListDetailsView() {
   };
 
   const setListName = (value: string) => {
-    updateList((l) => (l.name = value));
+    updateShoppingList((l) => (l.name = value));
   };
 
   const addNewIngredient = (at?: number) => {
-    updateList((l) => {
+    updateShoppingList((l) => {
       if (at !== undefined) {
         l.ingredients.splice(at, 0, {
           _id: uuid(),
@@ -64,22 +65,22 @@ export default function ShoppingListDetailsView() {
   };
 
   const reorderIngredients = (ingredients: Ingredient[]) => {
-    updateList((r) => (r.ingredients = ingredients));
+    updateShoppingList((r) => (r.ingredients = ingredients));
   };
 
   const handleDeleteList = () => {
-    if (!list) throw "List not loaded";
+    if (!shoppingList) throw "List not loaded";
 
     const confirmed = window.confirm(
       "Are you sure you want to delete this shopping list?"
     );
     if (confirmed) {
-      deleteList(list._id);
+      deleteList(shoppingList._id);
       navigate("/shopping-lists");
     }
   };
 
-  if (!list) {
+  if (!shoppingList) {
     return <span className="ra-error-message">Shopping list not found...</span>;
   }
 
@@ -104,7 +105,7 @@ export default function ShoppingListDetailsView() {
             />
 
             <Button
-              title="Delete list"
+              title="Delete shoppingList"
               onClick={handleDeleteList}
               variant="icon"
               iconBefore="delete"
@@ -116,7 +117,7 @@ export default function ShoppingListDetailsView() {
       <div className="ra-header">
         <MultilineInput
           className="ra-title"
-          value={list.name}
+          value={shoppingList.name}
           placeholder="Untitled Shopping List"
           onChange={(v) => setListName(v)}
           variant="naked"
@@ -125,12 +126,12 @@ export default function ShoppingListDetailsView() {
       </div>
 
       <ShoppingIngredientList
-        list={list}
+        list={shoppingList}
         onNew={addNewIngredient}
         onUpdate={(newIngredient, i) =>
-          updateList((r) => r.ingredients.splice(i, 1, newIngredient))
+          updateShoppingList((r) => r.ingredients.splice(i, 1, newIngredient))
         }
-        onDelete={(i) => updateList((r) => r.ingredients.splice(i, 1))}
+        onDelete={(i) => updateShoppingList((r) => r.ingredients.splice(i, 1))}
         onReorder={reorderIngredients}
         editing={editing}
       />

@@ -4,96 +4,103 @@ import { setRecoil } from "recoil-nexus";
 
 import Button from "../../@design/components/Button/Button";
 
-import { getFolder, getFoldersWithParent } from "../../@modules/api/folders";
-import { getRecipesWithParent } from "../../@modules/api/recipes";
+import { FolderRefParams } from "../../@modules/api/folders";
+import { RecipeRefParams } from "../../@modules/api/recipes";
+import { WorkspaceRefParams } from "../../@modules/api/workspaces";
+import { useFolder, useFoldersWithParent } from "../../@modules/hooks/folders";
+import { useRecipesWithParent } from "../../@modules/hooks/recipes";
 import { useAllWorkspaces } from "../../@modules/hooks/useAllWorkspaces";
 import { authStore } from "../../@modules/stores/auth";
-import { RecipeSelectorDialogAtom } from "../../@modules/stores/dialogs";
+import { RecipeSelectorDialog } from "../../@modules/stores/dialogs";
 
 import { profileStore } from "../../@modules/stores/profile";
 import { Folder } from "../../@modules/types/folder";
 import { Recipe } from "../../@modules/types/recipes";
-import { useSWR } from "../../@modules/utils/cache.react";
 
 import "./RecipeSelectorDialog.scss";
+import { FolderItem } from "../FolderItem";
 import { ProfileImage } from "../ProfileImage";
 import { RecipeItem } from "../RecipeItem";
-import { FolderItem } from "../RecipeTree/FolderItem";
+
+export interface RecipeSelectorResult {
+  recipe?: RecipeRefParams;
+  folder?: FolderRefParams;
+}
 
 export function selectRecipe() {
-  return new Promise<Recipe | undefined>((resolve, reject) => {
-    setRecoil(RecipeSelectorDialogAtom, {
-      // @ts-expect-error Resolve could resolve recipe or string
-      resolve,
+  return new Promise<RecipeRefParams | undefined>((resolve, reject) => {
+    setRecoil(RecipeSelectorDialog, {
+      resolve: ({ recipe } = {}) => resolve(recipe),
       reject,
       payload: { folderOnly: false },
     });
   });
 }
 
-export function selectFolder(disablePathUnder?: string) {
-  return new Promise<string | undefined>((resolve, reject) => {
-    setRecoil(RecipeSelectorDialogAtom, {
-      // @ts-expect-error Resolve could resolve recipe or string
-      resolve,
+export function selectFolder(
+  disablePathUnder?: string,
+  params?: WorkspaceRefParams
+) {
+  return new Promise<FolderRefParams | undefined>((resolve, reject) => {
+    setRecoil(RecipeSelectorDialog, {
+      resolve: ({ folder } = {}) => resolve(folder),
       reject,
-      payload: { folderOnly: true, disablePathUnder },
+      payload: { folderOnly: true, disablePathUnder, params },
     });
   });
 }
 
-export default function RecipeSelectorDialog() {
+export default function RecipeSelectorDialogComponent() {
   const { user } = useRecoilValue(authStore);
   const { profile } = useRecoilValue(profileStore);
   const [
     {
       resolve,
       reject,
-      payload: { folderOnly = false, disablePathUnder = undefined } = {},
+      payload: {
+        folderOnly = false,
+        disablePathUnder = undefined,
+        params = undefined,
+      } = {},
     },
     setDialogState,
-  ] = useRecoilState(RecipeSelectorDialogAtom);
+  ] = useRecoilState(RecipeSelectorDialog);
 
   const [folderStack, setFolderStack] = useState<string[]>([]);
-  const [{ userId, workspaceId }, setWorkspace] = useState<{
-    userId?: string | null;
-    workspaceId?: string | null;
-  }>({ userId: null, workspaceId: null });
+  const [workspace, setWorkspace] = useState<WorkspaceRefParams | undefined>(
+    undefined
+  );
 
+  const { userId, workspaceId } = workspace || {};
   const folderId = folderStack.at(-1);
 
   const { workspaces } = useAllWorkspaces();
 
-  const { value: currentFolder } = useSWR<Folder>(
-    `${userId}/${workspaceId}/folders/${folderId}`,
-    () =>
-      userId !== null && workspaceId !== null
-        ? getFolder({ userId, workspaceId, folderId })
-        : Promise.resolve(undefined)
-  );
+  const { folder: currentFolder } = useFolder({
+    userId,
+    workspaceId,
+    folderId,
+  });
 
-  const { value: folders } = useSWR<Folder[]>(
-    `${userId}/${workspaceId}/foldersWithParent/${folderId}`,
-    () =>
-      userId !== null && workspaceId !== null
-        ? getFoldersWithParent({ userId, workspaceId }, folderId)
-        : Promise.resolve(undefined)
-  );
+  const { folders } = useFoldersWithParent({ userId, workspaceId, folderId });
+  const { recipes } = useRecipesWithParent({ userId, workspaceId }, folderId);
 
-  const { value: recipes } = useSWR<Recipe[]>(
-    `${userId}/${workspaceId}/recipesWithParent/${folderId}`,
-    () =>
-      userId !== null && workspaceId !== null
-        ? getRecipesWithParent({ userId, workspaceId }, folderId)
-        : Promise.resolve(undefined)
-  );
-
-  const res = (r?: Recipe | string) => {
-    if (resolve) {
-      resolve(r);
+  useEffect(() => {
+    if (!resolve || !reject) {
+      setFolderStack([]);
+      setWorkspace(undefined);
     }
-    setDialogState({});
-  };
+  }, [resolve, reject]);
+
+  useEffect(() => {
+    if (params) {
+      setWorkspace(params);
+    }
+  }, [params]);
+
+  if (!resolve || !reject) {
+    return null;
+  }
 
   const handleBackClick = () => {
     if (folderStack.length > 0) {
@@ -101,27 +108,27 @@ export default function RecipeSelectorDialog() {
       return;
     }
 
-    setWorkspace({ userId: null, workspaceId: null });
+    setWorkspace(undefined);
   };
 
   const handleRecipeClick = (recipe: Recipe) => {
-    res(recipe);
+    resolve({ recipe: { userId, workspaceId, recipeId: recipe._id } });
+    setDialogState({});
   };
 
   const handleFolderClick = (folder: Folder) => {
     setFolderStack([...folderStack, String(folder._id)]);
   };
 
-  useEffect(() => {
-    if (!resolve || !reject) {
-      setFolderStack([]);
-      setWorkspace({ userId: null, workspaceId: null });
-    }
-  }, [resolve, reject]);
+  const handleFolderAccept = () => {
+    resolve({ folder: { userId, workspaceId, folderId } });
+    setDialogState({});
+  };
 
-  if (!resolve || !reject) {
-    return null;
-  }
+  const handleCancel = () => {
+    resolve();
+    setDialogState({});
+  };
 
   return (
     <>
@@ -130,7 +137,7 @@ export default function RecipeSelectorDialog() {
           className="ra-card-header"
           style={{ justifyContent: "flex-start", gap: "var(--spacing)" }}
         >
-          {(currentFolder || userId !== null) && (
+          {(currentFolder || (!params && !!workspace)) && (
             <Button
               onClick={handleBackClick}
               variant="icon"
@@ -145,7 +152,7 @@ export default function RecipeSelectorDialog() {
         </header>
 
         <div className="ra-compact-list">
-          {userId === null && workspaceId === null && (
+          {!params && !!workspace && (
             <>
               <Button
                 before={
@@ -186,43 +193,35 @@ export default function RecipeSelectorDialog() {
             </>
           )}
 
-          {folders?.map((subFolder) => (
-            <FolderItem
-              key={subFolder._id}
-              folder={subFolder}
-              onClick={() => handleFolderClick(subFolder)}
-            />
-          ))}
+          {folders
+            ?.filter((f) => f._id !== disablePathUnder)
+            .map((subFolder) => (
+              <FolderItem
+                key={subFolder._id}
+                folder={subFolder}
+                onClick={() => handleFolderClick(subFolder)}
+              />
+            ))}
 
-          {recipes?.map((recipe) => (
-            <RecipeItem
-              key={recipe._id}
-              recipe={recipe}
-              onClick={() => handleRecipeClick(recipe)}
-            />
-          ))}
-
-          {/* <RecipeTree
-            folderOnly={folderOnly}
-            folderId={currentFolder?._id}
-            disablePathUnder={disablePathUnder}
-            onRecipeClick={handleRecipeClick}
-            onFolderClick={handleFolderClick}
-          /> */}
+          {!folderOnly &&
+            recipes?.map((recipe) => (
+              <RecipeItem
+                key={recipe._id}
+                recipe={recipe}
+                onClick={() => handleRecipeClick(recipe)}
+              />
+            ))}
         </div>
 
         {folderOnly && (
           <div className="ra-actions">
-            <Button
-              onClick={() => res(String(currentFolder?._id || -1))}
-              size="sm"
-            >
+            <Button onClick={handleFolderAccept} size="sm">
               Select this folder
             </Button>
           </div>
         )}
       </div>
-      <div className="ra-dialog-cover" onClick={() => res(undefined)}></div>
+      <div className="ra-dialog-cover" onClick={handleCancel}></div>
     </>
   );
 }
