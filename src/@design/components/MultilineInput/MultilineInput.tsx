@@ -44,7 +44,7 @@ export const MultilineInput = forwardRef<
         data-replicated-value={value}
       >
         {disabled ? (
-          <div className="multiline-input-area">{value}</div>
+          <div className="multiline-input-area">{value || placeholder}</div>
         ) : (
           <textarea
             rows={1}
