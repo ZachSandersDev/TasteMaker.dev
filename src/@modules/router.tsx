@@ -4,7 +4,6 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import Loading from "../components/Loading";
 import LoginView from "../views/Login";
 import RootView from "../views/RootView";
-import WorkspaceSettings from "../views/WorkspaceSettings";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
 const RecipeDetailsView = React.lazy(
@@ -17,6 +16,9 @@ const ShoppingListDetailsView = React.lazy(
 );
 const ShoppingListsView = React.lazy(
   () => import("../views/ShoppingList/ShoppingLists")
+);
+const WorkspaceSettings = React.lazy(
+  () => import("../views/WorkspaceSettings")
 );
 
 const router = createBrowserRouter([
