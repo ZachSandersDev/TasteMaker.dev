@@ -27,6 +27,7 @@
 .ra-button-filled {
   background-color: var(--color-interface-base);
   color: var(--color-interface-color);
+  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
 }
 
 .ra-button-chip {
@@ -48,7 +49,7 @@
   justify-content: center;
   padding: calc(var(--spacing) * 0.5);
 
-  > .material-symbols-rounded {
+  >.material-symbols-rounded {
     font-size: inherit;
   }
 }
@@ -68,7 +69,7 @@
     padding: calc(var(--spacing) * 0.75);
   }
 
-  > .material-symbols-rounded {
+  >.material-symbols-rounded {
     font-size: 1.25em;
   }
 }
@@ -90,8 +91,8 @@
     padding: calc(var(--spacing) * 0.5);
   }
 
-  > .ra-button-icon-before,
-  > .ra-button-icon-after {
+  >.ra-button-icon-before,
+  >.ra-button-icon-after {
     font-size: 1.25em;
   }
 }
