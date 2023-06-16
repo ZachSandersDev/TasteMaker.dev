@@ -1,23 +1,40 @@
 export const CACHE_TTL = 500;
 
-const listeners = new Map<string, ((value: any) => void)[]>();
+export interface SWRCacheEntry<T> {
+  timestamp: number;
+  value: T | undefined;
+}
+
+export interface SWRState<T> {
+  loading: boolean;
+  value: T | undefined;
+}
+
+export type SWRListener<T> = (update: SWRState<T>) => void;
+
+const listeners = new Map<string, SWRListener<any>[]>();
 
 function addListener(cacheKey: string, callback: (value: any) => void) {
   const listenersForKey = listeners.get(cacheKey) || [];
   listeners.set(cacheKey, [...listenersForKey, callback]);
 }
 
-function notifyListeners(cacheKey: string, value: any) {
+function removeListener(cacheKey: string, callback: (value: any) => void) {
   const listenersForKey = listeners.get(cacheKey) || [];
-  listeners.set(cacheKey, []);
+  listeners.set(
+    cacheKey,
+    listenersForKey.filter((l) => l != callback)
+  );
+}
 
-  listenersForKey.forEach((listener) => listener(value));
-  listeners.delete(cacheKey);
+export function notifyListeners(cacheKey: string, value: any) {
+  const listenersForKey = listeners.get(cacheKey) || [];
+  listenersForKey.forEach((listener) => listener({ loading: false, value }));
 }
 
 function setIsLoading(cacheKey: string) {
   const timestamp = new Date().getTime();
-  const value = getCachedValue(cacheKey);
+  const { value } = getCacheEntry(cacheKey) || {};
 
   const cachedValue = JSON.stringify({ timestamp, value });
   localStorage.setItem(cacheKey, cachedValue);
@@ -35,13 +52,12 @@ function isLoading(cacheKey: string): boolean {
   return !isExpired;
 }
 
-function getCachedValue<T>(cacheKey: string): T | undefined {
-  const cachedValue =
+function getCacheEntry<T>(cacheKey: string): SWRCacheEntry<T> | undefined {
+  const cacheEntry =
     JSON.parse(localStorage.getItem(cacheKey) || "0") || undefined;
-  if (!cachedValue) return;
+  if (!cacheEntry) return;
 
-  const { value } = cachedValue;
-  return value;
+  return cacheEntry;
 }
 
 export function setCachedValue<T>(cacheKey: string, value: T) {
@@ -53,30 +69,34 @@ export function setCachedValue<T>(cacheKey: string, value: T) {
 export function swr<T>(
   cacheKey: string,
   loader: () => Promise<T | undefined>,
-  callback: (value: T | undefined) => void
-): void {
+  callback: SWRListener<T>
+): () => void {
+  const cacheEntry = getCacheEntry<T>(cacheKey);
+  if (cacheEntry) {
+    callback({ loading: false, value: cacheEntry.value });
+  }
+
+  // If the only option we have is to load from network, notify we're loading
+  else {
+    callback({ loading: true, value: undefined });
+  }
+
+  // If we're already loading, skip calling loader() again
   if (isLoading(cacheKey)) {
     addListener(cacheKey, callback);
-    return;
   }
 
-  const cachedValue = getCachedValue<T>(cacheKey);
-  if (cachedValue) {
-    callback(cachedValue);
-  }
-
-  setIsLoading(cacheKey);
-  loader()
-    .then((value) => {
-      // console.log("swr", cacheKey, value);
-
+  // Otherwise, load from network and notify listeners
+  else {
+    setIsLoading(cacheKey);
+    loader().then((value) => {
       setCachedValue(cacheKey, value);
       notifyListeners(cacheKey, value);
-      callback(value);
-    })
-    .catch((error) => {
-      // console.log("swr", cacheKey, error);
+      callback({ loading: false, value });
     });
+  }
+
+  return () => removeListener(cacheKey, callback);
 }
 
 export function swrOnce<T>(
@@ -84,22 +104,13 @@ export function swrOnce<T>(
   loader: () => Promise<T | undefined>
 ): Promise<T | undefined> {
   return new Promise((resolve) => {
-    if (isLoading(cacheKey)) {
-      addListener(cacheKey, resolve);
-      return;
-    }
+    const listener = ({ loading, value }: SWRState<T>) => {
+      if (!loading) {
+        resolve(value);
+        removeListener(cacheKey, listener);
+      }
+    };
 
-    const cachedValue = getCachedValue<T>(cacheKey);
-    if (cachedValue) {
-      resolve(cachedValue);
-      return;
-    }
-
-    setIsLoading(cacheKey);
-    loader().then((value) => {
-      setCachedValue(cacheKey, value);
-      notifyListeners(cacheKey, value);
-      resolve(value);
-    });
+    swr(cacheKey, loader, listener);
   });
 }
