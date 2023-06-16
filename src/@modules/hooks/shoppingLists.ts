@@ -25,9 +25,15 @@ export function useShoppingList(listId: string) {
 }
 
 export function useShoppingLists() {
-  const { loading: shoppingListsLoading, value: shoppingLists } = useSWR<
-    ShoppingList[]
-  >("/lists", () => getShoppingLists());
+  const {
+    loading: shoppingListsLoading,
+    value: shoppingLists,
+    revalidate: revalidateShoppingLists,
+  } = useSWR<ShoppingList[]>("/lists", () => getShoppingLists());
 
-  return { shoppingListsLoading, shoppingLists };
+  return {
+    shoppingListsLoading,
+    shoppingLists,
+    revalidateShoppingLists,
+  };
 }
