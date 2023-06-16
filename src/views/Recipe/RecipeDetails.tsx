@@ -14,15 +14,10 @@ import {
   uploadBannerImage,
   uploadIconImage,
 } from "../../@modules/api/files";
-import {
-  deleteRecipe,
-  getRecipe,
-  saveRecipe,
-} from "../../@modules/api/recipes";
+import { deleteRecipe } from "../../@modules/api/recipes";
+import { useRecipe } from "../../@modules/hooks/recipes";
 import { authStore } from "../../@modules/stores/auth";
 import { workspaceStore } from "../../@modules/stores/workspace";
-import { Recipe } from "../../@modules/types/recipes";
-import { useSWR } from "../../@modules/utils/cache.react";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
 import AppHeader from "../../components/AppHeader";
@@ -46,19 +41,20 @@ export default function RecipeDetailsView() {
 
   const [editing, setEditing] = useState<boolean>(false);
 
-  const {
-    loading: recipeLoading,
-    value: recipe,
-    updateValue: updateRecipe,
-  } = useSWR<Recipe>(
-    `${userId}/${workspaceId}/recipes/${recipeId}`,
-    () => getRecipe({ userId, workspaceId, recipeId }),
-    (r) => saveRecipe({ userId, workspaceId, recipeId }, r)
-  );
+  const { recipeLoading, recipe, updateRecipe } = useRecipe({
+    userId,
+    workspaceId,
+    recipeId,
+  });
 
   useEffect(() => {
     if (recipe) {
       document.title = recipe.name || "Untitled Recipe";
+    }
+
+    // If the user has not set a name yet, default to editing mode
+    if (recipe && !recipe?.name) {
+      setEditing(true);
     }
   }, [recipe]);
 
@@ -219,12 +215,8 @@ export default function RecipeDetailsView() {
     }
   };
 
-  if (recipeLoading) {
+  if (recipeLoading || !recipe) {
     return <Loading />;
-  }
-
-  if (!recipe) {
-    return <span className="ra-error-message">Recipe not found...</span>;
   }
 
   return (
@@ -234,7 +226,12 @@ export default function RecipeDetailsView() {
           subView
           before={
             recipe.parent && (
-              <Breadcrumbs links={[...breadcrumbs, { text: recipe.name }]} />
+              <Breadcrumbs
+                links={[
+                  ...breadcrumbs,
+                  { text: recipe.name || "Untitled Recipe" },
+                ]}
+              />
             )
           }
         >

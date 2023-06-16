@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -17,6 +17,8 @@ import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
+import Loading from "../../components/Loading";
+
 import { ShoppingIngredientList } from "./IngredientList/ShoppingIngredientList";
 
 export default function ShoppingListDetailsView() {
@@ -24,7 +26,21 @@ export default function ShoppingListDetailsView() {
   const navigate = useNavigate();
   const [editing, setEditing] = useState<boolean>(false);
 
-  const { shoppingList, updateShoppingList } = useShoppingList(listId);
+  const { shoppingListLoading, shoppingList, updateShoppingList } =
+    useShoppingList(listId);
+
+  useEffect(() => {
+    if (shoppingList) {
+      document.title = shoppingList.name || "Untitled Shopping List";
+    }
+
+    if (shoppingList && !shoppingList.name) {
+      setEditing(true);
+      if (!shoppingList.ingredients.length) {
+        addNewIngredient();
+      }
+    }
+  }, [shoppingList]);
 
   const addRecipe = async () => {
     try {
@@ -80,8 +96,8 @@ export default function ShoppingListDetailsView() {
     }
   };
 
-  if (!shoppingList) {
-    return <span className="ra-error-message">Shopping list not found...</span>;
+  if (shoppingListLoading || !shoppingList) {
+    return <Loading />;
   }
 
   return (
