@@ -21,8 +21,6 @@ export default function AppNav() {
         </div>
       )}
 
-      {!isMobile && <WorkspacePicker />}
-
       <Link
         to="/"
         className={classNames(
@@ -30,7 +28,7 @@ export default function AppNav() {
           (pathname.startsWith("/folder") ||
             pathname.startsWith("/recipe") ||
             pathname === "/") &&
-            "active"
+          "active"
         )}
       >
         <i className="material-symbols-rounded">description</i>
@@ -43,7 +41,7 @@ export default function AppNav() {
           "app-link",
           (pathname.startsWith("/shopping-list/") ||
             pathname === "/shopping-lists") &&
-            "active"
+          "active"
         )}
       >
         <i className="material-symbols-rounded">checklist</i>
