@@ -63,7 +63,7 @@ export default function RecipeDetailsView() {
   }, [recipe]);
 
   const navigate = useNavigate();
-  const { breadcrumbs } = useBreadcrumbs(
+  const breadcrumbs = useBreadcrumbs(
     {
       userId,
       workspaceId,

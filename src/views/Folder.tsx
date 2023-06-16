@@ -5,21 +5,14 @@ import { useRecoilValue } from "recoil";
 
 import Breadcrumbs from "../@design/components/Breadcrumbs/Breadcrumbs";
 import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
-import {
-  deleteFolder,
-  getFolder,
-  newFolder,
-  saveFolder,
-} from "../@modules/api/folders";
+import { deleteFolder, newFolder } from "../@modules/api/folders";
 import { newRecipe } from "../@modules/api/recipes";
-import { useFoldersWithParent } from "../@modules/hooks/folders";
+import { useFolder, useFoldersWithParent } from "../@modules/hooks/folders";
 import { useRecipesWithParent } from "../@modules/hooks/recipes";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
-import { useSWR } from "../@modules/utils/cache.react";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
-import useMediaQuery from "../@modules/utils/useMediaQuery";
 
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
@@ -29,23 +22,17 @@ import { selectFolder } from "../components/Dialogs/RecipeSelectorDialog";
 import { FolderItem } from "../components/FolderItem";
 import Loading from "../components/Loading";
 import { RecipeItem } from "../components/RecipeItem";
-import Spinner from "../components/Spinner";
 import WorkspacePicker from "../components/WorkspacePicker";
 
 export default function FolderView() {
   const { folderId } = useParams();
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
-  const isMobile = useMediaQuery("(max-width: 1000px)");
 
-  const {
-    loading: folderLoading,
-    value: folder,
-    updateValue: updateFolder,
-  } = useSWR<Folder>(
-    `${userId}/${workspaceId}/folders/${folderId}`,
-    () => getFolder({ userId, workspaceId, folderId }),
-    (newFolder) => saveFolder({ userId, workspaceId, folderId }, newFolder)
-  );
+  const { folderLoading, folder, updateFolder } = useFolder({
+    userId,
+    workspaceId,
+    folderId,
+  });
 
   const { foldersLoading, folders, revalidateFolders } = useFoldersWithParent({
     userId,
@@ -67,7 +54,7 @@ export default function FolderView() {
   }, [folder]);
 
   const navigate = useNavigate();
-  const { breadcrumbs, revalidateBreadcrumbs } = useBreadcrumbs({
+  const breadcrumbs = useBreadcrumbs({
     userId,
     workspaceId,
     folderId,
@@ -135,7 +122,6 @@ export default function FolderView() {
     const newParent = await selectFolder(folder._id, { userId, workspaceId });
     if (newParent) {
       updateFolder((f) => (f.parent = newParent.folderId));
-      revalidateBreadcrumbs();
     }
   };
 
@@ -150,7 +136,7 @@ export default function FolderView() {
           subView={folderId !== undefined}
           before={folderId && <Breadcrumbs links={breadcrumbs} />}
         >
-          {!folderId && isMobile && <WorkspacePicker />}
+          {!folderId && <WorkspacePicker />}
 
           <div className="ra-actions">
             <DropMenu
@@ -197,7 +183,7 @@ export default function FolderView() {
       )}
 
       <div className="ra-header">
-        {folder ? (
+        {folderId && folder ? (
           <MultilineInput
             className="ra-title"
             value={folder.text || ""}
@@ -215,27 +201,21 @@ export default function FolderView() {
         )}
       </div>
 
-      {foldersLoading || recipesLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          {folders?.map((subFolder) => (
-            <FolderItem
-              key={subFolder._id}
-              folder={subFolder}
-              onClick={() => handleFolderClick(subFolder)}
-            />
-          ))}
+      {folders?.map((subFolder) => (
+        <FolderItem
+          key={subFolder._id}
+          folder={subFolder}
+          onClick={() => handleFolderClick(subFolder)}
+        />
+      ))}
 
-          {recipes?.map((recipe) => (
-            <RecipeItem
-              key={recipe._id}
-              recipe={recipe}
-              onClick={() => handleRecipeClick(recipe)}
-            />
-          ))}
-        </>
-      )}
+      {recipes?.map((recipe) => (
+        <RecipeItem
+          key={recipe._id}
+          recipe={recipe}
+          onClick={() => handleRecipeClick(recipe)}
+        />
+      ))}
     </AppView>
   );
 }

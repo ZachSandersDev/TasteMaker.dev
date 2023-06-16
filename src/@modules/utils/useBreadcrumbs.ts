@@ -1,60 +1,68 @@
-import isEqual from "lodash/isEqual";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { FolderRefParams, getFolder } from "../api/folders";
+import { getFolderCacheKey } from "../hooks/folders";
 import { Folder } from "../types/folder";
 
-import { swrOnce } from "./cache";
+import { swr } from "./cache";
 
 export interface BreadcrumbLink {
   text: string;
   href?: string;
 }
 
-export function useBreadcrumbs(params: FolderRefParams, isRecipe?: boolean) {
+export function useBreadcrumbs(
+  { userId, workspaceId, folderId }: FolderRefParams,
+  isRecipe?: boolean
+): BreadcrumbLink[] {
+  const listeners = useRef<(() => void)[]>([]);
+
   const [folders, setFolders] = useState<Record<string, Folder>>({});
 
-  const revalidateBreadcrumbs = async () => {
-    const folderRecord = { ...folders };
-    let currentFolder: string | undefined = params.folderId;
+  const listenForFolder = (folderId: string) => {
+    if (folders[folderId]) return;
 
-    while (currentFolder) {
-      const folder =
-        folderRecord[currentFolder] ||
-        (await swrOnce(`/folders/${currentFolder}`, () =>
-          getFolder({ ...params, folderId: currentFolder })
-        ));
+    const listener = swr(
+      getFolderCacheKey({ userId, workspaceId, folderId }),
+      () => getFolder({ userId, workspaceId, folderId }),
+      ({ value: folder }) => {
+        if (!folder) return;
+        setFolders((folders) => ({ ...folders, [folder._id]: folder }));
 
-      if (folder) {
-        folderRecord[folder._id] = folder;
-        currentFolder = folder.parent;
-      } else {
-        throw new Error("Could not fetch folder");
+        if (folder.parent) {
+          listenForFolder(folder.parent);
+        }
       }
-    }
+    );
 
-    if (!isEqual(folderRecord, folders)) {
-      setFolders(folderRecord);
-    }
+    listeners.current.push(listener);
   };
 
   useEffect(() => {
-    revalidateBreadcrumbs();
-  }, [params]);
+    if (!folderId) return;
+    console.log("Fresh start");
+    listenForFolder(folderId);
+
+    return () => {
+      listeners.current.forEach((l) => l());
+      listeners.current = [];
+      setFolders({});
+    };
+  }, [folderId]);
 
   const breadcrumbs: BreadcrumbLink[] = [];
 
-  let currentFolder: string | undefined = params.folderId;
+  let currentFolder: string | undefined = folderId;
   do {
     if (!currentFolder || !folders[currentFolder]) {
-      return { breadcrumbs: [], revalidateBreadcrumbs };
+      return [];
     }
 
     const folder = folders[currentFolder];
     breadcrumbs.push({
       text: folder.text || "Untitled Folder",
       href:
-        folder._id !== params.folderId || isRecipe
+        folder._id !== folderId || isRecipe
           ? `/folder/${folder._id}`
           : undefined,
     });
@@ -67,5 +75,5 @@ export function useBreadcrumbs(params: FolderRefParams, isRecipe?: boolean) {
   });
   breadcrumbs.reverse();
 
-  return { breadcrumbs, revalidateBreadcrumbs };
+  return breadcrumbs;
 }
