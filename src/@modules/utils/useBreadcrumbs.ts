@@ -40,7 +40,6 @@ export function useBreadcrumbs(
 
   useEffect(() => {
     if (!folderId) return;
-    console.log("Fresh start");
     listenForFolder(folderId);
 
     return () => {
