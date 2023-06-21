@@ -89,11 +89,17 @@ export function swr<T>(
   // Otherwise, load from network and notify listeners
   else {
     setIsLoading(cacheKey);
-    loader().then((value) => {
-      setCachedValue(cacheKey, value);
-      notifyListeners(cacheKey, value);
-      callback({ loading: false, value });
-    });
+    loader()
+      .then((value) => {
+        setCachedValue(cacheKey, value);
+        notifyListeners(cacheKey, value);
+        callback({ loading: false, value });
+      })
+      .catch(() => {
+        setCachedValue(cacheKey, undefined);
+        notifyListeners(cacheKey, undefined);
+        callback({ loading: false, value: undefined });
+      });
   }
 
   return () => removeListener(cacheKey, callback);
