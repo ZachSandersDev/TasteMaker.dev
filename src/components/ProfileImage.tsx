@@ -2,9 +2,9 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 import classNames from "../@modules/utils/classNames";
+import { quickHash } from "../@modules/utils/quickHash";
 
 import "./ProfileImage.scss";
-import { quickHash } from "../@modules/utils/quickHash";
 
 export interface ProfileImageProps {
   onChange?: (image: File) => void;
