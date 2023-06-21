@@ -1,4 +1,5 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
@@ -17,10 +18,14 @@ import SwipeToDelete from "../SwipeToDelete";
 
 import "./EditIngredientDialog.scss";
 
-export function editIngredient(ingredient: string) {
-  return new Promise<string | undefined>((resolve, reject) => {
-    setRecoil(EditIngredientDialog, { resolve, reject, payload: ingredient });
-  });
+export function useEditIngredient() {
+  const navigate = useNavigate();
+
+  return (ingredient: string) =>
+    new Promise<string | undefined>((resolve, reject) => {
+      navigate("modal/edit-ingredient");
+      setRecoil(EditIngredientDialog, { resolve, reject, payload: ingredient });
+    });
 }
 
 export default function EditIngredientDialogComponent() {

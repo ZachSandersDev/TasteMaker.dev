@@ -23,9 +23,9 @@ import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
-import { pickIcon } from "../../components/Dialogs/IconPickerDialog";
-import { importRecipe } from "../../components/Dialogs/ImportRecipeDialog";
-import { selectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
+import { usePickIcon } from "../../components/Dialogs/IconPickerDialog";
+import { useImportRecipe } from "../../components/Dialogs/ImportRecipeDialog";
+import { useSelectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import ImageBanner from "../../components/ImageUpload";
 import Loading from "../../components/Loading";
 
@@ -38,6 +38,9 @@ export default function RecipeDetailsView() {
   const { recipeId } = useParams();
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
   const { user } = useRecoilValue(authStore);
+  const pickIcon = usePickIcon();
+  const importRecipe = useImportRecipe();
+  const selectFolder = useSelectFolder();
 
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -127,7 +130,7 @@ export default function RecipeDetailsView() {
       if (recipe.parent) {
         navigate(`/folder/${recipe.parent}`);
       } else {
-        navigate("/");
+        navigate("/recipes");
       }
     }
   };

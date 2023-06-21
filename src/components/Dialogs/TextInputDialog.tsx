@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
@@ -10,14 +11,14 @@ import { TextInputDialog } from "../../@modules/stores/dialogs";
 
 import "./TextInputDialog.scss";
 
-export function getText(payload: {
-  title: string;
-  placeholder: string;
-  value?: string;
-}) {
-  return new Promise<string | undefined>((resolve, reject) => {
-    setRecoil(TextInputDialog, { resolve, reject, payload });
-  });
+export function useGetText() {
+  const navigate = useNavigate();
+
+  return (payload: { title: string; placeholder: string; value?: string }) =>
+    new Promise<string | undefined>((resolve, reject) => {
+      navigate("modal/text-input");
+      setRecoil(TextInputDialog, { resolve, reject, payload });
+    });
 }
 
 export default function TextInputComponent() {

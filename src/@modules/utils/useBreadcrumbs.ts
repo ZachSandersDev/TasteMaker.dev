@@ -70,7 +70,7 @@ export function useBreadcrumbs(
 
   breadcrumbs.push({
     text: "Recipes",
-    href: "/",
+    href: "/recipes",
   });
   breadcrumbs.reverse();
 

@@ -4,7 +4,7 @@ import MultilineInput from "../../../@design/components/MultilineInput/Multiline
 import { Ingredient } from "../../../@modules/types/recipes";
 
 import classNames from "../../../@modules/utils/classNames";
-import { editIngredient } from "../../../components/Dialogs/EditIngredientDialog";
+import { useEditIngredient } from "../../../components/Dialogs/EditIngredientDialog";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./IngredientItem.scss";
@@ -23,6 +23,7 @@ export default function IngredientItem({
   editing,
 }: IngredientItemProps) {
   const controls = useDragControls();
+  const editIngredient = useEditIngredient();
 
   const setIngredientValue = (value: string) => {
     const newIngredient = structuredClone(ingredient);

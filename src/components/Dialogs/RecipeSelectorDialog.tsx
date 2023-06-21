@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
@@ -17,37 +18,43 @@ import { profileStore } from "../../@modules/stores/profile";
 import { Folder } from "../../@modules/types/folder";
 import { Recipe } from "../../@modules/types/recipes";
 
-import "./RecipeSelectorDialog.scss";
 import { FolderItem } from "../FolderItem";
 import { ProfileImage } from "../ProfileImage";
 import { RecipeItem } from "../RecipeItem";
+
+import "./RecipeSelectorDialog.scss";
 
 export interface RecipeSelectorResult {
   recipe?: RecipeRefParams;
   folder?: FolderRefParams;
 }
 
-export function selectRecipe() {
-  return new Promise<RecipeRefParams | undefined>((resolve, reject) => {
-    setRecoil(RecipeSelectorDialog, {
-      resolve: ({ recipe } = {}) => resolve(recipe),
-      reject,
-      payload: { folderOnly: false },
+export function useSelectRecipe() {
+  const navigate = useNavigate();
+
+  return () =>
+    new Promise<RecipeRefParams | undefined>((resolve, reject) => {
+      navigate("modal/recipe-selector");
+      setRecoil(RecipeSelectorDialog, {
+        resolve: ({ recipe } = {}) => resolve(recipe),
+        reject,
+        payload: { folderOnly: false },
+      });
     });
-  });
 }
 
-export function selectFolder(
-  disablePathUnder?: string,
-  params?: WorkspaceRefParams
-) {
-  return new Promise<FolderRefParams | undefined>((resolve, reject) => {
-    setRecoil(RecipeSelectorDialog, {
-      resolve: ({ folder } = {}) => resolve(folder),
-      reject,
-      payload: { folderOnly: true, disablePathUnder, params },
+export function useSelectFolder() {
+  const navigate = useNavigate();
+
+  return (disablePathUnder?: string, params?: WorkspaceRefParams) =>
+    new Promise<FolderRefParams | undefined>((resolve, reject) => {
+      navigate("modal/recipe-selector");
+      setRecoil(RecipeSelectorDialog, {
+        resolve: ({ folder } = {}) => resolve(folder),
+        reject,
+        payload: { folderOnly: true, disablePathUnder, params },
+      });
     });
-  });
 }
 
 export default function RecipeSelectorDialogComponent() {

@@ -7,11 +7,14 @@ import classNames from "../@modules/utils/classNames";
 import "./AppView.scss";
 import { getCSSVariableNumber } from "../@modules/utils/getCSSVariable";
 
+import AppNav from "./AppNav";
+
 export interface AppViewProps {
   header?: ReactElement;
   before?: ReactElement;
   className?: string;
   center?: boolean;
+  noNav?: boolean;
 }
 
 export default function AppView({
@@ -20,6 +23,7 @@ export default function AppView({
   children,
   className,
   center,
+  noNav,
 }: PropsWithChildren<AppViewProps>) {
   const topObserver = useRef<HTMLDivElement>(null);
   const bottomObserver = useRef<HTMLDivElement>(null);
@@ -61,18 +65,21 @@ export default function AppView({
   }, []);
 
   return (
-    <div className={classNames("ra-view", className)}>
-      {header}
-      {/* <div className="ra-sentinel-container"> */}
-      <div className="top-observer" ref={topObserver}></div>
-      <div className="ra-before-container">{before}</div>
-      <div
-        className={classNames("ra-view-content", center && "absolute-center")}
-      >
-        {children}
+    <>
+      <div className={classNames("ra-view", className)}>
+        {header}
+        {/* <div className="ra-sentinel-container"> */}
+        <div className="top-observer" ref={topObserver}></div>
+        <div className="ra-before-container">{before}</div>
+        <div
+          className={classNames("ra-view-content", center && "absolute-center")}
+        >
+          {children}
+        </div>
+        <div className="bottom-observer" ref={bottomObserver}></div>
+        {/* </div> */}
       </div>
-      <div className="bottom-observer" ref={bottomObserver}></div>
-      {/* </div> */}
-    </div>
+      {!noNav && <AppNav />}
+    </>
   );
 }

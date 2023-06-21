@@ -1,4 +1,5 @@
 import { ReactNode, createElement, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 import "emoji-picker-element";
@@ -27,10 +28,13 @@ export interface IconPickerResult {
   newEmoji?: string;
 }
 
-export function pickIcon(state: IconPickerState) {
-  return new Promise<IconPickerResult | undefined>((resolve, reject) => {
-    setRecoil(IconPickerDialog, { resolve, reject, payload: state });
-  });
+export function usePickIcon() {
+  const navigate = useNavigate();
+  return (state: IconPickerState) =>
+    new Promise<IconPickerResult | undefined>((resolve, reject) => {
+      navigate("modal/icon-picker");
+      setRecoil(IconPickerDialog, { resolve, reject, payload: state });
+    });
 }
 
 export default function IconPickerDialogComponent() {

@@ -5,12 +5,9 @@ import { useRecoilValue } from "recoil";
 import router from "../@modules/router";
 import { authStore, listenForAuth } from "../@modules/stores/auth";
 
-import EditIngredientDialog from "./Dialogs/EditIngredientDialog";
-import IconPickerDialog from "./Dialogs/IconPickerDialog";
-import ImportRecipeDialog from "./Dialogs/ImportRecipeDialog";
-import RecipeSelectorDialog from "./Dialogs/RecipeSelectorDialog";
-import TextInputDialog from "./Dialogs/TextInputDialog";
 import Loading from "./Loading";
+
+import "./Shell.scss";
 
 export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
@@ -30,13 +27,8 @@ export default function Shell() {
   }
 
   return (
-    <>
+    <main className="root-layout">
       <RouterProvider router={router} />
-      <RecipeSelectorDialog />
-      <EditIngredientDialog />
-      <ImportRecipeDialog />
-      <TextInputDialog />
-      <IconPickerDialog />
-    </>
+    </main>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { setRecoil } from "recoil-nexus";
 
@@ -21,10 +22,14 @@ const importRecipeDialog = atom<ImportRecipeDialogState>({
   default: {},
 });
 
-export function importRecipe(recipe: Recipe) {
-  return new Promise<Recipe | undefined>((resolve, reject) => {
-    setRecoil(importRecipeDialog, { resolve, reject, recipe });
-  });
+export function useImportRecipe() {
+  const navigate = useNavigate();
+
+  return (recipe: Recipe) =>
+    new Promise<Recipe | undefined>((resolve, reject) => {
+      navigate("modal/import-recipe");
+      setRecoil(importRecipeDialog, { resolve, reject, recipe });
+    });
 }
 
 export default function ImportRecipeDialog() {

@@ -33,7 +33,7 @@ export default function WorkspacePicker() {
     } else {
       setWorkspace({ userId, workspaceId });
     }
-    navigate("/");
+    navigate("/recipes");
     setIsOpen(false);
   };
 
@@ -45,7 +45,8 @@ export default function WorkspacePicker() {
   const makeNewWorkspace = async () => {
     const workspaceId = await newWorkspace({ name: "Untitled Workspace" });
     if (workspaceId) {
-      handleSwitchWorkspace(workspaceId);
+      handleSwitchWorkspace(user?.uid, workspaceId);
+      navigate(`/workspace/${user?.uid}/${workspaceId}`);
       setIsOpen(false);
     }
   };

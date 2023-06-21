@@ -15,7 +15,7 @@ import mergeIngredients from "../../@modules/utils/mergeIngredients";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
-import { selectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
+import { useSelectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
 import Loading from "../../components/Loading";
 
@@ -25,6 +25,7 @@ export default function ShoppingListDetailsView() {
   const { listId = "" } = useParams();
   const navigate = useNavigate();
   const [editing, setEditing] = useState<boolean>(false);
+  const selectRecipe = useSelectRecipe();
 
   const { shoppingListLoading, shoppingList, updateShoppingList } =
     useShoppingList(listId);

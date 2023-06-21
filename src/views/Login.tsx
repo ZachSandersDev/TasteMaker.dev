@@ -22,7 +22,7 @@ export default function LoginView() {
 
     try {
       await doLogin(email, password);
-      navigate("/");
+      navigate("/recipes");
     } catch (err: any) {
       setError(err.toString());
     }
@@ -32,14 +32,14 @@ export default function LoginView() {
     e.preventDefault();
     try {
       await createAccount(email, password);
-      navigate("/");
+      navigate("/recipes");
     } catch (err: any) {
       setError(err.toString());
     }
   };
 
   return (
-    <AppView className="login-view" center>
+    <AppView className="login-view" center noNav>
       <h1 className="ra-app-title">TasteMaker.dev</h1>
       <form onSubmit={login} className="login-form">
         <h2 className="ra-title">Login</h2>

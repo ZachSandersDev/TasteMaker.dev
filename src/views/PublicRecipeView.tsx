@@ -45,6 +45,7 @@ export default function PublicRecipeView() {
   if (!recipe) {
     return (
       <AppView
+        noNav
         header={
           <AppHeader height="fit-content">
             <h1 className="ra-app-title">TasteMaker.dev</h1>
@@ -60,6 +61,7 @@ export default function PublicRecipeView() {
 
   return (
     <AppView
+      noNav
       before={<ImageUpload editing={false} image={recipe.bannerImage} />}
     >
       <div className="ra-header">

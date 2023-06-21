@@ -17,8 +17,8 @@ import { useSWR } from "../@modules/utils/cache.react";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
-import { pickIcon } from "../components/Dialogs/IconPickerDialog";
-import { getText } from "../components/Dialogs/TextInputDialog";
+import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
+import { useGetText } from "../components/Dialogs/TextInputDialog";
 import Loading from "../components/Loading";
 import { ProfileImage } from "../components/ProfileImage";
 
@@ -26,6 +26,8 @@ export default function WorkspaceSettings() {
   const { userId, workspaceId } = useParams();
   const setWorkspace = useSetRecoilState(workspaceStore);
   const navigate = useNavigate();
+  const pickIcon = usePickIcon();
+  const getText = useGetText();
 
   const { value: workspace, updateValue: updateWorkspace } = useSWR<Workspace>(
     `${userId}/${workspaceId}/workspaces/${workspaceId}`,
@@ -101,7 +103,7 @@ export default function WorkspaceSettings() {
 
     deleteWorkspace({ userId, workspaceId });
 
-    navigate("/");
+    navigate("/recipes");
     setWorkspace({});
   };
 
@@ -126,13 +128,16 @@ export default function WorkspaceSettings() {
           </div>
         </AppHeader>
       }
+      noNav
     >
-      <ProfileImage
-        emoji={workspace.icon}
-        imageUrl={workspace.image?.imageUrl}
-        id={workspace._id}
-        onClick={handlePickIcon}
-      />
+      <header className="ra-header">
+        <ProfileImage
+          emoji={workspace.icon}
+          imageUrl={workspace.image?.imageUrl}
+          id={workspace._id}
+          onClick={handlePickIcon}
+        />
+      </header>
       <header className="ra-header">
         <MultilineInput
           className="ra-title"

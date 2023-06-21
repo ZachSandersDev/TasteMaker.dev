@@ -1,9 +1,18 @@
-import React, { Suspense } from "react";
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import React, {
+  FunctionComponent,
+  LazyExoticComponent,
+  PropsWithChildren,
+  Suspense,
+} from "react";
+import {
+  Navigate,
+  Outlet,
+  RouteObject,
+  createBrowserRouter,
+} from "react-router-dom";
 
 import Loading from "../components/Loading";
 import LoginView from "../views/Login";
-import RootView from "../views/RootView";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
 const RecipeDetailsView = React.lazy(
@@ -21,69 +30,71 @@ const WorkspaceSettings = React.lazy(
   () => import("../views/WorkspaceSettings")
 );
 
-const router = createBrowserRouter([
+const LazyRoute: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  return (
+    <Suspense fallback={<Loading />}>
+      {children}
+      <Outlet />
+    </Suspense>
+  );
+};
+
+const routes: RouteObject[] = [
   {
-    path: "/",
-    element: <RootView />,
-    children: [
-      {
-        path: "",
-        index: true,
-        element: (
-          <Suspense fallback={<Loading />}>
-            <FolderView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/folder/:folderId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <FolderView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "recipe/:recipeId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <RecipeDetailsView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "shopping-lists",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ShoppingListsView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "shopping-list/:listId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ShoppingListDetailsView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "settings",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <SettingsView />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/workspace/:userId/:workspaceId",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <WorkspaceSettings />
-          </Suspense>
-        ),
-      },
-    ],
+    path: "/recipes",
+    element: (
+      <LazyRoute>
+        <FolderView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "/folder/:folderId",
+    element: (
+      <LazyRoute>
+        <FolderView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "recipe/:recipeId",
+    element: (
+      <LazyRoute>
+        <RecipeDetailsView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "shopping-lists",
+    element: (
+      <LazyRoute>
+        <ShoppingListsView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "shopping-list/:listId",
+    element: (
+      <LazyRoute>
+        <ShoppingListDetailsView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "settings",
+    element: (
+      <LazyRoute>
+        <SettingsView />
+      </LazyRoute>
+    ),
+  },
+  {
+    path: "/workspace/:userId/:workspaceId",
+    element: (
+      <LazyRoute>
+        <WorkspaceSettings />
+      </LazyRoute>
+    ),
   },
   {
     path: "/login",
@@ -92,23 +103,73 @@ const router = createBrowserRouter([
   {
     path: "/public/:userId/recipe/:recipeId",
     element: (
-      <Suspense fallback={<Loading />}>
+      <LazyRoute>
         <PublicRecipeView />
-      </Suspense>
+      </LazyRoute>
     ),
   },
   {
     path: "/public/workspace/:userId/:workspaceId/recipe/:recipeId",
     element: (
-      <Suspense fallback={<Loading />}>
+      <LazyRoute>
         <PublicRecipeView />
-      </Suspense>
+      </LazyRoute>
     ),
   },
   {
     path: "*",
-    element: <Navigate replace to="/" />,
+    element: <Navigate replace to="/recipes" />,
   },
-]);
+];
+
+const Dialogs: [string, LazyExoticComponent<() => JSX.Element | null>][] = [
+  [
+    "edit-ingredient",
+    React.lazy(() => import("../components/Dialogs/EditIngredientDialog")),
+  ],
+  [
+    "icon-picker",
+    React.lazy(() => import("../components/Dialogs/IconPickerDialog")),
+  ],
+  [
+    "import-recipe",
+    React.lazy(() => import("../components/Dialogs/ImportRecipeDialog")),
+  ],
+  [
+    "recipe-selector",
+    React.lazy(() => import("../components/Dialogs/RecipeSelectorDialog")),
+  ],
+  [
+    "text-input",
+    React.lazy(() => import("../components/Dialogs/TextInputDialog")),
+  ],
+];
+
+function attachModalsToRoutes(routes: RouteObject[]): RouteObject[] {
+  const createModalSubroutes = (): RouteObject[] => {
+    return Dialogs.map(([path, Dialog]) => ({
+      path: `modal/${path}`,
+      element: (
+        <LazyRoute>
+          <Dialog />
+        </LazyRoute>
+      ),
+    }));
+  };
+
+  for (const route of routes) {
+    if (route.children) {
+      route.children = attachModalsToRoutes(route.children).concat(
+        ...createModalSubroutes()
+      );
+    } else {
+      route.children = createModalSubroutes();
+    }
+  }
+
+  return routes;
+}
+
+const router = createBrowserRouter(attachModalsToRoutes(routes));
 
 export default router;

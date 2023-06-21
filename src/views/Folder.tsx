@@ -17,8 +17,8 @@ import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
-import { pickIcon } from "../components/Dialogs/IconPickerDialog";
-import { selectFolder } from "../components/Dialogs/RecipeSelectorDialog";
+import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
+import { useSelectFolder } from "../components/Dialogs/RecipeSelectorDialog";
 import { FolderItem } from "../components/FolderItem";
 import Loading from "../components/Loading";
 import { RecipeItem } from "../components/RecipeItem";
@@ -27,6 +27,8 @@ import WorkspacePicker from "../components/WorkspacePicker";
 export default function FolderView() {
   const { folderId } = useParams();
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
+  const pickIcon = usePickIcon();
+  const selectFolder = useSelectFolder();
 
   const { folderLoading, folder, updateFolder } = useFolder({
     userId,
@@ -94,7 +96,7 @@ export default function FolderView() {
     if (folder.parent) {
       navigate(`/folder/${folder.parent}`);
     } else {
-      navigate("/");
+      navigate("/recipes");
     }
   };
 

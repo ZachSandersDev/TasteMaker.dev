@@ -6,7 +6,6 @@ import classNames from "../@modules/utils/classNames";
 import useMediaQuery from "../@modules/utils/useMediaQuery";
 
 import "./AppNav.scss";
-import WorkspacePicker from "./WorkspacePicker";
 
 export default function AppNav() {
   const { pathname } = useLocation();
@@ -22,13 +21,11 @@ export default function AppNav() {
       )}
 
       <Link
-        to="/"
+        to="/recipes"
         className={classNames(
           "app-link",
-          (pathname.startsWith("/folder") ||
-            pathname.startsWith("/recipe") ||
-            pathname === "/") &&
-          "active"
+          (pathname.startsWith("/folder") || pathname.startsWith("/recipe")) &&
+            "active"
         )}
       >
         <i className="material-symbols-rounded">description</i>
@@ -41,7 +38,7 @@ export default function AppNav() {
           "app-link",
           (pathname.startsWith("/shopping-list/") ||
             pathname === "/shopping-lists") &&
-          "active"
+            "active"
         )}
       >
         <i className="material-symbols-rounded">checklist</i>

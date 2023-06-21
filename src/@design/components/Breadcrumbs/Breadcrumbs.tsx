@@ -18,7 +18,7 @@ export default function Breadcrumbs({ links }: BreadcrumbsProps) {
   return (
     <>
       <Button
-        onClick={() => navigate(parent?.href || "/")}
+        onClick={() => navigate(parent?.href || "/recipes")}
         variant="icon"
         size="xm"
         iconBefore="arrow_back_ios_new"
