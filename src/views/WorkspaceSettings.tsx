@@ -128,7 +128,6 @@ export default function WorkspaceSettings() {
           </div>
         </AppHeader>
       }
-      noNav
     >
       <header className="ra-header">
         <ProfileImage

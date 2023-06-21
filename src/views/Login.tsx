@@ -39,7 +39,7 @@ export default function LoginView() {
   };
 
   return (
-    <AppView className="login-view" center noNav>
+    <AppView className="login-view" center>
       <h1 className="ra-app-title">TasteMaker.dev</h1>
       <form onSubmit={login} className="login-form">
         <h2 className="ra-title">Login</h2>
