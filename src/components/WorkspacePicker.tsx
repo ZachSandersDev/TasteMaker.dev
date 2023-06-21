@@ -8,18 +8,16 @@ import Button from "../@design/components/Button/Button";
 import { newWorkspace } from "../@modules/api/workspaces";
 import { useAllWorkspaces } from "../@modules/hooks/useAllWorkspaces";
 import { authStore } from "../@modules/stores/auth";
-import { profileStore } from "../@modules/stores/profile";
 import { workspaceStore } from "../@modules/stores/workspace";
 
-import { ProfileImage } from "./ProfileImage";
 import Spinner from "./Spinner";
+import { WorkspaceItem } from "./WorkspaceItem";
 
 import "./WorkspacePicker.scss";
 
 export default function WorkspacePicker() {
   const [{ workspaceId }, setWorkspace] = useRecoilState(workspaceStore);
   const { user } = useRecoilValue(authStore);
-  const { profile } = useRecoilValue(profileStore);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,35 +49,20 @@ export default function WorkspacePicker() {
     }
   };
 
-  if (loading) {
-    return <Spinner />;
-  }
-
   const selectedWorkspace = workspaces.find(
     ({ ws }) => ws._id === workspaceId
   )?.ws;
 
+  if (loading || (workspaceId && !selectedWorkspace)) {
+    return <Spinner />;
+  }
+
   return (
     <>
-      <Button
-        className="workspace-picker-button"
-        variant="naked"
-        before={
-          <ProfileImage
-            size="sm"
-            emoji={selectedWorkspace?.icon}
-            imageUrl={
-              selectedWorkspace
-                ? selectedWorkspace.image?.imageUrl
-                : profile?.image?.imageUrl
-            }
-            id={selectedWorkspace?._id || user?.uid}
-          />
-        }
+      <WorkspaceItem
+        workspace={selectedWorkspace}
         onClick={() => setIsOpen(true)}
-      >
-        {selectedWorkspace?.name || "Personal Workspace"}
-      </Button>
+      />
 
       {isOpen &&
         createPortal(
@@ -89,37 +72,15 @@ export default function WorkspacePicker() {
                 <h2>Workspaces</h2>
               </span>
               <div className="workspace-picker-options">
-                <Button
-                  before={
-                    <ProfileImage
-                      size="sm"
-                      imageUrl={profile?.image?.imageUrl}
-                      id={user?.uid}
-                    />
-                  }
-                  variant="naked"
-                  onClick={() => handleSwitchWorkspace()}
-                >
-                  Personal Workspace
-                </Button>
+                <WorkspaceItem onClick={() => handleSwitchWorkspace()} />
                 <div />
 
                 {...workspaces.map(({ uid, ws }) => (
                   <Fragment key={ws._id}>
-                    <Button
-                      before={
-                        <ProfileImage
-                          size="sm"
-                          emoji={ws?.icon}
-                          imageUrl={ws?.image?.imageUrl}
-                          id={ws._id}
-                        />
-                      }
-                      variant="naked"
+                    <WorkspaceItem
+                      workspace={ws}
                       onClick={() => handleSwitchWorkspace(uid, ws._id)}
-                    >
-                      {ws.name || "Untitled Workspace"}
-                    </Button>
+                    />
                     {uid === user?.uid && (
                       <Button
                         iconBefore="settings"

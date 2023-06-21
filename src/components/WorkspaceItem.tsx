@@ -1,9 +1,15 @@
+import { useRecoilValue } from "recoil";
+
+import Button from "../@design/components/Button/Button";
+import { authStore } from "../@modules/stores/auth";
+import { profileStore } from "../@modules/stores/profile";
 import { Workspace } from "../@modules/types/workspaces";
-import classNames from "../@modules/utils/classNames";
+
+import { ProfileImage } from "./ProfileImage";
 
 export type WorkspaceItemProps = {
   onClick?: (e: React.MouseEvent) => void;
-  workspace: Workspace;
+  workspace?: Workspace;
   disabled?: boolean;
 };
 
@@ -12,27 +18,27 @@ export const WorkspaceItem = ({
   workspace,
   disabled,
 }: WorkspaceItemProps) => {
-  const handleClick = (e: React.MouseEvent) => {
-    if (onClick && !disabled) onClick(e);
-  };
-
-  if (!workspace) {
-    return null;
-  }
+  const { user } = useRecoilValue(authStore);
+  const { profile } = useRecoilValue(profileStore);
 
   return (
-    <div
-      className={classNames("ra-option", disabled && "disabled")}
-      onClick={handleClick}
+    <Button
+      variant="naked"
+      gap="calc(var(--spacing) * 1.5)"
+      before={
+        <ProfileImage
+          size="sm"
+          emoji={workspace?.icon}
+          imageUrl={
+            workspace ? workspace.image?.imageUrl : profile?.image?.imageUrl
+          }
+          id={workspace?._id || user?.uid}
+        />
+      }
+      onClick={onClick}
+      disabled={disabled}
     >
-      <span className="ra-option-icon">
-        {workspace.image ? (
-          <img src={workspace.image.imageUrl} />
-        ) : (
-          workspace.icon || <i className="material-symbols-rounded">notes</i>
-        )}
-      </span>
-      <span>{workspace.name || "Untitled Workspace"}</span>
-    </div>
+      {workspace?.name || "Personal Workspace"}
+    </Button>
   );
 };
