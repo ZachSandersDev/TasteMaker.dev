@@ -1,34 +1,43 @@
 import { useEffect } from "react";
-import { RouterProvider } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import router from "../@modules/router";
 import { authStore, listenForAuth } from "../@modules/stores/auth";
 
+import AppNav from "./AppNav";
 import Loading from "./Loading";
 
 import "./Shell.scss";
 
 export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     listenForAuth();
   }, []);
 
   useEffect(() => {
-    if (!userLoading && !user && !location.pathname.includes("/public/")) {
-      router.navigate("/login");
+    const { pathname } = location;
+    if (
+      !userLoading &&
+      !user &&
+      !pathname.includes("/public/") &&
+      !pathname.includes("/login")
+    ) {
+      navigate("/login");
     }
-  }, [userLoading, user]);
+  }, [userLoading, user, location]);
 
-  if (!user && userLoading) {
+  if (userLoading) {
     return <Loading />;
   }
 
   return (
     <main className="root-layout">
-      <RouterProvider router={router} />
+      <Outlet />
+      <AppNav />
     </main>
   );
 }

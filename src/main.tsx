@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import RecoilNexus from "recoil-nexus";
 
-import Shell from "./components/Shell";
+import router from "./@modules/router";
 
 import "./@design/@EPDesign.scss";
 
@@ -11,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <RecoilRoot>
       <RecoilNexus />
-      <Shell />
+      <RouterProvider router={router} />
     </RecoilRoot>
   </React.StrictMode>
 );

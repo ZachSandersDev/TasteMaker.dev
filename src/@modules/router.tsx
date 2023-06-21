@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 
 import Loading from "../components/Loading";
+import Shell from "../components/Shell";
 import LoginView from "../views/Login";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
@@ -41,52 +42,57 @@ const LazyRoute: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
 const routes: RouteObject[] = [
   {
-    path: "/recipes",
-    element: (
-      <LazyRoute>
-        <FolderView />
-      </LazyRoute>
-    ),
-  },
-  {
-    path: "/folder/:folderId",
-    element: (
-      <LazyRoute>
-        <FolderView />
-      </LazyRoute>
-    ),
-  },
-  {
-    path: "recipe/:recipeId",
-    element: (
-      <LazyRoute>
-        <RecipeDetailsView />
-      </LazyRoute>
-    ),
-  },
-  {
-    path: "shopping-lists",
-    element: (
-      <LazyRoute>
-        <ShoppingListsView />
-      </LazyRoute>
-    ),
-  },
-  {
-    path: "shopping-list/:listId",
-    element: (
-      <LazyRoute>
-        <ShoppingListDetailsView />
-      </LazyRoute>
-    ),
-  },
-  {
-    path: "settings",
-    element: (
-      <LazyRoute>
-        <SettingsView />
-      </LazyRoute>
-    ),
+    element: <Shell />,
+    children: [
+      {
+        path: "/recipes",
+        element: (
+          <LazyRoute>
+            <FolderView />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: "/folder/:folderId",
+        element: (
+          <LazyRoute>
+            <FolderView />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: "recipe/:recipeId",
+        element: (
+          <LazyRoute>
+            <RecipeDetailsView />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: "shopping-lists",
+        element: (
+          <LazyRoute>
+            <ShoppingListsView />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: "shopping-list/:listId",
+        element: (
+          <LazyRoute>
+            <ShoppingListDetailsView />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: "settings",
+        element: (
+          <LazyRoute>
+            <SettingsView />
+          </LazyRoute>
+        ),
+      },
+    ],
   },
   {
     path: "/workspace/:userId/:workspaceId",
@@ -116,6 +122,7 @@ const routes: RouteObject[] = [
       </LazyRoute>
     ),
   },
+
   {
     path: "*",
     element: <Navigate replace to="/recipes" />,
