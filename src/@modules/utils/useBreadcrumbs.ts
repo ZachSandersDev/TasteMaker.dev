@@ -20,8 +20,6 @@ export function useBreadcrumbs(
   const [folders, setFolders] = useState<Record<string, Folder>>({});
 
   const listenForFolder = (folderId: string) => {
-    if (folders[folderId]) return;
-
     const listener = swr(
       getFolderCacheKey({ userId, workspaceId, folderId }),
       () => getFolder({ userId, workspaceId, folderId }),
