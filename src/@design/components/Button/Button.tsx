@@ -14,6 +14,7 @@ export interface ButtonProps
   before?: ReactNode;
   iconBefore?: string;
   iconAfter?: string;
+  gap?: string;
   color?: string;
   noPadding?: boolean;
 }
@@ -28,6 +29,7 @@ export default function Button({
   children,
   className,
   noPadding,
+  gap,
   ...rest
 }: PropsWithChildren<ButtonProps>) {
   return (
@@ -39,7 +41,7 @@ export default function Button({
         className,
         noPadding && "ra-button-no-padding"
       )}
-      style={{ color }}
+      style={{ color, gap }}
       {...rest}
     >
       {before && <i className="ra-button-icon-before">{before}</i>}

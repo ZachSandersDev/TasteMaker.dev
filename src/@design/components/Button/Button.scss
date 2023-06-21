@@ -17,10 +17,14 @@
   cursor: pointer;
   user-select: none;
 
-  transition: background-color 0.25s;
+  transition: all 0.15s;
 
   &:not(:disabled):hover {
     background-color: var(--color-interface-active);
+  }
+
+  &:not(:disabled):active {
+    opacity: 0.3;
   }
 }
 
@@ -38,8 +42,6 @@
 }
 
 .ra-button-naked-chip {
-  // background-color: var(--color-interface-base);
-  // color: var(--color-interface-color);
   border-radius: calc(var(--radius) * 4);
   padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
 }
@@ -49,7 +51,7 @@
   justify-content: center;
   padding: calc(var(--spacing) * 0.5);
 
-  >.material-symbols-rounded {
+  > .material-symbols-rounded {
     font-size: inherit;
   }
 }
@@ -69,7 +71,7 @@
     padding: calc(var(--spacing) * 0.75);
   }
 
-  >.material-symbols-rounded {
+  > .material-symbols-rounded {
     font-size: 1.25em;
   }
 }
@@ -91,8 +93,8 @@
     padding: calc(var(--spacing) * 0.5);
   }
 
-  >.ra-button-icon-before,
-  >.ra-button-icon-after {
+  > .ra-button-icon-before,
+  > .ra-button-icon-after {
     font-size: 1.25em;
   }
 }
