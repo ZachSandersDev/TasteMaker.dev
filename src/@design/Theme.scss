@@ -58,14 +58,12 @@
   }
 
   @media (min-width: 1000px) {
-    --app-header-height: 40px;
+    --app-header-height: 50px;
     --app-nav-size: 25ch;
   }
 
   @media (min-width: 1000px) and (-webkit-min-device-pixel-ratio: 2),
     (min-width: 1000px) and (min-resolution: 192dpi) {
-    font-size: 1.4em;
-
     --app-header-height: 60px;
     --app-view-max-size: 800px;
     --spacing: 10px;

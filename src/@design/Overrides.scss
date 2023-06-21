@@ -1,10 +1,6 @@
 body {
   margin: 0;
-  font-size: 1rem;
-
-  @media (max-width: 1000px) {
-    font-size: 1.15rem;
-  }
+  font-size: 20px;
 
   background-color: var(--color-background);
   color: var(--color-color);
