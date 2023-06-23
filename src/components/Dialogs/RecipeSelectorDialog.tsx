@@ -18,9 +18,9 @@ import { profileStore } from "../../@modules/stores/profile";
 import { Folder } from "../../@modules/types/folder";
 import { Recipe } from "../../@modules/types/recipes";
 
-import { FolderItem } from "../FolderItem";
+import { FolderItem } from "../ListItems/FolderItem";
+import { RecipeItem } from "../ListItems/RecipeItem";
 import { ProfileImage } from "../ProfileImage";
-import { RecipeItem } from "../RecipeItem";
 
 import "./RecipeSelectorDialog.scss";
 

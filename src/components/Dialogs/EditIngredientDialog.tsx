@@ -13,7 +13,6 @@ import {
 
 import { EditIngredientDialog } from "../../@modules/stores/dialogs";
 import { ingredientStore } from "../../@modules/stores/ingredients";
-import classNames from "../../@modules/utils/classNames";
 import SwipeToDelete from "../SwipeToDelete";
 
 import "./EditIngredientDialog.scss";
@@ -137,14 +136,11 @@ export default function EditIngredientDialogComponent() {
           }
         />
 
-        <div className="edit-ingredient-dialog-content ra-option-list">
+        <div className="edit-ingredient-dialog-content ra-list">
           {filteredIngredients.map((i, index) => (
             <SwipeToDelete key={i} onDelete={() => handleDeleteIngredient(i)}>
-              <button
-                className={classNames(
-                  "ra-option",
-                  selectedIndex === index && "hover"
-                )}
+              <Button
+                variant="naked"
                 onClick={() => {
                   handleSaveIngredient(i);
                 }}
@@ -153,7 +149,7 @@ export default function EditIngredientDialogComponent() {
                 }}
               >
                 {i}
-              </button>
+              </Button>
             </SwipeToDelete>
           ))}
         </div>
