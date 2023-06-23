@@ -6,7 +6,7 @@ import { newList } from "../../@modules/api/shoppingLists";
 import { useShoppingLists } from "../../@modules/hooks/shoppingLists";
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
-import { ShoppingListItem } from "../../components/ShoppingListItem";
+import { ShoppingListItem } from "../../components/ListItems/ShoppingListItem";
 
 export default function ShoppingListsView() {
   const { shoppingLists, revalidateShoppingLists } = useShoppingLists();
