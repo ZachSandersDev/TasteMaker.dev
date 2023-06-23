@@ -1,5 +1,7 @@
-import { Recipe } from "../@modules/types/recipes";
-import classNames from "../@modules/utils/classNames";
+import Button from "../../@design/components/Button/Button";
+import { Recipe } from "../../@modules/types/recipes";
+
+import "./ListItem.scss";
 
 export type RecipeItemProps = {
   onClick?: (e: React.MouseEvent) => void;
@@ -17,18 +19,21 @@ export const RecipeItem = ({ onClick, recipe, disabled }: RecipeItemProps) => {
   }
 
   return (
-    <div
-      className={classNames("ra-option", disabled && "disabled")}
+    <Button
+      className="list-option"
+      gap="calc(var(--spacing) * 1.5)"
+      variant="naked"
       onClick={handleClick}
-    >
-      <span className="ra-option-icon">
-        {recipe.iconImage ? (
+      disabled={disabled}
+      before={
+        recipe.iconImage ? (
           <img src={recipe.iconImage.imageUrl} />
         ) : (
           recipe.icon || <i className="material-symbols-rounded">notes</i>
-        )}
-      </span>
-      <span>{recipe.name || "Untitled Recipe"}</span>
-    </div>
+        )
+      }
+    >
+      {recipe.name || "Untitled Recipe"}
+    </Button>
   );
 };

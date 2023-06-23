@@ -1,11 +1,11 @@
 import { useRecoilValue } from "recoil";
 
-import Button from "../@design/components/Button/Button";
-import { authStore } from "../@modules/stores/auth";
-import { profileStore } from "../@modules/stores/profile";
-import { Workspace } from "../@modules/types/workspaces";
+import Button from "../../@design/components/Button/Button";
+import { authStore } from "../../@modules/stores/auth";
+import { profileStore } from "../../@modules/stores/profile";
+import { Workspace } from "../../@modules/types/workspaces";
 
-import { ProfileImage } from "./ProfileImage";
+import { ProfileImage } from "../ProfileImage";
 
 export type WorkspaceItemProps = {
   onClick?: (e: React.MouseEvent) => void;

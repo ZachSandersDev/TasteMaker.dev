@@ -11,7 +11,7 @@ import { authStore } from "../@modules/stores/auth";
 import { workspaceStore } from "../@modules/stores/workspace";
 
 import Spinner from "./Spinner";
-import { WorkspaceItem } from "./WorkspaceItem";
+import { WorkspaceItem } from "./ListItems/WorkspaceItem";
 
 import "./WorkspacePicker.scss";
 

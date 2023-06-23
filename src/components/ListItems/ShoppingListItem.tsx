@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import { ShoppingList } from "../@modules/types/shoppingLists";
+import Button from "../../@design/components/Button/Button";
+import { ShoppingList } from "../../@modules/types/shoppingLists";
 
 export type ShoppingListItemProps = {
   shoppingList: ShoppingList;
@@ -15,13 +16,14 @@ export const ShoppingListItem = ({ shoppingList }: ShoppingListItemProps) => {
   };
 
   return (
-    <div className="ra-option" onClick={handleClick}>
-      <span className="ra-option-icon">
-        <i className="material-symbols-rounded">notes</i>
-      </span>
-      <span style={{ whiteSpace: "pre-wrap" }}>
-        {shoppingList.name || "Untitled List"}
-      </span>
-    </div>
+    <Button
+      className="list-option"
+      gap="calc(var(--spacing) * 1.5)"
+      variant="naked"
+      onClick={handleClick}
+      iconBefore="notes"
+    >
+      {shoppingList.name || "Untitled Shopping List"}
+    </Button>
   );
 };

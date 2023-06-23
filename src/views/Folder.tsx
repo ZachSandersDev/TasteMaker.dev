@@ -19,9 +19,9 @@ import AppView from "../components/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../components/Dialogs/RecipeSelectorDialog";
-import { FolderItem } from "../components/FolderItem";
+import { FolderItem } from "../components/ListItems/FolderItem";
+import { RecipeItem } from "../components/ListItems/RecipeItem";
 import Loading from "../components/Loading";
-import { RecipeItem } from "../components/RecipeItem";
 import WorkspacePicker from "../components/WorkspacePicker";
 
 export default function FolderView() {
