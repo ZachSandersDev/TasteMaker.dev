@@ -6,18 +6,17 @@ import { getRecipe } from "../@modules/api/recipes";
 import { Profile } from "../@modules/types/profile";
 import { Recipe } from "../@modules/types/recipes";
 import { useSWR } from "../@modules/utils/cache.react";
+
 import AppHeader from "../components/AppHeader";
 import AppView from "../components/AppView";
 import ImageUpload from "../components/ImageUpload";
-
 import Loading from "../components/Loading";
-
 import { ProfileImage } from "../components/ProfileImage";
 
 import IngredientList from "./Recipe/IngredientList/IngredientList";
+import { StepList } from "./Recipe/StepList/StepList";
 
 import "./Recipe/RecipeDetails.scss";
-import StepItem from "./Recipe/StepList/StepItem";
 
 export default function PublicRecipeView() {
   const { userId, recipeId, workspaceId } = useParams();
@@ -103,11 +102,7 @@ export default function PublicRecipeView() {
             </header>
           )}
 
-          <div className="ra-list">
-            {recipe.steps.map((step, i) => (
-              <StepItem step={step} key={step._id} index={i} editing={false} />
-            ))}
-          </div>
+          <StepList steps={recipe.steps} editing={false} />
         </div>
       </div>
     </AppView>

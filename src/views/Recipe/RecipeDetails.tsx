@@ -22,7 +22,6 @@ import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../../components/Dialogs/IconPickerDialog";
-import { useImportRecipe } from "../../components/Dialogs/ImportRecipeDialog";
 import { useSelectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import ImageBanner from "../../components/ImageUpload";
 import Loading from "../../components/Loading";
@@ -37,7 +36,6 @@ export default function RecipeDetailsView() {
   const { userId, workspaceId } = useRecoilValue(workspaceStore);
   const { user } = useRecoilValue(authStore);
   const pickIcon = usePickIcon();
-  const importRecipe = useImportRecipe();
   const selectFolder = useSelectFolder();
 
   const [editing, setEditing] = useState<boolean>(false);
@@ -80,14 +78,6 @@ export default function RecipeDetailsView() {
     const newParent = await selectFolder();
     if (newParent) {
       updateRecipe((r) => (r.parent = newParent.folderId));
-    }
-  };
-
-  const handleImport = async () => {
-    if (!recipe) throw "Recipe not loaded";
-    const newRecipe = await importRecipe(recipe);
-    if (newRecipe) {
-      updateRecipe((r) => Object.assign(r, newRecipe));
     }
   };
 
@@ -234,11 +224,6 @@ export default function RecipeDetailsView() {
                   text: "Move recipe",
                   onClick: handleMove,
                   icon: "drive_file_move",
-                },
-                {
-                  text: "Import ingredients",
-                  onClick: handleImport,
-                  icon: "format_list_bulleted_add",
                 },
                 {
                   text: "Delete recipe",

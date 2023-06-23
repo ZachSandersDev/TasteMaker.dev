@@ -131,16 +131,8 @@ const routes: RouteObject[] = [
 
 const Dialogs: [string, LazyExoticComponent<() => JSX.Element | null>][] = [
   [
-    "edit-ingredient",
-    React.lazy(() => import("../components/Dialogs/EditIngredientDialog")),
-  ],
-  [
     "icon-picker",
     React.lazy(() => import("../components/Dialogs/IconPickerDialog")),
-  ],
-  [
-    "import-recipe",
-    React.lazy(() => import("../components/Dialogs/ImportRecipeDialog")),
   ],
   [
     "recipe-selector",
