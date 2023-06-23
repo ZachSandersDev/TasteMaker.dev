@@ -10,9 +10,11 @@
   outline: none;
   border: none;
   border-radius: var(--radius);
-  padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 0.5);
+  padding: var(--spacing);
 
   flex-shrink: 0;
+  text-align: start;
+  white-space: pre-wrap;
 
   cursor: pointer;
   user-select: none;
@@ -112,6 +114,8 @@
 .ra-button-icon-before,
 .ra-button-icon-after {
   font-size: 1.25em;
+  display: flex;
+  align-items: center;
 }
 
 //---//
