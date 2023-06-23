@@ -11,7 +11,7 @@ export interface MultilineInputProps {
   placeholder?: string;
   onChange?: (newValue: string) => void;
   disabled?: boolean;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent) => void;
   variant?: "filled" | "naked";
 }

@@ -1,5 +1,6 @@
 .multiline-input {
   display: grid;
+  white-space: pre-wrap;
 }
 
 .multiline-input::after {
@@ -54,7 +55,7 @@
 
 .multiline-input.naked > .multiline-input-area,
 .multiline-input.naked::after {
-  padding: calc(var(--spacing) * 0.5);
+  padding: calc(var(--spacing));
   border-radius: calc(var(--spacing) * 0.5);
 }
 
