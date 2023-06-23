@@ -30,20 +30,15 @@ export default function TextInputComponent() {
     },
     setDialogState,
   ] = useRecoilState(TextInputDialog);
+  const navigate = useNavigate();
 
   const [localValue, setLocalValue] = useState<string>(value || "");
-
-  useEffect(() => {
-    setLocalValue(value || "");
-  }, [value]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (resolve && reject && inputRef.current) {
       inputRef.current.focus();
-    } else {
-      setLocalValue("");
     }
   }, [resolve, reject]);
 
@@ -52,12 +47,13 @@ export default function TextInputComponent() {
     e.preventDefault();
 
     resolve(localValue);
-    setDialogState({});
+    reset();
   };
 
-  const handleCancel = () => {
-    if (resolve) resolve();
+  const reset = () => {
     setDialogState({});
+    setLocalValue("");
+    navigate(-1);
   };
 
   if (!resolve || !reject || !title || !placeholder) {
@@ -89,12 +85,7 @@ export default function TextInputComponent() {
             }
           />
           <div className="ra-actions">
-            <Button
-              onClick={handleCancel}
-              variant="naked"
-              size="sm"
-              type="button"
-            >
+            <Button onClick={reset} variant="naked" size="sm" type="button">
               Cancel
             </Button>
             <Button
@@ -108,7 +99,7 @@ export default function TextInputComponent() {
           </div>
         </form>
       </div>
-      <div className="ra-dialog-cover" onClick={handleCancel}></div>
+      <div className="ra-dialog-cover" onClick={reset}></div>
     </>
   );
 }

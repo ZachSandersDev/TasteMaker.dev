@@ -40,6 +40,7 @@ export function usePickIcon() {
 export default function IconPickerDialogComponent() {
   const [{ resolve, payload }, setDialogState] =
     useRecoilState(IconPickerDialog);
+  const navigate = useNavigate();
 
   const [tab, setTab] = useState<"image" | "emoji">("emoji");
 
@@ -59,22 +60,22 @@ export default function IconPickerDialogComponent() {
 
   const onEmojiChange = (newEmoji: string) => {
     resolve?.({ newEmoji });
-    setDialogState({});
+    reset();
   };
 
   const onImageChange = (newImage: File) => {
     resolve?.({ newImage });
-    setDialogState({});
+    reset;
   };
 
   const onRemoveIcon = () => {
     resolve?.({ deleted: true });
-    setDialogState({});
+    reset;
   };
 
-  const close = () => {
-    resolve?.();
+  const reset = () => {
     setDialogState({});
+    navigate(-1);
   };
 
   return (
@@ -124,12 +125,12 @@ export default function IconPickerDialogComponent() {
           <Button onClick={onRemoveIcon} variant="naked">
             Remove Icon
           </Button>
-          <Button variant="chip" onClick={close}>
+          <Button variant="chip" onClick={reset}>
             Save
           </Button>
         </div>
       </div>
-      <div className="ra-dialog-cover" onClick={close}></div>
+      <div className="ra-dialog-cover" onClick={reset}></div>
     </>
   );
 }

@@ -72,6 +72,7 @@ export default function RecipeSelectorDialogComponent() {
     },
     setDialogState,
   ] = useRecoilState(RecipeSelectorDialog);
+  const navigate = useNavigate();
 
   const [folderStack, setFolderStack] = useState<string[]>([]);
   const [workspace, setWorkspace] = useState<WorkspaceRefParams | undefined>(
@@ -91,13 +92,6 @@ export default function RecipeSelectorDialogComponent() {
 
   const { folders } = useFoldersWithParent({ userId, workspaceId, folderId });
   const { recipes } = useRecipesWithParent({ userId, workspaceId }, folderId);
-
-  useEffect(() => {
-    if (!resolve || !reject) {
-      setFolderStack([]);
-      setWorkspace(undefined);
-    }
-  }, [resolve, reject]);
 
   useEffect(() => {
     if (params) {
@@ -120,7 +114,7 @@ export default function RecipeSelectorDialogComponent() {
 
   const handleRecipeClick = (recipe: Recipe) => {
     resolve({ recipe: { userId, workspaceId, recipeId: recipe._id } });
-    setDialogState({});
+    reset();
   };
 
   const handleFolderClick = (folder: Folder) => {
@@ -129,12 +123,14 @@ export default function RecipeSelectorDialogComponent() {
 
   const handleFolderAccept = () => {
     resolve({ folder: { userId, workspaceId, folderId } });
-    setDialogState({});
+    reset();
   };
 
-  const handleCancel = () => {
-    resolve();
+  const reset = () => {
     setDialogState({});
+    setWorkspace(undefined);
+    setFolderStack([]);
+    navigate(-1);
   };
 
   return (
@@ -152,14 +148,14 @@ export default function RecipeSelectorDialogComponent() {
             />
           )}
           <h3>
-            {currentFolder && currentFolder.text}
-            {!currentFolder && folderOnly && "Select Folder"}
-            {!currentFolder && !folderOnly && "Select Recipe"}
+            {!!folderStack.length && currentFolder && currentFolder.text}
+            {!folderStack.length && folderOnly && "Select Folder"}
+            {!folderStack.length && !folderOnly && "Select Recipe"}
           </h3>
         </header>
 
         <div className="ra-compact-list">
-          {!params && !!workspace && (
+          {!params && !workspace && (
             <>
               <Button
                 before={
@@ -200,17 +196,19 @@ export default function RecipeSelectorDialogComponent() {
             </>
           )}
 
-          {folders
-            ?.filter((f) => f._id !== disablePathUnder)
-            .map((subFolder) => (
-              <FolderItem
-                key={subFolder._id}
-                folder={subFolder}
-                onClick={() => handleFolderClick(subFolder)}
-              />
-            ))}
+          {!!workspace &&
+            folders
+              ?.filter((f) => f._id !== disablePathUnder)
+              .map((subFolder) => (
+                <FolderItem
+                  key={subFolder._id}
+                  folder={subFolder}
+                  onClick={() => handleFolderClick(subFolder)}
+                />
+              ))}
 
-          {!folderOnly &&
+          {!!workspace &&
+            !folderOnly &&
             recipes?.map((recipe) => (
               <RecipeItem
                 key={recipe._id}
@@ -228,7 +226,7 @@ export default function RecipeSelectorDialogComponent() {
           </div>
         )}
       </div>
-      <div className="ra-dialog-cover" onClick={handleCancel}></div>
+      <div className="ra-dialog-cover" onClick={() => reset()}></div>
     </>
   );
 }
