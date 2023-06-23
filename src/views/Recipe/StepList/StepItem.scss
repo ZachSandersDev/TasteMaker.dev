@@ -4,6 +4,7 @@
 
 .step-item {
   display: flex;
+  align-items: center;
   flex: 1;
   gap: calc(var(--spacing) * 2);
   background-color: var(--color-background);

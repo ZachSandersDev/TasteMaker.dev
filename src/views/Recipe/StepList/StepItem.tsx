@@ -1,7 +1,9 @@
 import { Reorder, useDragControls } from "framer-motion";
 
+import { KeyboardEvent, forwardRef } from "react";
+
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
-import { Recipe, Step } from "../../../@modules/types/recipes";
+import { Step } from "../../../@modules/types/recipes";
 
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
@@ -11,59 +13,58 @@ export interface StepItemProps {
   step: Step;
   index: number;
   editing: boolean;
-  updateRecipe?: (update: (r: Recipe) => unknown) => void;
+  onTextChange: (value: string) => void;
+  onDelete: () => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-export default function StepItem({
-  step,
-  index,
-  editing,
-  updateRecipe,
-}: StepItemProps) {
-  const controls = useDragControls();
+export const StepItem = forwardRef<HTMLTextAreaElement, StepItemProps>(
+  (
+    { step, index, editing, onTextChange, onDelete, onKeyDown }: StepItemProps,
+    ref
+  ) => {
+    const controls = useDragControls();
 
-  const setStepText = (value: string) => {
-    updateRecipe?.((r) => (r.steps[index].text = value));
-  };
+    if (!editing) {
+      return (
+        <div className="step-item">
+          <span className="step-number">{index + 1}.</span>
+          <span style={{ whiteSpace: "pre-wrap" }}>{step.text}</span>
+        </div>
+      );
+    }
 
-  const deleteStep = () => {
-    updateRecipe?.((r) => r.steps.splice(index, 1));
-  };
-
-  if (!editing) {
     return (
-      <div className="step-item">
-        <span className="step-number">{index + 1}.</span>
-        <span style={{ whiteSpace: "pre-wrap" }}>{step.text}</span>
-      </div>
+      <Reorder.Item
+        className="step-item-wrapper"
+        value={step}
+        dragListener={false}
+        dragControls={controls}
+        as="div"
+      >
+        <SwipeToDelete onDelete={onDelete}>
+          <div className="step-item">
+            <div
+              onPointerDown={(e) => controls.start(e)}
+              style={{ touchAction: "none" }}
+              className="material-symbols-rounded drag-handle"
+            >
+              drag_indicator
+            </div>
+            <MultilineInput
+              placeholder={`Step ${index + 1}`}
+              className="step-input"
+              variant="naked"
+              value={step.text}
+              onChange={onTextChange}
+              onKeyDown={onKeyDown}
+              ref={ref}
+            />
+          </div>
+        </SwipeToDelete>
+      </Reorder.Item>
     );
   }
+);
 
-  return (
-    <Reorder.Item
-      className="step-item-wrapper"
-      value={step}
-      dragListener={false}
-      dragControls={controls}
-      as="div"
-    >
-      <SwipeToDelete onDelete={deleteStep} editing={editing}>
-        <div className="step-item">
-          <div
-            onPointerDown={(e) => controls.start(e)}
-            style={{ touchAction: "none" }}
-            className="material-symbols-rounded drag-handle"
-          >
-            drag_indicator
-          </div>
-          <MultilineInput
-            placeholder={`Step ${index + 1}`}
-            className="step-input"
-            value={step.text}
-            onChange={(v) => setStepText(v)}
-          />
-        </div>
-      </SwipeToDelete>
-    </Reorder.Item>
-  );
-}
+StepItem.displayName = "StepItem";

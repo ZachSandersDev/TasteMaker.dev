@@ -1,8 +1,17 @@
-import { Reorder } from "framer-motion";
+import { useEffect } from "react";
 
-import { Ingredient, Recipe } from "../../../@modules/types/recipes";
+import {
+  Ingredient,
+  Recipe,
+  getBlankIngredient,
+} from "../../../@modules/types/recipes";
 
-import IngredientItem from "./IngredientItem";
+import classNames from "../../../@modules/utils/classNames";
+import { KeyboardList } from "../../../components/KeyboardList";
+
+import { IngredientItem } from "./IngredientItem";
+
+import "./IngredientList.scss";
 
 export interface IngredientListProps {
   ingredients: Ingredient[];
@@ -15,6 +24,12 @@ export default function IngredientList({
   editing,
   updateRecipe,
 }: IngredientListProps) {
+  useEffect(() => {
+    if (!ingredients.length) {
+      updateRecipe?.((r) => (r.ingredients = [getBlankIngredient()]));
+    }
+  }, [ingredients]);
+
   const reorderIngredients = (ingredients: Ingredient[]) => {
     updateRecipe?.((r) => (r.ingredients = ingredients));
   };
@@ -24,42 +39,42 @@ export default function IngredientList({
   };
 
   const deleteIngredient = (index: number) => {
-    updateRecipe?.((r) => r.ingredients.splice(index, 1));
+    updateRecipe?.((r) => {
+      if (r.ingredients.length === 1) {
+        r.ingredients = [
+          { ...getBlankIngredient(), _id: r.ingredients[0]._id },
+        ];
+        return;
+      }
+
+      r.ingredients.splice(index, 1);
+    });
   };
 
-  if (!editing) {
-    return (
-      <div className="ingredient-list">
-        {ingredients.map((ingredient, i) => (
-          <IngredientItem
-            ingredient={ingredient}
-            key={ingredient._id}
-            updateIngredient={(ni) => updateIngredient(ni, i)}
-            deleteIngredient={() => deleteIngredient(i)}
-            editing={editing}
-          />
-        ))}
-      </div>
+  const newIngredient = (at?: number) => {
+    updateRecipe?.((r) =>
+      r.ingredients.splice(at || r.ingredients.length, 0, getBlankIngredient())
     );
-  }
+  };
 
   return (
-    <Reorder.Group
-      className="ingredient-list editing"
-      axis="y"
-      as="div"
+    <KeyboardList<Ingredient>
+      className={classNames(!editing && "ingredient-list")}
       values={ingredients}
       onReorder={reorderIngredients}
-    >
-      {ingredients.map((ingredient, i) => (
+      onNew={newIngredient}
+      onDelete={deleteIngredient}
+      renderItem={(ingredient, i, onKeyDown, ref) => (
         <IngredientItem
           ingredient={ingredient}
           key={ingredient._id}
           updateIngredient={(ni) => updateIngredient(ni, i)}
           deleteIngredient={() => deleteIngredient(i)}
           editing={editing}
+          onKeyDown={onKeyDown}
+          ref={ref}
         />
-      ))}
-    </Reorder.Group>
+      )}
+    />
   );
 }

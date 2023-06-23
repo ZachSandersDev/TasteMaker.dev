@@ -1,39 +1,28 @@
-.ingredient-list {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--spacing) * 1);
-}
-
-.ingredient-list.editing {
-  gap: calc(var(--spacing) * 0.5);
+.ingredient-item-wrapper {
+  width: 100%;
 }
 
 .ingredient-item {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 1);
+  gap: calc(var(--spacing) * 1.5);
 
-  .subheading {
-    font-weight: 500;
-    font-style: italic;
+  .multiline-input {
+    flex: 1;
   }
-
-  &:not(:first-child) .subheading {
-    margin-top: calc(var(--spacing) * 2);
-  }
-}
-
-.value-field {
-  text-align: right;
-  width: 10ch;
 
   &.subheading {
-    width: 100%;
-    text-align: left;
-  }
-}
+    gap: calc(var(--spacing) * 0.5);
 
-.ingredient-field {
-  width: 100%;
-  text-align: left;
+    .multiline-input,
+    .multiline-input-area,
+    > span {
+      font-weight: 500;
+      font-style: italic;
+    }
+  }
+
+  &:not(:first-child).subheading {
+    margin-top: calc(var(--spacing) * 2);
+  }
 }

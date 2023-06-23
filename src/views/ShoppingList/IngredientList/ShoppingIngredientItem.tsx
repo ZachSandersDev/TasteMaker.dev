@@ -8,31 +8,29 @@ import { ShoppingListIngredient } from "../../../@modules/types/shoppingLists";
 import classNames from "../../../@modules/utils/classNames";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
-import { ShoppingIngredientListProps } from "../IngredientList/ShoppingIngredientList";
-
-export interface ShoppingIngredientItemProp
-  extends ShoppingIngredientListProps {
+export interface ShoppingIngredientItemProps {
   ingredient: ShoppingListIngredient;
-  index: number;
-  onKeyDown?: (e: KeyboardEvent) => void;
+  editing?: boolean;
+  onUpdate: (i: ShoppingListIngredient) => void;
+  onDelete: () => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
 export const ShoppingIngredientItem = forwardRef<
   HTMLTextAreaElement,
-  ShoppingIngredientItemProp
->(({ ingredient, index, onDelete, onUpdate, onKeyDown, editing }, ref) => {
+  ShoppingIngredientItemProps
+>(({ ingredient, editing, onUpdate, onDelete, onKeyDown }, ref) => {
   const controls = useDragControls();
 
   const { recipeList } = useRecipeList(ingredient.fromRecipes || []);
 
   const setComplete = (
     ingredient: ShoppingListIngredient,
-    index: number,
     complete?: boolean
   ) => {
     const newIngredient = structuredClone(ingredient);
     newIngredient.complete = complete;
-    onUpdate(newIngredient, index);
+    onUpdate(newIngredient);
   };
 
   if (!editing) {
@@ -49,9 +47,7 @@ export const ShoppingIngredientItem = forwardRef<
               <input
                 type="checkbox"
                 checked={!!ingredient.complete}
-                onChange={(e) =>
-                  setComplete(ingredient, index, e.target.checked)
-                }
+                onChange={(e) => setComplete(ingredient, e.target.checked)}
               />
               <span
                 className={[
@@ -88,7 +84,7 @@ export const ShoppingIngredientItem = forwardRef<
       dragListener={false}
       dragControls={controls}
     >
-      <SwipeToDelete editing={editing} onDelete={() => onDelete(index)}>
+      <SwipeToDelete onDelete={onDelete}>
         <div className="sil-wrapper">
           <div
             className="sil-ingredient-line"
@@ -111,9 +107,7 @@ export const ShoppingIngredientItem = forwardRef<
                 <input
                   type="checkbox"
                   checked={!!ingredient.complete}
-                  onChange={(e) =>
-                    setComplete(ingredient, index, e.target.checked)
-                  }
+                  onChange={(e) => setComplete(ingredient, e.target.checked)}
                 />
                 <span
                   className={[
@@ -140,7 +134,7 @@ export const ShoppingIngredientItem = forwardRef<
                 onChange={(v) => {
                   const newIngredient = structuredClone(ingredient);
                   newIngredient.ingredient = v;
-                  onUpdate(newIngredient, index);
+                  onUpdate(newIngredient);
                 }}
                 onKeyDown={onKeyDown}
                 ref={ref}

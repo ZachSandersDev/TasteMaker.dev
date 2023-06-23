@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { ImageField } from "./imageField";
 
 export interface Recipe {
@@ -6,15 +8,15 @@ export interface Recipe {
   icon?: string | null;
   parent?: string | null;
 
-  servingSize?: string
-  prepTime?: string
+  servingSize?: string;
+  prepTime?: string;
 
   ingredients: Ingredient[];
   steps: Step[];
 
   bannerImage?: ImageField | null;
   iconImage?: ImageField | null;
-  public?: true | null
+  public?: true | null;
 }
 
 export interface Ingredient {
@@ -45,8 +47,25 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
 
     bannerImage: recipie.bannerImage || null,
     iconImage: recipie.iconImage || null,
-    public: recipie.public || null
+    public: recipie.public || null,
   };
 
   return defaultedRecipe;
+}
+
+export function getBlankIngredient(): Ingredient {
+  return {
+    value: "",
+    units: "",
+    ingredient: "",
+    _id: uuid(),
+    subHeading: false,
+  };
+}
+
+export function getBlankStep(): Step {
+  return {
+    _id: uuid(),
+    text: "",
+  };
 }

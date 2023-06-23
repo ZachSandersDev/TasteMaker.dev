@@ -1,8 +1,6 @@
-import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
-import { v4 as uuid } from "uuid";
 
 import Breadcrumbs from "../../@design/components/Breadcrumbs/Breadcrumbs";
 import Button from "../../@design/components/Button/Button";
@@ -30,9 +28,9 @@ import ImageBanner from "../../components/ImageUpload";
 import Loading from "../../components/Loading";
 
 import IngredientList from "./IngredientList/IngredientList";
-import StepItem from "./StepList/StepItem";
 
 import "./RecipeDetails.scss";
+import { StepList } from "./StepList/StepList";
 
 export default function RecipeDetailsView() {
   const { recipeId } = useParams();
@@ -76,33 +74,6 @@ export default function RecipeDetailsView() {
     value: string
   ) => {
     updateRecipe((r) => (r[key] = value));
-  };
-
-  const addNewIngredient = () => {
-    updateRecipe((r) =>
-      r.ingredients.push({
-        value: "",
-        units: "",
-        ingredient: "",
-        _id: uuid(),
-      })
-    );
-  };
-
-  const addNewSection = () => {
-    updateRecipe((r) =>
-      r.ingredients.push({
-        value: "",
-        units: "",
-        ingredient: "",
-        subHeading: true,
-        _id: uuid(),
-      })
-    );
-  };
-
-  const addNewStep = () => {
-    updateRecipe((r) => r.steps.push({ _id: uuid(), text: "" }));
   };
 
   const handleMove = async () => {
@@ -247,41 +218,35 @@ export default function RecipeDetailsView() {
               {editing ? "Save" : "Edit"}
             </Button>
 
-            {!editing && (
-              <>
-                <Button
-                  title="Share"
-                  onClick={handleShareRecipe}
-                  variant="icon"
-                  iconBefore="ios_share"
-                />
-
-                <DropMenu
-                  options={[
-                    {
-                      onClick: handlePickIcon,
-                      text: recipe.icon ? "Change Icon" : "Add Recipe Icon",
-                      icon: "mood",
-                    },
-                    {
-                      text: "Move recipe",
-                      onClick: handleMove,
-                      icon: "drive_file_move",
-                    },
-                    {
-                      text: "Import ingredients",
-                      onClick: handleImport,
-                      icon: "format_list_bulleted_add",
-                    },
-                    {
-                      text: "Delete recipe",
-                      onClick: handleDelete,
-                      icon: "delete",
-                    },
-                  ]}
-                />
-              </>
-            )}
+            <DropMenu
+              options={[
+                {
+                  onClick: handleShareRecipe,
+                  text: "Share recipe",
+                  icon: "ios_share",
+                },
+                {
+                  onClick: handlePickIcon,
+                  text: recipe.icon ? "Change Icon" : "Add Recipe Icon",
+                  icon: "mood",
+                },
+                {
+                  text: "Move recipe",
+                  onClick: handleMove,
+                  icon: "drive_file_move",
+                },
+                {
+                  text: "Import ingredients",
+                  onClick: handleImport,
+                  icon: "format_list_bulleted_add",
+                },
+                {
+                  text: "Delete recipe",
+                  onClick: handleDelete,
+                  icon: "delete",
+                },
+              ]}
+            />
           </div>
         </AppHeader>
       }
@@ -354,17 +319,6 @@ export default function RecipeDetailsView() {
             updateRecipe={updateRecipe}
             editing={editing}
           />
-
-          {editing && (
-            <div className="ra-actions-left">
-              <Button iconBefore="add" size="sm" onClick={addNewIngredient}>
-                New Ingredient
-              </Button>
-              <Button iconBefore="add" size="sm" onClick={addNewSection}>
-                New Section
-              </Button>
-            </div>
-          )}
         </div>
 
         <div>
@@ -374,31 +328,11 @@ export default function RecipeDetailsView() {
             </header>
           )}
 
-          <Reorder.Group
-            axis="y"
-            values={recipe.steps}
-            onReorder={(steps) => updateRecipe((r) => (r.steps = steps))}
-            className="ra-list"
-            as="div"
-          >
-            {recipe.steps.map((step, i) => (
-              <StepItem
-                step={step}
-                key={step._id}
-                index={i}
-                updateRecipe={updateRecipe}
-                editing={editing}
-              />
-            ))}
-          </Reorder.Group>
-
-          {editing && (
-            <div className="ra-actions-left">
-              <Button iconBefore="add" size="sm" onClick={addNewStep}>
-                New Step
-              </Button>
-            </div>
-          )}
+          <StepList
+            steps={recipe.steps}
+            updateRecipe={updateRecipe}
+            editing={editing}
+          />
         </div>
       </div>
     </AppView>

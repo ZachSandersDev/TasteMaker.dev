@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { v4 as uuid } from "uuid";
 
 import Button from "../../@design/components/Button/Button";
 
@@ -9,12 +8,12 @@ import { getRecipe } from "../../@modules/api/recipes";
 import { deleteList } from "../../@modules/api/shoppingLists";
 import { getRecipeCacheKey } from "../../@modules/hooks/recipes";
 import { useShoppingList } from "../../@modules/hooks/shoppingLists";
-import { Ingredient } from "../../@modules/types/recipes";
 import { swrOnce } from "../../@modules/utils/cache";
 import mergeIngredients from "../../@modules/utils/mergeIngredients";
 
 import AppHeader from "../../components/AppHeader";
 import AppView from "../../components/AppView";
+import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { useSelectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
 import Loading from "../../components/Loading";
@@ -24,8 +23,9 @@ import { ShoppingIngredientList } from "./IngredientList/ShoppingIngredientList"
 export default function ShoppingListDetailsView() {
   const { listId = "" } = useParams();
   const navigate = useNavigate();
-  const [editing, setEditing] = useState<boolean>(false);
   const selectRecipe = useSelectRecipe();
+
+  const [editing, setEditing] = useState<boolean>(false);
 
   const { shoppingListLoading, shoppingList, updateShoppingList } =
     useShoppingList(listId);
@@ -37,9 +37,6 @@ export default function ShoppingListDetailsView() {
 
     if (shoppingList && !shoppingList.name) {
       setEditing(true);
-      if (!shoppingList.ingredients.length) {
-        addNewIngredient();
-      }
     }
   }, [shoppingList]);
 
@@ -63,26 +60,6 @@ export default function ShoppingListDetailsView() {
 
   const setListName = (value: string) => {
     updateShoppingList((l) => (l.name = value));
-  };
-
-  const addNewIngredient = (at?: number) => {
-    updateShoppingList((l) => {
-      if (at !== undefined) {
-        l.ingredients.splice(at, 0, {
-          _id: uuid(),
-          ingredient: "",
-        });
-      } else {
-        l.ingredients.push({
-          _id: uuid(),
-          ingredient: "",
-        });
-      }
-    });
-  };
-
-  const reorderIngredients = (ingredients: Ingredient[]) => {
-    updateShoppingList((r) => (r.ingredients = ingredients));
   };
 
   const handleDeleteList = () => {
@@ -114,18 +91,19 @@ export default function ShoppingListDetailsView() {
               {editing ? "Save" : "Edit"}
             </Button>
 
-            <Button
-              title="Import ingredients from recipe"
-              onClick={addRecipe}
-              variant="icon"
-              iconBefore="format_list_bulleted_add"
-            />
-
-            <Button
-              title="Delete shoppingList"
-              onClick={handleDeleteList}
-              variant="icon"
-              iconBefore="delete"
+            <DropMenu
+              options={[
+                {
+                  text: "Import ingredients from recipe",
+                  icon: "format_list_bulleted_add",
+                  onClick: addRecipe,
+                },
+                {
+                  text: "Delete shopping list",
+                  icon: "delete",
+                  onClick: handleDeleteList,
+                },
+              ]}
             />
           </div>
         </AppHeader>
@@ -143,28 +121,10 @@ export default function ShoppingListDetailsView() {
       </div>
 
       <ShoppingIngredientList
-        list={shoppingList}
-        onNew={addNewIngredient}
-        onUpdate={(newIngredient, i) =>
-          updateShoppingList((r) => r.ingredients.splice(i, 1, newIngredient))
-        }
-        onDelete={(i) => updateShoppingList((r) => r.ingredients.splice(i, 1))}
-        onReorder={reorderIngredients}
+        ingredients={shoppingList.ingredients}
         editing={editing}
+        updateShoppingList={updateShoppingList}
       />
-
-      {editing && (
-        <div className="ra-card-header">
-          <Button
-            onClick={() => addNewIngredient()}
-            iconBefore="add"
-            variant="filled"
-            size="sm"
-          >
-            New Item
-          </Button>
-        </div>
-      )}
     </AppView>
   );
 }

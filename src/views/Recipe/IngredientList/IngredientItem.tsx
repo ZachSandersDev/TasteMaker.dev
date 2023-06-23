@@ -1,106 +1,119 @@
 import { Reorder, useDragControls } from "framer-motion";
 
+import { KeyboardEvent, forwardRef } from "react";
+
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { Ingredient } from "../../../@modules/types/recipes";
 
 import classNames from "../../../@modules/utils/classNames";
-import { useEditIngredient } from "../../../components/Dialogs/EditIngredientDialog";
+import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./IngredientItem.scss";
 
 export interface IngredientItemProps {
   ingredient: Ingredient;
+  editing: boolean;
   updateIngredient: (i: Ingredient) => void;
   deleteIngredient: () => void;
-  editing: boolean;
+  onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-export default function IngredientItem({
-  ingredient,
-  updateIngredient,
-  deleteIngredient,
-  editing,
-}: IngredientItemProps) {
-  const controls = useDragControls();
-  const editIngredient = useEditIngredient();
+export const IngredientItem = forwardRef<
+  HTMLTextAreaElement,
+  IngredientItemProps
+>(
+  (
+    { ingredient, updateIngredient, deleteIngredient, onKeyDown, editing },
+    ref
+  ) => {
+    const controls = useDragControls();
 
-  const setIngredientValue = (value: string) => {
-    const newIngredient = structuredClone(ingredient);
-    newIngredient.value = value;
-    updateIngredient(newIngredient);
-  };
+    const setIngredientValue = (value: string) => {
+      const newIngredient = structuredClone(ingredient);
+      newIngredient.value = value;
+      updateIngredient(newIngredient);
+    };
 
-  const setIngredient = (ingredientValue: string) => {
-    const newIngredient = structuredClone(ingredient);
-    newIngredient.ingredient = ingredientValue;
-    updateIngredient(newIngredient);
-  };
+    const setIngredientType = (type: "subheading" | "ingredient") => {
+      const newIngredient = structuredClone(ingredient);
+      newIngredient.subHeading = type === "subheading";
+      updateIngredient(newIngredient);
+    };
 
-  if (!editing) {
-    return (
-      <div className="ingredient-item">
-        {ingredient.subHeading ? (
-          <span className="subheading">{ingredient.value}</span>
-        ) : (
-          <>
-            <span>&bull;</span>
-            <span>
-              {ingredient.value} <b>{ingredient.ingredient}</b>
-            </span>
-          </>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <Reorder.Item
-      value={ingredient}
-      dragListener={false}
-      dragControls={controls}
-      as="div"
-    >
-      <SwipeToDelete onDelete={deleteIngredient} editing={editing}>
-        <div className="ingredient-item">
-          <span
-            onPointerDown={(e) => controls.start(e)}
-            style={{ touchAction: "none" }}
-            className="material-symbols-rounded drag-handle"
-          >
-            drag_indicator
-          </span>
-
-          <MultilineInput
-            className={classNames(
-              "value-field",
-              ingredient.subHeading && "subheading"
-            )}
-            placeholder={ingredient.subHeading ? "Section:" : "amount"}
-            value={ingredient.value}
-            onChange={(value) => setIngredientValue(value)}
-            variant="naked"
-          />
-
-          {!ingredient.subHeading && (
-            <button
-              className="ingredient-field ra-input"
-              onClick={async () => {
-                const newIngredient = await editIngredient(
-                  ingredient.ingredient
-                );
-                if (newIngredient) {
-                  setIngredient(newIngredient);
-                }
-              }}
-            >
-              {ingredient.ingredient || (
-                <span className="placeholder">ingredient</span>
-              )}
-            </button>
+    if (!editing) {
+      return (
+        <div
+          className={classNames(
+            "ingredient-item",
+            ingredient.subHeading && "subheading"
+          )}
+        >
+          {ingredient.subHeading ? (
+            <span>{ingredient.value}</span>
+          ) : (
+            <>
+              <span>&bull;</span>
+              <span>
+                {ingredient.value} <b>{ingredient.ingredient}</b>
+              </span>
+            </>
           )}
         </div>
-      </SwipeToDelete>
-    </Reorder.Item>
-  );
-}
+      );
+    }
+
+    return (
+      <Reorder.Item
+        className="ingredient-item-wrapper"
+        value={ingredient}
+        dragListener={false}
+        dragControls={controls}
+        as="div"
+      >
+        <SwipeToDelete onDelete={deleteIngredient}>
+          <div
+            className={classNames(
+              "ingredient-item",
+              ingredient.subHeading && "subheading"
+            )}
+          >
+            <span
+              onPointerDown={(e) => controls.start(e)}
+              style={{ touchAction: "none" }}
+              className="material-symbols-rounded drag-handle"
+            >
+              drag_indicator
+            </span>
+
+            <MultilineInput
+              placeholder={ingredient.subHeading ? "Section:" : "Ingredient"}
+              value={ingredient.value}
+              onChange={(value) => setIngredientValue(value)}
+              variant="naked"
+              onKeyDown={onKeyDown}
+              ref={ref}
+            />
+
+            <DropMenu
+              icon="expand_more"
+              options={[
+                {
+                  text: "Section Title",
+                  icon: "title",
+                  onClick: () => setIngredientType("subheading"),
+                },
+                {
+                  text: "Ingredient",
+                  icon: "notes",
+                  onClick: () => setIngredientType("ingredient"),
+                },
+              ]}
+            />
+          </div>
+        </SwipeToDelete>
+      </Reorder.Item>
+    );
+  }
+);
+IngredientItem.displayName = "IngredientItem";

@@ -3,19 +3,14 @@
   display: flex;
   overflow: hidden;
 
-  padding-bottom: var(--spacing);
-  border-bottom: 1px solid var(--color-border);
-
   &.editing {
-    .sil-wrapper {
-      align-items: flex-start;
-      flex-direction: column;
+    .sil-ingredient-line {
+      padding: 0;
     }
+  }
 
-    .sil-included-in {
-      max-width: none;
-      padding-left: calc(var(--spacing) * 5);
-    }
+  .multiline-input {
+    flex: 1;
   }
 }
 
@@ -45,10 +40,6 @@
       display: none;
     }
   }
-
-  .content-editable-naked {
-    width: fit-content;
-  }
 }
 
 .sil-checkbox {
@@ -60,7 +51,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: var(--color-input-background);
+  background-color: var(--color-interface-base);
   border-radius: calc(var(--spacing) * 0.5);
   box-shadow: 0 0 2px 0 var(--color-interface-active);
 }

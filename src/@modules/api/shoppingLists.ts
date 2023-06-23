@@ -79,7 +79,7 @@ export function getShoppingLists(): Promise<ShoppingList[] | undefined> {
 }
 
 export const saveShoppingList = debounce((list: ShoppingList) => {
-  return set(getListRef(list._id), stripItemID(list));
+  return set(getListRef(list._id), stripItemID(setListDefaults(list)));
 }, 500);
 
 export function formatShoppingList(snapshot: DataSnapshot) {

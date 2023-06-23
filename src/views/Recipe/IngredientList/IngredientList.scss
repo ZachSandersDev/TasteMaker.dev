@@ -1,0 +1,8 @@
+.ingredient-list {
+  padding: 0 calc(var(--spacing) * 2);
+
+  > * {
+    flex: 1;
+    width: 100%;
+  }
+}
