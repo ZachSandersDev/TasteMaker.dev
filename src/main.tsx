@@ -6,12 +6,15 @@ import RecoilNexus from "recoil-nexus";
 
 import router from "./@modules/router";
 
+import { AuthListener } from "./components/Global/AuthListener";
+
 import "./@design/@EPDesign.scss";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <RecoilRoot>
       <RecoilNexus />
+      <AuthListener />
       <RouterProvider router={router} />
     </RecoilRoot>
   </React.StrictMode>

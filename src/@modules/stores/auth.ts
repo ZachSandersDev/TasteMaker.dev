@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  User
+  User,
 } from "firebase/auth";
 import debounce from "lodash/debounce";
 import { setRecoil } from "recoil-nexus";
@@ -16,29 +16,41 @@ import { loadAllData, unloadAllData } from "./dataLoader";
 
 const AUTH_PERSIST_KEY = "tm-auth-store";
 
-export const authStore = persistentAtom<{ loading: boolean, user?: User }>({
-  key: "authStore",
-  default: { loading: true, user: undefined },
-}, AUTH_PERSIST_KEY, "user");
+export const authStore = persistentAtom<{ loading: boolean; user?: User }>(
+  {
+    key: "authStore",
+    default: { loading: true, user: undefined },
+  },
+  AUTH_PERSIST_KEY,
+  "user"
+);
 
 export function listenForAuth() {
   const auth = getAuth(app);
+  console.log("listenForAuth");
 
   if (!localStorage.getItem(AUTH_PERSIST_KEY)) {
-    setRecoil(authStore, state => ({ ...state, loading: true }));
+    setRecoil(authStore, (state) => ({ ...state, loading: true }));
   } else {
     loadAllData();
   }
 
-  onAuthStateChanged(auth, debounce(async (user) => {
-    if (user) {
-      setRecoil(authStore, state => ({ ...state, loading: false, user }));
-      loadAllData();
-    } else {
-      setRecoil(authStore, state => ({ ...state, loading: false, user: undefined }));
-      unloadAllData();
-    }
-  }, 200));
+  return onAuthStateChanged(
+    auth,
+    debounce(async (user) => {
+      if (user) {
+        setRecoil(authStore, (state) => ({ ...state, loading: false, user }));
+        loadAllData();
+      } else {
+        setRecoil(authStore, (state) => ({
+          ...state,
+          loading: false,
+          user: undefined,
+        }));
+        unloadAllData();
+      }
+    }, 200)
+  );
 }
 
 export async function doLogin(email: string, password: string) {

@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { authStore, listenForAuth } from "../@modules/stores/auth";
+import { authStore } from "../../@modules/stores/auth";
+
+import Loading from "../Loading";
 
 import AppNav from "./AppNav";
-import Loading from "./Loading";
 
 import "./Shell.scss";
 
@@ -13,10 +14,6 @@ export default function Shell() {
   const { loading: userLoading, user } = useRecoilValue(authStore);
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    listenForAuth();
-  }, []);
 
   useEffect(() => {
     const { pathname } = location;

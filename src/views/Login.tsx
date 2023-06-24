@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { useRecoilValue } from "recoil";
 
 import Button from "../@design/components/Button/Button";
 import Input from "../@design/components/Input/Input";
 
-import { createAccount, doLogin } from "../@modules/stores/auth";
+import { authStore, createAccount, doLogin } from "../@modules/stores/auth";
 
 import AppView from "../components/AppView";
 
@@ -12,17 +14,23 @@ import "./Login.scss";
 
 export default function LoginView() {
   const navigate = useNavigate();
+  const { user } = useRecoilValue(authStore);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/recipes");
+    }
+  }, [user]);
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await doLogin(email, password);
-      navigate("/recipes");
     } catch (err: any) {
       setError(err.toString());
     }
@@ -32,7 +40,6 @@ export default function LoginView() {
     e.preventDefault();
     try {
       await createAccount(email, password);
-      navigate("/recipes");
     } catch (err: any) {
       setError(err.toString());
     }

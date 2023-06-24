@@ -12,7 +12,7 @@ import {
 } from "react-router-dom";
 
 import Loading from "../components/Loading";
-import Shell from "../components/Shell";
+import Shell from "../components/Global/Shell";
 import LoginView from "../views/Login";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
