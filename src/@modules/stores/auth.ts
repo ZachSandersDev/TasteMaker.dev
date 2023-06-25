@@ -27,7 +27,6 @@ export const authStore = persistentAtom<{ loading: boolean; user?: User }>(
 
 export function listenForAuth() {
   const auth = getAuth(app);
-  console.log("listenForAuth");
 
   if (!localStorage.getItem(AUTH_PERSIST_KEY)) {
     setRecoil(authStore, (state) => ({ ...state, loading: true }));
