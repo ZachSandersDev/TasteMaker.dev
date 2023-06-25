@@ -9,5 +9,5 @@ export function parseIngredient(ingredient: Ingredient): string {
       .join(" ")
   );
 
-  return ingredientParts.description ?? "";
+  return ingredientParts?.description ?? "";
 }
