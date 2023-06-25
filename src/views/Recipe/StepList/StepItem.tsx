@@ -5,6 +5,7 @@ import { KeyboardEvent, forwardRef } from "react";
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { Step } from "../../../@modules/types/recipes";
 
+import classNames from "../../../@modules/utils/classNames";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./StepItem.scss";
@@ -43,7 +44,9 @@ export const StepItem = forwardRef<HTMLTextAreaElement, StepItemProps>(
         as="div"
       >
         <SwipeToDelete onDelete={onDelete}>
-          <div className="step-item">
+          <div
+            className={classNames("step-item", editing && "step-item-editing")}
+          >
             <div
               onPointerDown={(e) => controls.start(e)}
               style={{ touchAction: "none" }}

@@ -4,14 +4,18 @@
 
 .step-item {
   display: flex;
-  align-items: center;
   flex: 1;
-  gap: calc(var(--spacing) * 2);
+  gap: var(--spacing);
   background-color: var(--color-background);
+
+  &.step-item-editing {
+    align-items: center;
+  }
 }
 
 .step-number {
-  width: 1.5ch;
+  width: 2ch;
+  flex-shrink: 0;
 }
 
 .step-input {
