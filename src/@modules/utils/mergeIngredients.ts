@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { RecipeRefParams } from "../api/recipes";
 import { getShortUnit } from "../parsers/textParser";
 import { Ingredient, Recipe } from "../types/recipes";
-import { ShoppingList, ShoppingListIngredient } from "../types/shoppingLists";
+import { ShoppingList } from "../types/shoppingLists";
 
 interface ParsedIngredientItem<T> {
   raw: RawIngredient;
@@ -23,8 +23,8 @@ function parseIngredients(
 }
 
 function parseShoppingIngredients(
-  ingredients: ShoppingListIngredient[]
-): ParsedIngredientItem<ShoppingListIngredient>[] {
+  ingredients: Ingredient[]
+): ParsedIngredientItem<Ingredient>[] {
   return ingredients
     .map((li) => ({ raw: parseIngredient(li.ingredient)[0], original: li }))
     .filter(({ raw }) => !!raw);
@@ -60,9 +60,11 @@ export default function mergeIngredients(
 
     // Otherwise, add the recipe ingredient to the end of the list
     else {
-      const newIngredient: ShoppingListIngredient = {
+      const newIngredient: Ingredient = {
         _id: uuid(),
-        ingredient: recipeI.value + " " + recipeI.ingredient,
+        value: recipeI.value + " " + recipeI.ingredient,
+        units: "",
+        ingredient: "",
       };
 
       // Add this recipe to the ingredient entry
