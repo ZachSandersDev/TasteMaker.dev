@@ -9,21 +9,30 @@ import { authStore } from "../stores/auth";
 import { JoinedWorkspace, Workspace } from "../types/workspaces";
 import { useSWR } from "../utils/cache.react";
 
+import { useMyInvites } from "./invites";
+
 export function useAllWorkspaces() {
   const { user } = useRecoilValue(authStore);
 
-  const { loading: myWorkspacesLoading, value: myWorkspaces } = useSWR<
-    Workspace[]
-  >(`${user?.uid}/workspaces`, () => getMyWorkspaces());
+  const {
+    loading: myWorkspacesLoading,
+    value: myWorkspaces,
+    revalidate: revalidateMyWorkspaces,
+  } = useSWR<Workspace[]>(`${user?.uid}/workspaces`, () => getMyWorkspaces());
 
-  const { loading: joinedWorkspaceIdsLoading, value: joinedWorkspaceIds } =
-    useSWR<JoinedWorkspace[]>(`${user?.uid}/joinedWorkspaceIds`, () =>
-      getJoinedWorkspaces()
-    );
+  const {
+    loading: joinedWorkspaceIdsLoading,
+    value: joinedWorkspaceIds,
+    revalidate: revalidateJoinedWorkspaceIds,
+  } = useSWR<JoinedWorkspace[]>(`${user?.uid}/joinedWorkspaceIds`, () =>
+    getJoinedWorkspaces()
+  );
 
-  const { loading: joinedWorkspacesLoading, value: joinedWorkspaces } = useSWR<
-    Workspace[]
-  >(
+  const {
+    loading: joinedWorkspacesLoading,
+    value: joinedWorkspaces,
+    revalidate: revalidateJoinedWorkspaces,
+  } = useSWR<Workspace[]>(
     `${user?.uid}/${JSON.stringify(joinedWorkspaceIds)}/joinedWorkspaces`,
     () => {
       if (!joinedWorkspaceIds) return Promise.resolve([]);
@@ -55,5 +64,57 @@ export function useAllWorkspaces() {
       myWorkspacesLoading ||
       joinedWorkspaceIdsLoading ||
       joinedWorkspacesLoading,
+    revalidate: () => {
+      revalidateMyWorkspaces();
+      revalidateJoinedWorkspaceIds();
+      revalidateJoinedWorkspaces();
+    },
+  };
+}
+
+export function useInvitedWorkspaces() {
+  const { user } = useRecoilValue(authStore);
+
+  const {
+    workspaceInvitesLoading,
+    workspaceInvites,
+    revalidateWorkspaceInvites,
+  } = useMyInvites();
+
+  const {
+    loading: joinedWorkspacesLoading,
+    value: joinedWorkspaces,
+    revalidate,
+  } = useSWR<Workspace[]>(
+    `invited_workspaces/${user?.uid}/${workspaceInvites?.join(",")}`,
+    () => {
+      if (!workspaceInvites) return Promise.resolve([]);
+
+      return Promise.all(
+        workspaceInvites.map((params) => getWorkspace(params))
+      ).then((workspaces) => workspaces.filter((w): w is Workspace => !!w));
+    }
+  );
+
+  return {
+    workspaces: [
+      ...(joinedWorkspaces || []).map((ws) => {
+        const joinedWorkspaceParams = workspaceInvites?.find(
+          (jws) => jws.workspaceId === ws._id
+        );
+
+        return {
+          userId: joinedWorkspaceParams?.userId,
+          workspaceId: joinedWorkspaceParams?.workspaceId,
+          inviteId: joinedWorkspaceParams?._id,
+          ws,
+        };
+      }),
+    ],
+    loading: workspaceInvitesLoading || joinedWorkspacesLoading,
+    revalidate: () => {
+      revalidateWorkspaceInvites();
+      revalidate();
+    },
   };
 }

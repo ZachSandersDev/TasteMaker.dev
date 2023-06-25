@@ -7,6 +7,7 @@ import {
   push,
   set,
   update,
+  remove,
 } from "firebase/database";
 import debounce from "lodash/debounce";
 import { getRecoil } from "recoil-nexus";
@@ -46,29 +47,12 @@ function getWorkspaceRef(params: WorkspaceRefParams = {}) {
   return currentRef;
 }
 
-function getJoinedWorkspacesRef() {
-  const userId = getUserId();
-  return child(ref(getDatabase(app)), `${userId}/joinedWorkspaces`);
-}
-
 export function getMyWorkspaces(): Promise<Workspace[] | undefined> {
   return new Promise((resolve) => {
     onValue(
       getWorkspaceRef(),
       (snapshot) => {
         resolve(formatSnapList(snapshot, formatWorkspace));
-      },
-      { onlyOnce: true }
-    );
-  });
-}
-
-export function getJoinedWorkspaces(): Promise<JoinedWorkspace[]> {
-  return new Promise((resolve) => {
-    onValue(
-      getJoinedWorkspacesRef(),
-      (snapshot) => {
-        resolve(formatSnapList(snapshot, formatJoinedWorkspace));
       },
       { onlyOnce: true }
     );
@@ -130,6 +114,33 @@ export async function deleteWorkspace(params: WorkspaceRefParams) {
 
 export function formatWorkspace(snapshot: DataSnapshot) {
   return setWorkspaceDefaults(addItemID<Workspace>(snapshot));
+}
+
+// --- //
+
+function getJoinedWorkspacesRef() {
+  const userId = getUserId();
+  return child(ref(getDatabase(app)), `${userId}/joinedWorkspaces`);
+}
+
+export function getJoinedWorkspaces(): Promise<JoinedWorkspace[]> {
+  return new Promise((resolve) => {
+    onValue(
+      getJoinedWorkspacesRef(),
+      (snapshot) => {
+        resolve(formatSnapList(snapshot, formatJoinedWorkspace));
+      },
+      { onlyOnce: true }
+    );
+  });
+}
+
+export function joinWorkspace(params: WorkspaceRefParams) {
+  return push(getJoinedWorkspacesRef(), params);
+}
+
+export function leaveWorkspace(joinedWorkspaceId: string) {
+  return remove(child(getJoinedWorkspacesRef(), joinedWorkspaceId));
 }
 
 export function formatJoinedWorkspace(snapshot: DataSnapshot) {

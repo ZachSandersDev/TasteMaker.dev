@@ -1,0 +1,18 @@
+.ra-dialog.invite-user-dialog {
+  max-width: 30ch;
+  min-height: 20ch;
+
+  .ra-actions {
+    flex: initial;
+    margin-top: auto;
+  }
+
+  .ra-list {
+    padding-top: var(--spacing);
+    flex: 1;
+
+    .ra-button {
+      width: 100%;
+    }
+  }
+}

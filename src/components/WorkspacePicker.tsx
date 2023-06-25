@@ -5,13 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import Button from "../@design/components/Button/Button";
-import { newWorkspace } from "../@modules/api/workspaces";
-import { useAllWorkspaces } from "../@modules/hooks/useAllWorkspaces";
+import { deleteInvite } from "../@modules/api/invites";
+import {
+  WorkspaceRefParams,
+  joinWorkspace,
+  newWorkspace,
+} from "../@modules/api/workspaces";
+import {
+  useAllWorkspaces,
+  useInvitedWorkspaces,
+} from "../@modules/hooks/useAllWorkspaces";
 import { authStore } from "../@modules/stores/auth";
 import { workspaceStore } from "../@modules/stores/workspace";
 
-import Spinner from "./Spinner";
 import { WorkspaceItem } from "./ListItems/WorkspaceItem";
+import Spinner from "./Spinner";
 
 import "./WorkspacePicker.scss";
 
@@ -23,7 +31,15 @@ export default function WorkspacePicker() {
 
   const navigate = useNavigate();
 
-  const { workspaces, loading } = useAllWorkspaces();
+  const {
+    workspaces,
+    loading,
+    revalidate: revalidateAllWorkspaces,
+  } = useAllWorkspaces();
+  const {
+    workspaces: invitedWorkspaces,
+    revalidate: revalidateInvitedWorkspaces,
+  } = useInvitedWorkspaces();
 
   const handleSwitchWorkspace = (userId?: string, workspaceId?: string) => {
     if (!workspaceId) {
@@ -47,6 +63,21 @@ export default function WorkspacePicker() {
       navigate(`/workspace/${user?.uid}/${workspaceId}`);
       setIsOpen(false);
     }
+  };
+
+  const handleAcceptInvite = async (
+    params: WorkspaceRefParams,
+    inviteId?: string
+  ) => {
+    await joinWorkspace(params);
+    if (inviteId) await deleteInvite(inviteId);
+    revalidateAllWorkspaces();
+    revalidateInvitedWorkspaces();
+  };
+
+  const handleDeleteInvite = async (inviteId?: string) => {
+    if (inviteId) await deleteInvite(inviteId);
+    revalidateInvitedWorkspaces();
   };
 
   const selectedWorkspace = workspaces.find(
@@ -92,6 +123,44 @@ export default function WorkspacePicker() {
                   </Fragment>
                 ))}
               </div>
+
+              <div className="workspace-picker-options">
+                {!!invitedWorkspaces?.length && (
+                  <>
+                    <span className="ra-sub-title">My Invites</span>
+                    <span />
+                  </>
+                )}
+
+                {...invitedWorkspaces.map(
+                  ({ userId, workspaceId, inviteId, ws }) => (
+                    <Fragment key={ws._id}>
+                      <WorkspaceItem workspace={ws} disabled />
+                      <div className="ra-actions">
+                        <Button
+                          iconBefore="check"
+                          variant="icon"
+                          size="sm"
+                          onClick={() =>
+                            handleAcceptInvite(
+                              { userId, workspaceId },
+                              inviteId
+                            )
+                          }
+                        />
+                        <Button
+                          iconBefore="clear"
+                          variant="icon"
+                          size="sm"
+                          color="var(--color-danger)"
+                          onClick={() => handleDeleteInvite(inviteId)}
+                        />
+                      </div>
+                    </Fragment>
+                  )
+                )}
+              </div>
+
               <div className="ra-actions">
                 <Button iconBefore="add" size="sm" onClick={makeNewWorkspace}>
                   New Workspace

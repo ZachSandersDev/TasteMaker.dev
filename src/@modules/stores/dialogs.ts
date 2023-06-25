@@ -32,10 +32,10 @@ export const EditIngredientDialog = atom<DialogState<string, string>>({
   default: {},
 });
 
-export const TextInputDialog = atom<
+export const InviteUserDialog = atom<
   DialogState<string, { title: string; placeholder: string; value?: string }>
 >({
-  key: "textInputDialog",
+  key: "inviteUserDialog",
   default: {},
 });
 

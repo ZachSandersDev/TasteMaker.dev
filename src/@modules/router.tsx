@@ -11,8 +11,8 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
-import Loading from "../components/Loading";
 import Shell from "../components/Global/Shell";
+import Loading from "../components/Loading";
 import LoginView from "../views/Login";
 
 const PublicRecipeView = React.lazy(() => import("../views/PublicRecipeView"));
@@ -139,8 +139,8 @@ const Dialogs: [string, LazyExoticComponent<() => JSX.Element | null>][] = [
     React.lazy(() => import("../components/Dialogs/RecipeSelectorDialog")),
   ],
   [
-    "text-input",
-    React.lazy(() => import("../components/Dialogs/TextInputDialog")),
+    "invite-user",
+    React.lazy(() => import("../components/Dialogs/InviteUserDialog")),
   ],
 ];
 

@@ -13,7 +13,7 @@ export interface Workspace {
   icon?: string | null;
   image?: ImageField | null;
 
-  editorEmails: Record<string, boolean>;
+  members?: Record<string, boolean>;
 }
 
 export function setWorkspaceDefaults(workspace: Partial<Workspace>) {
@@ -24,7 +24,7 @@ export function setWorkspaceDefaults(workspace: Partial<Workspace>) {
     icon: workspace.icon || null,
     image: workspace.image || null,
 
-    editorEmails: workspace.editorEmails || {},
+    members: workspace.members || {},
   };
 
   return newWorkspace;

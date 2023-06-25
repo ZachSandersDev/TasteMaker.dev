@@ -1,33 +1,38 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import Button from "../@design/components/Button/Button";
 import MultilineInput from "../@design/components/MultilineInput/MultilineInput";
 import { deleteImage, uploadIconImage } from "../@modules/api/files";
+import { sendInvite } from "../@modules/api/invites";
 import {
   deleteWorkspace,
   getWorkspace,
   saveWorkspace,
 } from "../@modules/api/workspaces";
+import { useProfiles } from "../@modules/hooks/profile";
+import { profileStore } from "../@modules/stores/profile";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Workspace } from "../@modules/types/workspaces";
 import { useSWR } from "../@modules/utils/cache.react";
 
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
-import { useGetText } from "../components/Dialogs/TextInputDialog";
+import { useInviteUser } from "../components/Dialogs/InviteUserDialog";
 import AppHeader from "../components/Global/AppHeader";
 import AppView from "../components/Global/AppView";
+import { ProfileItem } from "../components/ListItems/ProfileItem";
 import Loading from "../components/Loading";
 import { ProfileImage } from "../components/ProfileImage";
 
 export default function WorkspaceSettings() {
   const { userId, workspaceId } = useParams();
+  const { profile } = useRecoilValue(profileStore);
   const setWorkspace = useSetRecoilState(workspaceStore);
   const navigate = useNavigate();
   const pickIcon = usePickIcon();
-  const getText = useGetText();
+  const inviteUser = useInviteUser();
 
   const { value: workspace, updateValue: updateWorkspace } = useSWR<Workspace>(
     `${userId}/${workspaceId}/workspaces/${workspaceId}`,
@@ -35,18 +40,22 @@ export default function WorkspaceSettings() {
     (w) => saveWorkspace({ userId, workspaceId }, w)
   );
 
-  const handleNewEditor = async () => {
-    if (!workspace) return;
+  const { profiles } = useProfiles(Object.keys(workspace?.members || {}));
 
-    const newMemberEmail = await getText({
+  const handleNewEditor = async () => {
+    if (!workspace || !workspaceId) return;
+
+    const newMemberId = await inviteUser({
       title: "New Member",
       placeholder: "E-Mail",
     });
-    if (!newMemberEmail) return;
+    if (!newMemberId) return;
 
-    updateWorkspace(
-      (ws) => (ws.editorEmails[newMemberEmail.replace(".", ",")] = true)
-    );
+    sendInvite(newMemberId, workspaceId);
+    updateWorkspace((w) => {
+      if (!w.members) w.members = {};
+      w.members[newMemberId] = true;
+    });
   };
 
   const handleRenameWorkspace = (text: string) => {
@@ -152,12 +161,12 @@ export default function WorkspaceSettings() {
           <h3>Members</h3>
         </header>
 
-        <ul className="ra-padded-list">
-          <li>You</li>
-          {...Object.keys(workspace.editorEmails).map((email) => (
-            <li key={email}>{email.replace(",", ".")}</li>
+        <div className="ra-list">
+          <ProfileItem profile={profile} disabled />
+          {profiles?.map((p, i) => (
+            <ProfileItem key={i} profile={p} disabled />
           ))}
-        </ul>
+        </div>
 
         <div className="ra-actions-left">
           <Button iconBefore="add" size="sm" onClick={handleNewEditor}>
