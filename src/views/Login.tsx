@@ -8,7 +8,7 @@ import Input from "../@design/components/Input/Input";
 
 import { authStore, createAccount, doLogin } from "../@modules/stores/auth";
 
-import AppView from "../components/AppView";
+import AppView from "../components/Global/AppView";
 
 import "./Login.scss";
 

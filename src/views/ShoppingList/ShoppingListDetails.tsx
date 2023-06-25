@@ -11,10 +11,10 @@ import { useShoppingList } from "../../@modules/hooks/shoppingLists";
 import { swrOnce } from "../../@modules/utils/cache";
 import mergeIngredients from "../../@modules/utils/mergeIngredients";
 
-import AppHeader from "../../components/AppHeader";
-import AppView from "../../components/AppView";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { useSelectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
+import AppHeader from "../../components/Global/AppHeader";
+import AppView from "../../components/Global/AppView";
 
 import Loading from "../../components/Loading";
 

@@ -14,11 +14,11 @@ import { workspaceStore } from "../@modules/stores/workspace";
 import { Workspace } from "../@modules/types/workspaces";
 import { useSWR } from "../@modules/utils/cache.react";
 
-import AppHeader from "../components/AppHeader";
-import AppView from "../components/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
 import { useGetText } from "../components/Dialogs/TextInputDialog";
+import AppHeader from "../components/Global/AppHeader";
+import AppView from "../components/Global/AppView";
 import Loading from "../components/Loading";
 import { ProfileImage } from "../components/ProfileImage";
 

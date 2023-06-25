@@ -1,9 +1,9 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { navStore } from "../@modules/stores/nav";
-import classNames from "../@modules/utils/classNames";
-import useMediaQuery from "../@modules/utils/useMediaQuery";
+import { navStore } from "../../@modules/stores/nav";
+import classNames from "../../@modules/utils/classNames";
+import useMediaQuery from "../../@modules/utils/useMediaQuery";
 
 import "./AppNav.scss";
 

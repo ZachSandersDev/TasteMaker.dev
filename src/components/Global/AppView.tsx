@@ -1,11 +1,11 @@
 import { PropsWithChildren, ReactElement, useEffect, useRef } from "react";
 import { getRecoil, setRecoil } from "recoil-nexus";
 
-import { navStore } from "../@modules/stores/nav";
-import classNames from "../@modules/utils/classNames";
+import { navStore } from "../../@modules/stores/nav";
+import classNames from "../../@modules/utils/classNames";
+import { getCSSVariableNumber } from "../../@modules/utils/getCSSVariable";
 
 import "./AppView.scss";
-import { getCSSVariableNumber } from "../@modules/utils/getCSSVariable";
 
 export interface AppViewProps {
   header?: ReactElement;

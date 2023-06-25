@@ -14,8 +14,8 @@ import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
 
-import AppHeader from "../components/AppHeader";
-import AppView from "../components/AppView";
+import AppHeader from "../components/Global/AppHeader";
+import AppView from "../components/Global/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../components/Dialogs/RecipeSelectorDialog";

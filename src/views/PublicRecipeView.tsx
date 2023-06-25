@@ -7,8 +7,8 @@ import { Profile } from "../@modules/types/profile";
 import { Recipe } from "../@modules/types/recipes";
 import { useSWR } from "../@modules/utils/cache.react";
 
-import AppHeader from "../components/AppHeader";
-import AppView from "../components/AppView";
+import AppHeader from "../components/Global/AppHeader";
+import AppView from "../components/Global/AppView";
 import ImageUpload from "../components/ImageUpload";
 import Loading from "../components/Loading";
 import { ProfileImage } from "../components/ProfileImage";

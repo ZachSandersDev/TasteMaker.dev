@@ -6,7 +6,7 @@ import { saveProfile } from "../../@modules/api/profile";
 import { authStore, doLogout } from "../../@modules/stores/auth";
 import { profileStore } from "../../@modules/stores/profile";
 import useUpdater from "../../@modules/utils/useUpdater";
-import AppView from "../../components/AppView";
+import AppView from "../../components/Global/AppView";
 
 import "./SettingsView.scss";
 import { ProfileImage } from "../../components/ProfileImage";
