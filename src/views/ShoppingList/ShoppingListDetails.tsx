@@ -18,7 +18,7 @@ import { useSelectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 
 import Loading from "../../components/Loading";
 
-import { ShoppingIngredientList } from "./IngredientList/ShoppingIngredientList";
+import IngredientList from "../Recipe/IngredientList/IngredientList";
 
 export default function ShoppingListDetailsView() {
   const { listId = "" } = useParams();
@@ -120,10 +120,11 @@ export default function ShoppingListDetailsView() {
         />
       </div>
 
-      <ShoppingIngredientList
+      <IngredientList
         ingredients={shoppingList.ingredients}
         editing={editing}
-        updateShoppingList={updateShoppingList}
+        updateRecipe={updateShoppingList}
+        checklist
       />
     </AppView>
   );

@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: calc(var(--spacing) * 1.5);
+  transition: all 0.2s;
 
   .multiline-input {
     flex: 1;
@@ -24,5 +25,65 @@
 
   &:not(:first-child).subheading {
     margin-top: calc(var(--spacing) * 2);
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 1);
+
+    cursor: pointer;
+
+    > input {
+      display: none;
+    }
+  }
+}
+
+.ingredient-checkbox {
+  height: 20px;
+  width: 20px;
+  font-size: 1em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--color-interface-base);
+  border-radius: calc(var(--spacing) * 0.5);
+  box-shadow: 0 0 2px 0 var(--color-interface-active);
+}
+
+.ingredient-checkbox-checked {
+  opacity: 0.2;
+  @media (prefers-color-scheme: dark) {
+    opacity: 0.4;
+  }
+
+  .ingredient-checkbox {
+    background-color: var(--color-interface-active);
+  }
+}
+
+.ingredient-included-in {
+  font-size: 0.8em;
+  color: var(--color-placeholder);
+  padding-left: calc(var(--spacing));
+  margin-left: auto;
+
+  display: flex;
+  gap: 0.5ch;
+  overflow: hidden;
+  flex: 1;
+  justify-content: flex-end;
+
+  @media (max-width: 1000px) {
+    max-width: 15ch;
+  }
+
+  * {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }

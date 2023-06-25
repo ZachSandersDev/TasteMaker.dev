@@ -1,18 +1,11 @@
 import { v4 as uuid } from "uuid";
 
-import { RecipeRefParams } from "../api/recipes";
+import { Ingredient } from "./recipes";
 
 export interface ShoppingList {
   _id: string;
   name: string;
-  ingredients: ShoppingListIngredient[];
-}
-
-export interface ShoppingListIngredient {
-  _id: string;
-  ingredient: string;
-  fromRecipes?: RecipeRefParams[];
-  complete?: boolean;
+  ingredients: Ingredient[];
 }
 
 export function setListDefaults(list: Partial<ShoppingList>) {
@@ -23,6 +16,9 @@ export function setListDefaults(list: Partial<ShoppingList>) {
       list.ingredients?.map((i) => ({
         _id: i._id || uuid(),
         ingredient: i.ingredient || "",
+        value: i.value || "",
+        units: i.units || "",
+        subHeading: i.subHeading || false,
         fromRecipes:
           i.fromRecipes?.map((fr) => ({
             userId: fr.userId || "",
@@ -34,13 +30,4 @@ export function setListDefaults(list: Partial<ShoppingList>) {
   };
 
   return defaultedShoppingList;
-}
-
-export function getBlankShoppingListIngredient() {
-  return {
-    _id: uuid(),
-    ingredient: "",
-    fromRecipes: [],
-    complete: false,
-  };
 }

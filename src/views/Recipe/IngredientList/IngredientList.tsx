@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import {
   Ingredient,
-  Recipe,
   getBlankIngredient,
 } from "../../../@modules/types/recipes";
 
@@ -16,12 +15,16 @@ import "./IngredientList.scss";
 export interface IngredientListProps {
   ingredients: Ingredient[];
   editing: boolean;
-  updateRecipe?: (updateFunc: (r: Recipe) => void) => void;
+  checklist?: boolean;
+  updateRecipe?: (
+    updateFunc: (r: { ingredients: Ingredient[] }) => void
+  ) => void;
 }
 
 export default function IngredientList({
   ingredients,
   editing,
+  checklist = false,
   updateRecipe,
 }: IngredientListProps) {
   useEffect(() => {
@@ -66,11 +69,12 @@ export default function IngredientList({
       onDelete={deleteIngredient}
       renderItem={(ingredient, i, onKeyDown, ref) => (
         <IngredientItem
-          ingredient={ingredient}
           key={ingredient._id}
-          updateIngredient={(ni) => updateIngredient(ni, i)}
-          deleteIngredient={() => deleteIngredient(i)}
+          ingredient={ingredient}
           editing={editing}
+          checklist={checklist}
+          onUpdate={(ni) => updateIngredient(ni, i)}
+          onDelete={() => deleteIngredient(i)}
           onKeyDown={onKeyDown}
           ref={ref}
         />

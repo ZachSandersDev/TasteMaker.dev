@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid";
 
+import { RecipeRefParams } from "../api/recipes";
+
 import { ImageField } from "./imageField";
 
 export interface Recipe {
@@ -25,6 +27,8 @@ export interface Ingredient {
   ingredient: string;
   _id: string;
   subHeading?: boolean;
+  fromRecipes?: RecipeRefParams[];
+  complete?: boolean;
 }
 
 export interface Step {

@@ -1,8 +1,10 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { KeyboardEvent, forwardRef } from "react";
+import { KeyboardEvent, forwardRef, useEffect } from "react";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
+import { useRecipeList } from "../../../@modules/hooks/recipes";
+import { parseIngredient } from "../../../@modules/parsers/parseIngredient";
 import { Ingredient } from "../../../@modules/types/recipes";
 
 import classNames from "../../../@modules/utils/classNames";
@@ -14,8 +16,9 @@ import "./IngredientItem.scss";
 export interface IngredientItemProps {
   ingredient: Ingredient;
   editing: boolean;
-  updateIngredient: (i: Ingredient) => void;
-  deleteIngredient: () => void;
+  checklist?: boolean;
+  onUpdate: (i: Ingredient) => void;
+  onDelete: () => void;
   onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -24,40 +27,89 @@ export const IngredientItem = forwardRef<
   IngredientItemProps
 >(
   (
-    { ingredient, updateIngredient, deleteIngredient, onKeyDown, editing },
+    { ingredient, onUpdate, onDelete, onKeyDown, editing, checklist = false },
     ref
   ) => {
     const controls = useDragControls();
+    const { recipeList } = useRecipeList(ingredient.fromRecipes || []);
+
+    useEffect(() => {
+      if (ingredient.units || ingredient.ingredient) {
+        const newIngredient = structuredClone(ingredient);
+        newIngredient.value = [
+          newIngredient.value,
+          newIngredient.units,
+          newIngredient.ingredient,
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        newIngredient.units = "";
+        newIngredient.ingredient = "";
+        onUpdate(newIngredient);
+      }
+    }, [ingredient]);
 
     const setIngredientValue = (value: string) => {
       const newIngredient = structuredClone(ingredient);
       newIngredient.value = value;
-      updateIngredient(newIngredient);
+      onUpdate(newIngredient);
+    };
+
+    const setIngredientComplete = (complete: boolean) => {
+      const newIngredient = structuredClone(ingredient);
+      newIngredient.complete = complete;
+      onUpdate(newIngredient);
     };
 
     const setIngredientType = (type: "subheading" | "ingredient") => {
       const newIngredient = structuredClone(ingredient);
       newIngredient.subHeading = type === "subheading";
-      updateIngredient(newIngredient);
+      onUpdate(newIngredient);
     };
 
     if (!editing) {
+      const ingredientStr = parseIngredient(ingredient);
       return (
         <div
           className={classNames(
             "ingredient-item",
-            ingredient.subHeading && "subheading"
+            ingredient.subHeading && "subheading",
+            ingredient.complete && "ingredient-checkbox-checked"
           )}
         >
-          {ingredient.subHeading ? (
-            <span>{ingredient.value}</span>
-          ) : (
+          {ingredient.subHeading && <span>{ingredient.value}</span>}
+          {!ingredient.subHeading && checklist && (
+            <label>
+              <input
+                type="checkbox"
+                checked={!!ingredient.complete}
+                onChange={(e) => setIngredientComplete(e.target.checked)}
+              />
+              <span className="ingredient-checkbox material-symbols-rounded">
+                {ingredient.complete ? "check" : ""}
+              </span>
+              <span>{ingredient.value}</span>
+            </label>
+          )}
+          {!ingredient.subHeading && !checklist && (
             <>
               <span>&bull;</span>
               <span>
-                {ingredient.value} <b>{ingredient.ingredient}</b>
+                {ingredient.value.replace(ingredientStr, "").trim()}{" "}
+                <b>{ingredientStr}</b>
               </span>
             </>
+          )}
+          {!!recipeList.length && (
+            <span className="ingredient-included-in">
+              {recipeList.map((r, i) => (
+                <span key={r._id}>
+                  {r.name}
+                  {i !== recipeList.length - 1 && ", "}
+                </span>
+              ))}
+            </span>
           )}
         </div>
       );
@@ -71,7 +123,7 @@ export const IngredientItem = forwardRef<
         dragControls={controls}
         as="div"
       >
-        <SwipeToDelete onDelete={deleteIngredient}>
+        <SwipeToDelete onDelete={onDelete}>
           <div
             className={classNames(
               "ingredient-item",
@@ -94,6 +146,17 @@ export const IngredientItem = forwardRef<
               onKeyDown={onKeyDown}
               ref={ref}
             />
+
+            {!!recipeList.length && (
+              <span className="ingredient-included-in">
+                {recipeList.map((r, i) => (
+                  <span key={r._id}>
+                    {r.name}
+                    {i !== recipeList.length - 1 && ", "}
+                  </span>
+                ))}
+              </span>
+            )}
 
             <DropMenu
               icon="expand_more"
