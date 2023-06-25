@@ -2,7 +2,6 @@ import { Ingredient as RawIngredient, parseIngredient } from "parse-ingredient";
 import { v4 as uuid } from "uuid";
 
 import { RecipeRefParams } from "../api/recipes";
-import { getShortUnit } from "../parsers/textParser";
 import { Ingredient, Recipe } from "../types/recipes";
 import { ShoppingList } from "../types/shoppingLists";
 
@@ -17,16 +16,11 @@ function parseIngredients(
   return ingredients
     .filter((i) => !i.subHeading)
     .map((li) => ({
-      raw: parseIngredient(li.value + " " + li.ingredient)[0],
+      raw: parseIngredient(
+        [li.value, li.units, li.ingredient].filter(Boolean).join(" ")
+      )[0],
       original: li,
-    }));
-}
-
-function parseShoppingIngredients(
-  ingredients: Ingredient[]
-): ParsedIngredientItem<Ingredient>[] {
-  return ingredients
-    .map((li) => ({ raw: parseIngredient(li.ingredient)[0], original: li }))
+    }))
     .filter(({ raw }) => !!raw);
 }
 
@@ -36,7 +30,12 @@ export default function mergeIngredients(
   list: ShoppingList
 ) {
   const recipeIngredients = parseIngredients(recipe.ingredients);
-  const listIngredients = parseShoppingIngredients(list.ingredients);
+  const listIngredients = parseIngredients(list.ingredients);
+
+  // Empty the list of the default blank line if it's the only ingredient
+  if (list.ingredients.length === 1 && list.ingredients[0].value === "") {
+    list.ingredients = [];
+  }
 
   for (const { raw: rawRecipeI, original: recipeI } of recipeIngredients) {
     // Find a matching list ingredient
@@ -49,27 +48,43 @@ export default function mergeIngredients(
 
     // If we already have that ingredient, just add the quantity to it
     if (rawListI && listI) {
-      listI.ingredient = `${
-        Number(rawListI.quantity || 0) + Number(rawRecipeI.quantity || 0)
-      } ${getShortUnit(rawListI.unitOfMeasureID)} ${recipeI.ingredient}`;
+      listI.value = [
+        Number(rawListI.quantity || 0) + Number(rawRecipeI.quantity || 0),
+        rawListI.unitOfMeasure,
+        rawListI.description,
+      ]
+        .filter(Boolean)
+        .join(" ");
 
       // Add this recipe to the ingredient entry
       if (!listI.fromRecipes) listI.fromRecipes = [];
-      listI.fromRecipes.push(recipeParams);
+      if (
+        !listI.fromRecipes.find((r) => r.recipeId === recipeParams.recipeId)
+      ) {
+        listI.fromRecipes.push(recipeParams);
+      }
     }
 
     // Otherwise, add the recipe ingredient to the end of the list
     else {
       const newIngredient: Ingredient = {
         _id: uuid(),
-        value: recipeI.value + " " + recipeI.ingredient,
+        value: [recipeI.value, recipeI.units, recipeI.ingredient]
+          .filter(Boolean)
+          .join(" "),
         units: "",
         ingredient: "",
       };
 
       // Add this recipe to the ingredient entry
       if (!newIngredient.fromRecipes) newIngredient.fromRecipes = [];
-      newIngredient.fromRecipes.push(recipeParams);
+      if (
+        !newIngredient.fromRecipes.find(
+          (r) => r.recipeId === recipeParams.recipeId
+        )
+      ) {
+        newIngredient.fromRecipes.push(recipeParams);
+      }
 
       list.ingredients.push(newIngredient);
     }
