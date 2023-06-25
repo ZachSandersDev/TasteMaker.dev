@@ -50,3 +50,9 @@ h5 {
   font-weight: 300;
   font-family: "Roboto Slab", serif;
 }
+
+b {
+  @media (prefers-color-scheme: dark) {
+    font-weight: 900;
+  }
+}
