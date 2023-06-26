@@ -11,6 +11,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
+import { ContextMenuDialogComponent } from "../components/Dialogs/ContextMenuDialog";
 import Shell from "../components/Global/Shell";
 import Loading from "../components/Loading";
 import LoginView from "../views/Login";
@@ -36,6 +37,7 @@ const LazyRoute: FunctionComponent<PropsWithChildren> = ({ children }) => {
     <Suspense fallback={<Loading />}>
       {children}
       <Outlet />
+      <ContextMenuDialogComponent />
     </Suspense>
   );
 };

@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+import { ContextMenuDialogPayload } from "../../components/Dialogs/ContextMenuDialog";
 import {
   IconPickerResult,
   IconPickerState,
@@ -43,5 +44,12 @@ export const IconPickerDialog = atom<
   DialogState<IconPickerResult, IconPickerState>
 >({
   key: "iconPickerDialog",
+  default: {},
+});
+
+export const ContextMenuDialog = atom<
+  DialogState<void, ContextMenuDialogPayload>
+>({
+  key: "contextMenuDialog",
   default: {},
 });
