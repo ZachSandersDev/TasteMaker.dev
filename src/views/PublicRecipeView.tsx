@@ -1,11 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
 
-import { getProfile } from "../@modules/api/profile";
-import { getRecipe } from "../@modules/api/recipes";
-import { Profile } from "../@modules/types/profile";
-import { Recipe } from "../@modules/types/recipes";
-import { useSWR } from "../@modules/utils/cache.react";
+import { useProfile } from "../@modules/hooks/profile";
+import { useRecipe } from "../@modules/hooks/recipes";
 
 import AppHeader from "../components/Global/AppHeader";
 import AppView from "../components/Global/AppView";
@@ -21,15 +18,13 @@ import "./Recipe/RecipeDetails.scss";
 export default function PublicRecipeView() {
   const { userId, recipeId, workspaceId } = useParams();
 
-  const { loading, value: recipe } = useSWR<Recipe>(
-    `${userId}/${workspaceId}/recipes/${recipeId}`,
-    () => getRecipe({ userId, workspaceId, recipeId })
-  );
+  const { profileLoading, profile } = useProfile(userId || "");
 
-  const { loading: profileLoading, value: profile } = useSWR<Profile>(
-    `${userId}/${workspaceId}/profiles/${userId}`,
-    () => getProfile(userId || "")
-  );
+  const { recipeLoading, recipe } = useRecipe({
+    userId,
+    recipeId,
+    workspaceId,
+  });
 
   useEffect(() => {
     if (recipe) {
@@ -37,7 +32,7 @@ export default function PublicRecipeView() {
     }
   }, [recipe]);
 
-  if (loading || profileLoading) {
+  if (recipeLoading || profileLoading || !recipeId) {
     return <Loading />;
   }
 
