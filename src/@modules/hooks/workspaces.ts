@@ -11,7 +11,20 @@ import { useSWR } from "../utils/cache.react";
 
 import { useMyInvites } from "./invites";
 
-export function useAllWorkspaces() {
+export interface WorkspaceInvitePair {
+  userId?: string;
+  workspaceId?: string;
+  inviteId?: string;
+  ws: Workspace;
+}
+
+export interface WorkspaceFetchState {
+  workspaces: WorkspaceInvitePair[];
+  loading: boolean;
+  revalidate: () => void;
+}
+
+export function useAllWorkspaces(): WorkspaceFetchState {
   const { user } = useRecoilValue(authStore);
 
   const {
@@ -46,7 +59,8 @@ export function useAllWorkspaces() {
   return {
     workspaces: [
       ...(myWorkspaces || []).map((ws) => ({
-        uid: user?.uid,
+        userId: user?.uid,
+        workspaceId: ws._id,
         ws,
       })),
       ...(joinedWorkspaces || []).map((ws) => {
@@ -55,7 +69,9 @@ export function useAllWorkspaces() {
         );
 
         return {
-          uid: joinedWorkspaceParams?.userId,
+          userId: joinedWorkspaceParams?.userId,
+          workspaceId: joinedWorkspaceParams?.workspaceId,
+          inviteId: joinedWorkspaceParams?._id,
           ws,
         };
       }),
@@ -72,7 +88,7 @@ export function useAllWorkspaces() {
   };
 }
 
-export function useInvitedWorkspaces() {
+export function useInvitedWorkspaces(): WorkspaceFetchState {
   const { user } = useRecoilValue(authStore);
 
   const {

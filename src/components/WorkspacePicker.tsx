@@ -9,12 +9,13 @@ import { deleteInvite } from "../@modules/api/invites";
 import {
   WorkspaceRefParams,
   joinWorkspace,
+  leaveWorkspace,
   newWorkspace,
 } from "../@modules/api/workspaces";
 import {
   useAllWorkspaces,
   useInvitedWorkspaces,
-} from "../@modules/hooks/useAllWorkspaces";
+} from "../@modules/hooks/workspaces";
 import { authStore } from "../@modules/stores/auth";
 import { workspaceStore } from "../@modules/stores/workspace";
 
@@ -80,6 +81,16 @@ export default function WorkspacePicker() {
     revalidateInvitedWorkspaces();
   };
 
+  const handleLeaveWorkspace = async (inviteId?: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to leave this workspace?"
+    );
+    if (!confirmed) return;
+
+    if (inviteId) await leaveWorkspace(inviteId);
+    revalidateAllWorkspaces();
+  };
+
   const selectedWorkspace = workspaces.find(
     ({ ws }) => ws._id === workspaceId
   )?.ws;
@@ -106,18 +117,26 @@ export default function WorkspacePicker() {
                 <WorkspaceItem onClick={() => handleSwitchWorkspace()} />
                 <div />
 
-                {...workspaces.map(({ uid, ws }) => (
+                {...workspaces.map(({ userId, inviteId, ws }) => (
                   <Fragment key={ws._id}>
                     <WorkspaceItem
                       workspace={ws}
-                      onClick={() => handleSwitchWorkspace(uid, ws._id)}
+                      onClick={() => handleSwitchWorkspace(userId, ws._id)}
                     />
-                    {uid === user?.uid && (
+                    {userId === user?.uid ? (
                       <Button
                         iconBefore="settings"
                         variant="icon"
                         size="sm"
                         onClick={() => handleWorkspaceSettings(ws._id)}
+                      />
+                    ) : (
+                      <Button
+                        iconBefore="logout"
+                        variant="icon"
+                        size="sm"
+                        title="Leave Workspace"
+                        onClick={() => handleLeaveWorkspace(inviteId)}
                       />
                     )}
                   </Fragment>

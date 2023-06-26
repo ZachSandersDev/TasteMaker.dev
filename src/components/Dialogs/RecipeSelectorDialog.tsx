@@ -10,7 +10,7 @@ import { RecipeRefParams } from "../../@modules/api/recipes";
 import { WorkspaceRefParams } from "../../@modules/api/workspaces";
 import { useFolder, useFoldersWithParent } from "../../@modules/hooks/folders";
 import { useRecipesWithParent } from "../../@modules/hooks/recipes";
-import { useAllWorkspaces } from "../../@modules/hooks/useAllWorkspaces";
+import { useAllWorkspaces } from "../../@modules/hooks/workspaces";
 import { authStore } from "../../@modules/stores/auth";
 import { RecipeSelectorDialog } from "../../@modules/stores/dialogs";
 
