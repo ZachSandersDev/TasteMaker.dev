@@ -2,6 +2,7 @@ export const CACHE_TTL = 500;
 
 export interface SWRCacheEntry<T> {
   timestamp: number;
+  loading?: boolean;
   value: T | undefined;
 }
 
@@ -36,20 +37,12 @@ function setIsLoading(cacheKey: string) {
   const timestamp = new Date().getTime();
   const { value } = getCacheEntry(cacheKey) || {};
 
-  const cachedValue = JSON.stringify({ timestamp, value });
+  const cachedValue = JSON.stringify({ timestamp, value, loading: true });
   localStorage.setItem(cacheKey, cachedValue);
 }
 
 function isLoading(cacheKey: string): boolean {
-  const cachedValue =
-    JSON.parse(localStorage.getItem(cacheKey) || "0") || undefined;
-  if (!cachedValue) return false;
-
-  const { timestamp } = cachedValue;
-  const now = new Date().getTime();
-  const isExpired = now - timestamp > CACHE_TTL;
-
-  return !isExpired;
+  return !!getCacheEntry(cacheKey)?.loading;
 }
 
 function getCacheEntry<T>(cacheKey: string): SWRCacheEntry<T> | undefined {
@@ -72,20 +65,21 @@ export function swr<T>(
   callback: SWRListener<T>
 ): () => void {
   const cacheEntry = getCacheEntry<T>(cacheKey);
-  if (cacheEntry) {
+  const isCurrentlyLoading = isLoading(cacheKey);
+
+  // If we have a cached value, immediately return that while we load from network
+  if (cacheEntry && !isCurrentlyLoading) {
     callback({ loading: false, value: cacheEntry.value });
   }
-
-  // If the only option we have is to load from network, notify we're loading
+  // Otherwise, return that we're loading from network
   else {
     callback({ loading: true, value: undefined });
   }
 
   // If we're already loading, skip calling loader() again
-  if (isLoading(cacheKey)) {
+  if (isCurrentlyLoading) {
     addListener(cacheKey, callback);
   }
-
   // Otherwise, load from network and notify listeners
   else {
     setIsLoading(cacheKey);
