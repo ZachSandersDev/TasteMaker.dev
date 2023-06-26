@@ -18,7 +18,7 @@ import { authStore } from "../../@modules/stores/auth";
 import { workspaceStore } from "../../@modules/stores/workspace";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
-import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
+import DropMenu from "../../components/DropMenu";
 import { usePickIcon } from "../../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
 import AppHeader from "../../components/Global/AppHeader";

@@ -1,19 +1,13 @@
 import { ReactElement } from "react";
 
-import Button from "../../../@design/components/Button/Button";
-import { useContextMenu } from "../ContextMenuDialog";
+import Button from "../@design/components/Button/Button";
+
+import { ContextMenuOption, useContextMenu } from "./Dialogs/ContextMenuDialog";
 
 import "./DropMenu.scss";
 
-export interface DropMenuOption {
-  color?: string;
-  icon: string;
-  text: string;
-  onClick: () => void;
-}
-
 export interface DropMenuProps {
-  options: DropMenuOption[];
+  options: ContextMenuOption[];
   icon?: string;
   buttonContent?: ReactElement;
 }

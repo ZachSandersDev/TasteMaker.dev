@@ -11,7 +11,7 @@ import { useShoppingList } from "../../@modules/hooks/shoppingLists";
 import { swrOnce } from "../../@modules/utils/cache";
 import mergeIngredients from "../../@modules/utils/mergeIngredients";
 
-import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
+import DropMenu from "../../components/DropMenu";
 import { useSelectRecipe } from "../../components/Dialogs/RecipeSelectorDialog";
 import AppHeader from "../../components/Global/AppHeader";
 import AppView from "../../components/Global/AppView";
