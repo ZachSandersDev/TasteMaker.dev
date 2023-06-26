@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { KeyboardEvent, forwardRef, useEffect } from "react";
+import { KeyboardEvent, forwardRef, useEffect, useRef } from "react";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { useRecipeList } from "../../../@modules/hooks/recipes";
@@ -8,7 +8,7 @@ import { parseIngredient } from "../../../@modules/parsers/parseIngredient";
 import { Ingredient } from "../../../@modules/types/recipes";
 
 import classNames from "../../../@modules/utils/classNames";
-import DropMenu from "../../../components/Dialogs/DropMenu/DropMenu";
+import { useContextMenu } from "../../../components/Dialogs/ContextMenuDialog";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./IngredientItem.scss";
@@ -32,6 +32,9 @@ export const IngredientItem = forwardRef<
   ) => {
     const controls = useDragControls();
     const { recipeList } = useRecipeList(ingredient.fromRecipes || []);
+
+    const contextMenu = useContextMenu();
+    const dragStart = useRef<number>();
 
     useEffect(() => {
       if (ingredient.units || ingredient.ingredient) {
@@ -123,7 +126,11 @@ export const IngredientItem = forwardRef<
         dragControls={controls}
         as="div"
       >
-        <SwipeToDelete onDelete={onDelete}>
+        <SwipeToDelete
+          onDelete={onDelete}
+          editing={editing}
+          desktop-fallback={false}
+        >
           <div
             className={classNames(
               "ingredient-item",
@@ -131,9 +138,42 @@ export const IngredientItem = forwardRef<
             )}
           >
             <span
-              onPointerDown={(e) => controls.start(e)}
+              onPointerDown={(e) => {
+                dragStart.current = e.pageY;
+                controls.start(e);
+              }}
               style={{ touchAction: "none" }}
               className="material-symbols-rounded drag-handle"
+              onClick={(e) => {
+                if (
+                  !dragStart.current ||
+                  Math.abs(e.pageY - dragStart.current) < 10
+                ) {
+                  const div = e.target as HTMLDivElement;
+                  const rect = div.getBoundingClientRect();
+
+                  contextMenu({
+                    position: { x: rect.left, y: rect.bottom },
+                    options: [
+                      {
+                        text: "Section title",
+                        icon: "title",
+                        onClick: () => setIngredientType("subheading"),
+                      },
+                      {
+                        text: "Ingredient",
+                        icon: "notes",
+                        onClick: () => setIngredientType("ingredient"),
+                      },
+                      {
+                        text: "Delete",
+                        icon: "delete",
+                        onClick: onDelete,
+                      },
+                    ],
+                  });
+                }
+              }}
             >
               drag_indicator
             </span>
@@ -157,22 +197,6 @@ export const IngredientItem = forwardRef<
                 ))}
               </span>
             )}
-
-            <DropMenu
-              icon="expand_more"
-              options={[
-                {
-                  text: "Section Title",
-                  icon: "title",
-                  onClick: () => setIngredientType("subheading"),
-                },
-                {
-                  text: "Ingredient",
-                  icon: "notes",
-                  onClick: () => setIngredientType("ingredient"),
-                },
-              ]}
-            />
           </div>
         </SwipeToDelete>
       </Reorder.Item>
