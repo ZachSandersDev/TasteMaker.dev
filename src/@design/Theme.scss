@@ -40,14 +40,14 @@
   --color-danger-color: white;
 
   @media (prefers-color-scheme: dark) {
-    --color-nav-background: rgba(0, 0, 0, 0.6);
+    --color-nav-background: hsl(200, 11%, 8%);
     --color-nav-color: rgb(125, 125, 125);
     --color-nav-active: white;
 
-    --color-background: black;
+    --color-background: hsl(200, 11%, 8%);
     --color-color: hsl(165, 3%, 90%);
 
-    --color-input-background: hsl(214, 31%, 10%);
+    --color-input-background: hsl(200, 20%, 15%);
 
     --color-interface-base: hsl(220, 35%, 20%);
     --color-interface-active: hsl(219, 29%, 25%);
