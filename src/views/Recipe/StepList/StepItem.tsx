@@ -6,6 +6,7 @@ import MultilineInput from "../../../@design/components/MultilineInput/Multiline
 import { Step } from "../../../@modules/types/recipes";
 
 import classNames from "../../../@modules/utils/classNames";
+import { DragHandle } from "../../../components/DragHandle";
 import SwipeToDelete from "../../../components/SwipeToDelete";
 
 import "./StepItem.scss";
@@ -47,13 +48,17 @@ export const StepItem = forwardRef<HTMLTextAreaElement, StepItemProps>(
           <div
             className={classNames("step-item", editing && "step-item-editing")}
           >
-            <div
-              onPointerDown={(e) => controls.start(e)}
-              style={{ touchAction: "none" }}
-              className="material-symbols-rounded drag-handle"
-            >
-              drag_indicator
-            </div>
+            <DragHandle
+              controls={controls}
+              options={[
+                {
+                  text: "Delete",
+                  icon: "delete",
+                  onClick: onDelete,
+                },
+              ]}
+            />
+
             <MultilineInput
               placeholder={`Step ${index + 1}`}
               className="step-input"

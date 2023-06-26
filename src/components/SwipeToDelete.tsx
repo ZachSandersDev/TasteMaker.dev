@@ -11,8 +11,6 @@ export interface SwipeToDeleteProps {
   onClick?: () => void;
   className?: string;
   children?: React.ReactNode;
-  editing?: boolean;
-  "desktop-fallback"?: boolean;
 }
 
 export default function SwipeToDelete({
@@ -20,8 +18,6 @@ export default function SwipeToDelete({
   onClick,
   className = "",
   children,
-  editing,
-  "desktop-fallback": desktopFallback = true,
 }: SwipeToDeleteProps) {
   const isMobile = useMediaQuery("(max-width: 1000px)");
 
@@ -30,28 +26,17 @@ export default function SwipeToDelete({
       className={classNames(
         "swipe-to-delete-container",
         className,
-        isMobile && !editing && "mobile"
+        isMobile && "mobile"
       )}
     >
       <div className="swipe-to-delete-child" onClick={onClick}>
         {children}
       </div>
 
-      {isMobile && !editing ? (
+      {isMobile && (
         <Button className="swipe-to-delete-button" onClick={onDelete}>
           Delete
         </Button>
-      ) : (
-        desktopFallback && (
-          <Button
-            className="swipe-to-delete-button"
-            onClick={onDelete}
-            variant="icon"
-            size="sm"
-            color="var(--color-danger)"
-            iconBefore="clear"
-          />
-        )
       )}
     </div>
   );

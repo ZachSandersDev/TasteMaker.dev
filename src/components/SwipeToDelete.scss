@@ -10,7 +10,7 @@
     display: none;
   }
 
-  &.mobile {
+  @media (max-width: 1000px) {
     .swipe-to-delete-child {
       flex-shrink: 0;
       scroll-snap-align: start;
@@ -30,7 +30,7 @@
     }
   }
 
-  &:not(.mobile) {
+  @media (min-width: 1000px) {
     .swipe-to-delete-child {
       flex: 1;
       flex-shrink: 1;
