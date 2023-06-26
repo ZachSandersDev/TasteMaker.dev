@@ -14,7 +14,7 @@ export function getUserIdFromEmail(email: string): Promise<string | undefined> {
 
   return new Promise((resolve) => {
     onValue(
-      getEmailMapRef(email),
+      getEmailMapRef(email.toLowerCase()),
       (snapshot) => {
         resolve(snapshot.val());
       },
@@ -24,5 +24,5 @@ export function getUserIdFromEmail(email: string): Promise<string | undefined> {
 }
 
 export const setEmailMap = (userId: string, email: string) => {
-  return set(getEmailMapRef(email), userId);
+  return set(getEmailMapRef(email.toLowerCase()), userId);
 };
