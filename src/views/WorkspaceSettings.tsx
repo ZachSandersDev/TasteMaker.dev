@@ -131,7 +131,7 @@ export default function WorkspaceSettings() {
               options={[
                 {
                   onClick: handleDeleteWorkspace,
-                  text: "Delete Workspace",
+                  text: "Delete workspace",
                   icon: "delete",
                 },
               ]}

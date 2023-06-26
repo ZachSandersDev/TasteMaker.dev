@@ -18,11 +18,11 @@ import { authStore } from "../../@modules/stores/auth";
 import { workspaceStore } from "../../@modules/stores/workspace";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
-import AppHeader from "../../components/Global/AppHeader";
-import AppView from "../../components/Global/AppView";
 import DropMenu from "../../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
+import AppHeader from "../../components/Global/AppHeader";
+import AppView from "../../components/Global/AppView";
 import ImageBanner from "../../components/ImageUpload";
 import Loading from "../../components/Loading";
 
@@ -217,7 +217,7 @@ export default function RecipeDetailsView() {
                 },
                 {
                   onClick: handlePickIcon,
-                  text: recipe.icon ? "Change Icon" : "Add Recipe Icon",
+                  text: recipe.icon ? "Change icon" : "Add recipe icon",
                   icon: "mood",
                 },
                 {

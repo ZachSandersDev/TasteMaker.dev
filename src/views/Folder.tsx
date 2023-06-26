@@ -14,11 +14,11 @@ import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
 
-import AppHeader from "../components/Global/AppHeader";
-import AppView from "../components/Global/AppView";
 import DropMenu from "../components/Dialogs/DropMenu/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../components/Dialogs/RecipeSelectorDialog";
+import AppHeader from "../components/Global/AppHeader";
+import AppView from "../components/Global/AppView";
 import { FolderItem } from "../components/ListItems/FolderItem";
 import { RecipeItem } from "../components/ListItems/RecipeItem";
 import Loading from "../components/Loading";
@@ -146,7 +146,7 @@ export default function FolderView() {
               options={[
                 {
                   onClick: makeNewFolder,
-                  text: "New Folder",
+                  text: "New folder",
                   icon: "create_new_folder",
                 },
                 { onClick: makeNewRecipe, text: "New Recipe", icon: "notes" },
@@ -158,17 +158,17 @@ export default function FolderView() {
                 options={[
                   {
                     onClick: handleChangeFolderIcon,
-                    text: folder.icon ? "Change Icon" : "Add Folder Icon",
+                    text: folder.icon ? "Change icon" : "Add folder icon",
                     icon: "mood",
                   },
                   {
                     onClick: handleDeleteFolder,
-                    text: "Delete Folder",
+                    text: "Delete folder",
                     icon: "delete",
                   },
                   {
                     onClick: handleMove,
-                    text: "Move Folder",
+                    text: "Move folder",
                     icon: "drive_file_move",
                   },
                 ]}
