@@ -174,7 +174,7 @@ export default function RecipeSelectorDialogComponent() {
               </Button>
               <div />
 
-              {...workspaces.map(({ uid, ws }) => (
+              {...workspaces.map(({ userId, workspaceId, ws }) => (
                 <Button
                   key={ws._id}
                   before={
@@ -186,9 +186,7 @@ export default function RecipeSelectorDialogComponent() {
                     />
                   }
                   variant="naked"
-                  onClick={() =>
-                    setWorkspace({ userId: uid, workspaceId: ws._id })
-                  }
+                  onClick={() => setWorkspace({ userId, workspaceId })}
                 >
                   {ws.name || "Untitled Workspace"}
                 </Button>
