@@ -1,8 +1,8 @@
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 
 import Button from "../../../@design/components/Button/Button";
+import { useContextMenu } from "../ContextMenuDialog";
 
-import DropMenuDialog from "./DropMenuDialog";
 import "./DropMenu.scss";
 
 export interface DropMenuOption {
@@ -16,28 +16,26 @@ export interface DropMenuProps {
   options: DropMenuOption[];
   icon?: string;
   buttonContent?: ReactElement;
-  selected?: string;
 }
 
 export default function DropMenu({
   options,
   icon,
   buttonContent,
-  selected,
 }: DropMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const contextMenu = useContextMenu();
 
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as HTMLButtonElement;
+    const rect = target.getBoundingClientRect();
 
-  const handleSelect = (option: DropMenuOption) => {
-    option.onClick();
-    setIsOpen(false);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
+    contextMenu({
+      position: {
+        x: rect.right,
+        y: rect.bottom,
+      },
+      options,
+    });
   };
 
   return (
@@ -51,15 +49,6 @@ export default function DropMenu({
           variant="icon"
           onClick={handleClick}
           iconBefore={icon || "more_horiz"}
-        />
-      )}
-
-      {isOpen && (
-        <DropMenuDialog
-          options={options}
-          onSelect={handleSelect}
-          onClose={handleClose}
-          selected={selected}
         />
       )}
     </div>

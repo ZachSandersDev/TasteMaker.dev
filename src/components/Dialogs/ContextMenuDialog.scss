@@ -1,0 +1,118 @@
+.context-menu.ra-card {
+  width: fit-content;
+  padding: 0;
+  overflow: hidden;
+  z-index: 2;
+
+  position: absolute;
+
+  background-color: var(--color-nav-background);
+
+  box-shadow: 0 2px 8px 2px black;
+  border: 2px solid var(--color-border);
+
+  gap: 0;
+  display: none;
+
+  max-width: var(--app-view-max-size);
+
+  @media (max-width: 999px) {
+    top: 50% !important;
+    left: 50% !important;
+    transform-origin: center center !important;
+    width: 80vw;
+  }
+}
+
+.context-menu.ra-dialog-cover {
+  @media (min-width: 1000px) {
+    background-color: initial;
+  }
+}
+
+.context-menu-item {
+  outline: none;
+  border: none;
+  background-color: var(--color-background);
+  color: inherit;
+
+  display: flex;
+  align-items: center;
+  padding: calc(var(--spacing) * 2) var(--spacing);
+  gap: var(--spacing);
+
+  cursor: pointer;
+  user-select: none;
+
+  font-size: 1em;
+
+  @media (min-width: 1000px) {
+    padding: var(--spacing);
+    font-size: 0.8em;
+  }
+
+  i {
+    font-size: 1.35em;
+  }
+
+  * {
+    white-space: nowrap;
+  }
+
+  transition: all 0.25s;
+
+  &:hover {
+    background-color: var(--color-interface-base);
+  }
+
+  &:focus,
+  &.selected {
+    background-color: var(--color-interface-active);
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+.context-menu.context-menu-enter {
+  display: flex;
+  transform: translate(-50%, -50%) scale(0.5);
+  @media (min-width: 1000px) {
+    transform: scale(0.5);
+  }
+  opacity: 0;
+}
+
+.context-menu.context-menu-enter-active {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+  @media (min-width: 1000px) {
+    transform: scale(1);
+  }
+  opacity: 1;
+  transition: all 0.2s;
+}
+
+.context-menu.context-menu-enter-done,
+.context-menu.context-menu-exit {
+  display: flex;
+  transform: translate(-50%, -50%);
+  @media (min-width: 1000px) {
+    transform: scale(1);
+  }
+}
+
+.context-menu.context-menu-exit-active {
+  display: flex;
+  transform: translate(-50%, -50%) scale(0.5);
+  @media (min-width: 1000px) {
+    transform: scale(0.5);
+  }
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.context-menu.context-menu-exit-done {
+  display: none;
+}
