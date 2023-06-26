@@ -15,16 +15,23 @@ export function useProfile(userId: string) {
   return { profileLoading, profile };
 }
 
+export interface ProfileWithUserId {
+  userId: string;
+  profile: Profile;
+}
+
 export function useProfiles(userIds: string[]) {
-  const { loading: profilesLoading, value: profiles } = useSWR<Profile[]>(
-    `/profiles?userIds=${userIds.join(",")}`,
-    async () => {
-      const profiles = await Promise.all(
-        userIds.map((userId) => getProfile(userId))
-      );
-      return profiles.filter((p): p is Profile => !!p);
-    }
-  );
+  const { loading: profilesLoading, value: profiles } = useSWR<
+    ProfileWithUserId[]
+  >(`/profiles?userIds=${userIds.join(",")}`, async () => {
+    const profiles = await Promise.all(
+      userIds.map(async (userId) => ({
+        userId,
+        profile: await getProfile(userId),
+      }))
+    );
+    return profiles.filter((p): p is ProfileWithUserId => !!p.profile);
+  });
 
   return { profilesLoading, profiles };
 }

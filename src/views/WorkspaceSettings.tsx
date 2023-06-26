@@ -12,6 +12,7 @@ import {
   saveWorkspace,
 } from "../@modules/api/workspaces";
 import { useProfiles } from "../@modules/hooks/profile";
+import { authStore } from "../@modules/stores/auth";
 import { profileStore } from "../@modules/stores/profile";
 import { workspaceStore } from "../@modules/stores/workspace";
 import { Workspace } from "../@modules/types/workspaces";
@@ -28,6 +29,7 @@ import { ProfileImage } from "../components/ProfileImage";
 
 export default function WorkspaceSettings() {
   const { userId, workspaceId } = useParams();
+  const { user } = useRecoilValue(authStore);
   const { profile } = useRecoilValue(profileStore);
   const setWorkspace = useSetRecoilState(workspaceStore);
   const navigate = useNavigate();
@@ -145,8 +147,6 @@ export default function WorkspaceSettings() {
           id={workspace._id}
           onClick={handlePickIcon}
         />
-      </header>
-      <header className="ra-header">
         <MultilineInput
           className="ra-title"
           value={workspace.name || ""}
@@ -162,9 +162,9 @@ export default function WorkspaceSettings() {
         </header>
 
         <div className="ra-list">
-          <ProfileItem profile={profile} disabled />
-          {profiles?.map((p, i) => (
-            <ProfileItem key={i} profile={p} disabled />
+          <ProfileItem userId={user?.uid} profile={profile} disabled />
+          {profiles?.map(({ userId, profile }, i) => (
+            <ProfileItem key={i} userId={userId} profile={profile} disabled />
           ))}
         </div>
 
