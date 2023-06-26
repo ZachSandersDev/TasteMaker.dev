@@ -16,10 +16,13 @@
   text-align: start;
   white-space: pre-wrap;
 
-  cursor: pointer;
   user-select: none;
 
   transition: all 0.15s;
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 
   &:not(:disabled):hover {
     background-color: var(--color-interface-active);
