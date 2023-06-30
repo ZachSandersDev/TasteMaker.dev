@@ -50,7 +50,7 @@ export function KeyboardList<T>({
       e.preventDefault();
       onDelete(index);
 
-      if (index === values.length - 1) {
+      if (index > 0) {
         nextTickFocus.current = index - 1;
       } else {
         nextTickFocus.current = index;
