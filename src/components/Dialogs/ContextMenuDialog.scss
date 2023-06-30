@@ -38,6 +38,7 @@
 
   display: flex;
   align-items: center;
+  text-align: start;
   padding: calc(var(--spacing) * 2) var(--spacing);
   gap: var(--spacing);
 
@@ -53,10 +54,6 @@
 
   i {
     font-size: 1.35em;
-  }
-
-  * {
-    white-space: nowrap;
   }
 
   transition: all 0.25s;

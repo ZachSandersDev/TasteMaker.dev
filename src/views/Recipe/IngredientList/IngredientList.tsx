@@ -5,7 +5,6 @@ import {
   getBlankIngredient,
 } from "../../../@modules/types/recipes";
 
-import classNames from "../../../@modules/utils/classNames";
 import { KeyboardList } from "../../../components/KeyboardList";
 
 import { IngredientItem } from "./IngredientItem";
@@ -62,7 +61,7 @@ export default function IngredientList({
 
   return (
     <KeyboardList<Ingredient>
-      className={classNames(!editing && "ingredient-list")}
+      className="ingredient-list"
       values={ingredients}
       onReorder={reorderIngredients}
       onNew={newIngredient}

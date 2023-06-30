@@ -89,7 +89,20 @@ export const IngredientItem = forwardRef<
               <span className="ingredient-checkbox material-symbols-rounded">
                 {ingredient.complete ? "check" : ""}
               </span>
-              <span>{ingredient.value}</span>
+
+              <div className="ingredient-item-text">
+                <span>{ingredient.value}</span>
+                {!!recipeList.length && (
+                  <span className="ingredient-included-in">
+                    {recipeList.map((r, i) => (
+                      <span key={r._id}>
+                        {r.name}
+                        {i !== recipeList.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </span>
+                )}
+              </div>
             </label>
           )}
           {!ingredient.subHeading && !checklist && (
@@ -100,16 +113,6 @@ export const IngredientItem = forwardRef<
                 <b>{ingredientStr}</b>
               </span>
             </>
-          )}
-          {!!recipeList.length && (
-            <span className="ingredient-included-in">
-              {recipeList.map((r, i) => (
-                <span key={r._id}>
-                  {r.name}
-                  {i !== recipeList.length - 1 && ", "}
-                </span>
-              ))}
-            </span>
           )}
         </div>
       );
@@ -151,25 +154,27 @@ export const IngredientItem = forwardRef<
               ]}
             />
 
-            <MultilineInput
-              placeholder={ingredient.subHeading ? "Section:" : "Ingredient"}
-              value={ingredient.value}
-              onChange={(value) => setIngredientValue(value)}
-              variant="naked"
-              onKeyDown={onKeyDown}
-              ref={ref}
-            />
+            <div className="ingredient-item-text">
+              <MultilineInput
+                placeholder={ingredient.subHeading ? "Section:" : "Ingredient"}
+                value={ingredient.value}
+                onChange={(value) => setIngredientValue(value)}
+                variant="naked"
+                onKeyDown={onKeyDown}
+                ref={ref}
+              />
 
-            {!!recipeList.length && (
-              <span className="ingredient-included-in">
-                {recipeList.map((r, i) => (
-                  <span key={r._id}>
-                    {r.name}
-                    {i !== recipeList.length - 1 && ", "}
-                  </span>
-                ))}
-              </span>
-            )}
+              {!!recipeList.length && (
+                <span className="ingredient-included-in">
+                  {recipeList.map((r, i) => (
+                    <span key={r._id}>
+                      {r.name}
+                      {i !== recipeList.length - 1 && ", "}
+                    </span>
+                  ))}
+                </span>
+              )}
+            </div>
           </div>
         </SwipeToDelete>
       </Reorder.Item>
