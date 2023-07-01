@@ -1,4 +1,4 @@
-# TasteMaker.dev
+# [TasteMaker.dev](https://tastemaker.dev)
 
 A Firebase powered recipe book app with beautiful, simple recipe previews.
 
