@@ -13,6 +13,7 @@ export interface MultilineInputProps {
   disabled?: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent) => void;
+  onPaste?: (e: React.ClipboardEvent) => void;
   variant?: "filled" | "naked";
 }
 
@@ -28,6 +29,7 @@ export const MultilineInput = forwardRef<
       onChange,
       onKeyDown,
       onKeyUp,
+      onPaste,
       disabled,
       variant = "filled",
     },
@@ -53,6 +55,7 @@ export const MultilineInput = forwardRef<
             value={value}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
+            onPaste={onPaste}
             onChange={(e) => onChange?.(e.target.value)}
             ref={ref}
           />

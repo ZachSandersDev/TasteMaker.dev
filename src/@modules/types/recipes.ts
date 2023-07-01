@@ -57,9 +57,9 @@ export function setRecipeDefaults(recipie: Partial<Recipe>) {
   return defaultedRecipe;
 }
 
-export function getBlankIngredient(): Ingredient {
+export function getBlankIngredient(value?: string): Ingredient {
   return {
-    value: "",
+    value: value || "",
     units: "",
     ingredient: "",
     _id: uuid(),

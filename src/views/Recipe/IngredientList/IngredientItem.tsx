@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { KeyboardEvent, forwardRef, useEffect } from "react";
+import { ClipboardEvent, KeyboardEvent, forwardRef, useEffect } from "react";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { useRecipeList } from "../../../@modules/hooks/recipes";
@@ -20,6 +20,7 @@ export interface IngredientItemProps {
   onUpdate: (i: Ingredient) => void;
   onDelete: () => void;
   onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  onPaste?: (e: ClipboardEvent) => void;
 }
 
 export const IngredientItem = forwardRef<
@@ -27,7 +28,15 @@ export const IngredientItem = forwardRef<
   IngredientItemProps
 >(
   (
-    { ingredient, onUpdate, onDelete, onKeyDown, editing, checklist = false },
+    {
+      ingredient,
+      onUpdate,
+      onDelete,
+      onKeyDown,
+      onPaste,
+      editing,
+      checklist = false,
+    },
     ref
   ) => {
     const controls = useDragControls();
@@ -161,6 +170,7 @@ export const IngredientItem = forwardRef<
                 onChange={(value) => setIngredientValue(value)}
                 variant="naked"
                 onKeyDown={onKeyDown}
+                onPaste={onPaste}
                 ref={ref}
               />
 

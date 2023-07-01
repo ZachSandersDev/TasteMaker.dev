@@ -18,9 +18,9 @@ import { authStore } from "../../@modules/stores/auth";
 import { workspaceStore } from "../../@modules/stores/workspace";
 import { useBreadcrumbs } from "../../@modules/utils/useBreadcrumbs";
 
-import DropMenu from "../../components/DropMenu";
 import { usePickIcon } from "../../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../../components/Dialogs/RecipeSelectorDialog";
+import DropMenu from "../../components/DropMenu";
 import AppHeader from "../../components/Global/AppHeader";
 import AppView from "../../components/Global/AppView";
 import ImageBanner from "../../components/ImageUpload";
@@ -292,33 +292,18 @@ export default function RecipeDetailsView() {
           </section>
         )}
 
-        <div>
-          {(!!recipe.ingredients.length || editing) && (
-            <header className="ra-header">
-              <h3>Ingredients</h3>
-            </header>
-          )}
+        <IngredientList
+          ingredients={recipe.ingredients}
+          updateRecipe={updateRecipe}
+          editing={editing}
+          header
+        />
 
-          <IngredientList
-            ingredients={recipe.ingredients}
-            updateRecipe={updateRecipe}
-            editing={editing}
-          />
-        </div>
-
-        <div>
-          {(!!recipe.steps.length || editing) && (
-            <header className="ra-header">
-              <h3>Steps</h3>
-            </header>
-          )}
-
-          <StepList
-            steps={recipe.steps}
-            updateRecipe={updateRecipe}
-            editing={editing}
-          />
-        </div>
+        <StepList
+          steps={recipe.steps}
+          updateRecipe={updateRecipe}
+          editing={editing}
+        />
       </div>
     </AppView>
   );
