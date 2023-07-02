@@ -3,7 +3,6 @@ import { v4 as uuid } from "uuid";
 
 import { Step, Recipe, getBlankStep } from "../../../@modules/types/recipes";
 
-import classNames from "../../../@modules/utils/classNames";
 import { KeyboardList } from "../../../components/KeyboardList";
 
 import { StepItem } from "../StepList/StepItem";
@@ -42,34 +41,49 @@ export function StepList({ steps, editing, updateRecipe }: StepListProps) {
     });
   };
 
-  const newStep = (at?: number) => {
-    updateRecipe?.((r) =>
-      r.steps.splice(at || r.steps.length, 0, {
-        text: "",
-        _id: uuid(),
-      })
-    );
+  const newStep = (at?: number, values?: string[]) => {
+    updateRecipe?.((r) => {
+      const hasValue = !!at && !!r.steps[at]?.text;
+
+      r.steps.splice(
+        at ?? r.steps.length,
+        !hasValue ? 1 : 0,
+        ...(values
+          ? values.map((v) => ({ text: v, _id: uuid() }))
+          : [{ text: "", _id: uuid() }])
+      );
+    });
   };
 
+  if (!editing && !steps.some(({ text }) => !!text)) {
+    return null;
+  }
+
   return (
-    <KeyboardList<Step>
-      className={classNames(!editing && "step-list")}
-      values={steps}
-      onReorder={reorderSteps}
-      onNew={newStep}
-      onDelete={deleteStep}
-      renderItem={(step, i, onKeyDown, ref) => (
-        <StepItem
-          key={step._id}
-          step={step}
-          index={i}
-          onTextChange={(text) => updateStepText(i, text)}
-          onDelete={() => deleteStep(i)}
-          onKeyDown={onKeyDown}
-          editing={editing}
-          ref={ref}
-        />
-      )}
-    />
+    <div>
+      <header className="ra-header">
+        <h3>Steps</h3>
+      </header>
+      <KeyboardList<Step>
+        className="step-list"
+        values={steps}
+        onReorder={reorderSteps}
+        onNew={newStep}
+        onDelete={deleteStep}
+        renderItem={(step, i, { onKeyDown, onPaste }, ref) => (
+          <StepItem
+            key={step._id}
+            step={step}
+            index={i}
+            onTextChange={(text) => updateStepText(i, text)}
+            onDelete={() => deleteStep(i)}
+            onKeyDown={onKeyDown}
+            onPaste={onPaste}
+            editing={editing}
+            ref={ref}
+          />
+        )}
+      />
+    </div>
   );
 }

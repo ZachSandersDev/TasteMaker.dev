@@ -1,19 +1,22 @@
 import { Reorder } from "framer-motion";
 
-import { KeyboardEvent, useEffect, useRef } from "react";
+import { ClipboardEvent, KeyboardEvent, useEffect, useRef } from "react";
 
 import classNames from "../@modules/utils/classNames";
 
 export interface KeyboardListProps<T> {
   values: T[];
   className?: string;
-  onNew: (at?: number) => void;
+  onNew: (at?: number, values?: string[]) => void;
   onDelete: (index: number) => void;
   onReorder: (newValues: T[]) => void;
   renderItem: (
     value: T,
     index: number,
-    onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void,
+    props: {
+      onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+      onPaste: (e: ClipboardEvent) => void;
+    },
     ref: (ref: HTMLTextAreaElement | null) => void
   ) => JSX.Element;
 }
@@ -50,12 +53,31 @@ export function KeyboardList<T>({
       e.preventDefault();
       onDelete(index);
 
-      if (index === values.length - 1) {
+      if (index > 0) {
         nextTickFocus.current = index - 1;
       } else {
         nextTickFocus.current = index;
       }
     }
+  };
+
+  const handlePaste = (e: ClipboardEvent, index: number) => {
+    const text = e.clipboardData?.getData("text/plain");
+    if (!text) {
+      return;
+    }
+
+    const lines = text
+      .split(/\r?\n/g)
+      .map((t) => t.replaceAll("•", "").trim())
+      .filter((t) => !!t);
+
+    if (lines.length <= 1) {
+      return;
+    }
+
+    e.preventDefault();
+    onNew(index, lines);
   };
 
   useEffect(() => {
@@ -77,7 +99,10 @@ export function KeyboardList<T>({
         renderItem(
           value,
           index,
-          (e) => handleKeyDown(e, index),
+          {
+            onKeyDown: (e) => handleKeyDown(e, index),
+            onPaste: (e) => handlePaste(e, index),
+          },
           (el) => (editorRefs.current[index] = el)
         )
       )}

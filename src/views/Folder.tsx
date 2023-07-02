@@ -14,9 +14,9 @@ import { Folder } from "../@modules/types/folder";
 import { Recipe } from "../@modules/types/recipes";
 import { useBreadcrumbs } from "../@modules/utils/useBreadcrumbs";
 
-import DropMenu from "../components/DropMenu";
 import { usePickIcon } from "../components/Dialogs/IconPickerDialog";
 import { useSelectFolder } from "../components/Dialogs/RecipeSelectorDialog";
+import DropMenu from "../components/DropMenu";
 import AppHeader from "../components/Global/AppHeader";
 import AppView from "../components/Global/AppView";
 import { FolderItem } from "../components/ListItems/FolderItem";
@@ -42,7 +42,7 @@ export default function FolderView() {
     folderId,
   });
 
-  const { recipesLoading, recipes, revalidateRecipes } = useRecipesWithParent(
+  const { recipesLoading, recipes } = useRecipesWithParent(
     { userId, workspaceId },
     folderId
   );
@@ -63,16 +63,19 @@ export default function FolderView() {
   });
 
   const makeNewRecipe = async () => {
-    await newRecipe({ userId, workspaceId }, { name: "", parent: folder?._id });
-    revalidateRecipes();
+    const recipeId = await newRecipe(
+      { userId, workspaceId },
+      { name: "", parent: folder?._id }
+    );
+    navigate(`/recipe/${recipeId}`);
   };
 
   const makeNewFolder = async () => {
-    await newFolder(
+    const folderId = await newFolder(
       { userId, workspaceId },
       { text: "New Folder", parent: folder?._id }
     );
-    revalidateFolders();
+    navigate(`/folder/${folderId}`);
   };
 
   const handleRecipeClick = (recipe: Recipe) => {
@@ -162,14 +165,14 @@ export default function FolderView() {
                     icon: "mood",
                   },
                   {
-                    onClick: handleDeleteFolder,
-                    text: "Delete folder",
-                    icon: "delete",
-                  },
-                  {
                     onClick: handleMove,
                     text: "Move folder",
                     icon: "drive_file_move",
+                  },
+                  {
+                    onClick: handleDeleteFolder,
+                    text: "Delete folder",
+                    icon: "delete",
                   },
                 ]}
               />

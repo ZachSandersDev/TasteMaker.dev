@@ -5,7 +5,6 @@ import {
   getBlankIngredient,
 } from "../../../@modules/types/recipes";
 
-import classNames from "../../../@modules/utils/classNames";
 import { KeyboardList } from "../../../components/KeyboardList";
 
 import { IngredientItem } from "./IngredientItem";
@@ -16,6 +15,7 @@ export interface IngredientListProps {
   ingredients: Ingredient[];
   editing: boolean;
   checklist?: boolean;
+  header?: boolean;
   updateRecipe?: (
     updateFunc: (r: { ingredients: Ingredient[] }) => void
   ) => void;
@@ -25,6 +25,7 @@ export default function IngredientList({
   ingredients,
   editing,
   checklist = false,
+  header = false,
   updateRecipe,
 }: IngredientListProps) {
   useEffect(() => {
@@ -54,31 +55,51 @@ export default function IngredientList({
     });
   };
 
-  const newIngredient = (at?: number) => {
-    updateRecipe?.((r) =>
-      r.ingredients.splice(at || r.ingredients.length, 0, getBlankIngredient())
-    );
+  const newIngredient = (at?: number, values?: string[]) => {
+    updateRecipe?.((r) => {
+      const hasValue = !!at && !!r.ingredients[at]?.value;
+
+      r.ingredients.splice(
+        at ?? r.ingredients.length,
+        !hasValue ? 1 : 0,
+        ...(values
+          ? values.map((v) => getBlankIngredient(v))
+          : [getBlankIngredient()])
+      );
+    });
   };
 
+  if (!editing && !ingredients.some(({ value }) => !!value)) {
+    return null;
+  }
+
   return (
-    <KeyboardList<Ingredient>
-      className={classNames(!editing && "ingredient-list")}
-      values={ingredients}
-      onReorder={reorderIngredients}
-      onNew={newIngredient}
-      onDelete={deleteIngredient}
-      renderItem={(ingredient, i, onKeyDown, ref) => (
-        <IngredientItem
-          key={ingredient._id}
-          ingredient={ingredient}
-          editing={editing}
-          checklist={checklist}
-          onUpdate={(ni) => updateIngredient(ni, i)}
-          onDelete={() => deleteIngredient(i)}
-          onKeyDown={onKeyDown}
-          ref={ref}
-        />
+    <div>
+      {header && (
+        <header className="ra-header">
+          <h3>Ingredients</h3>
+        </header>
       )}
-    />
+      <KeyboardList<Ingredient>
+        className="ingredient-list"
+        values={ingredients}
+        onReorder={reorderIngredients}
+        onNew={newIngredient}
+        onDelete={deleteIngredient}
+        renderItem={(ingredient, i, { onKeyDown, onPaste }, ref) => (
+          <IngredientItem
+            key={ingredient._id}
+            ingredient={ingredient}
+            editing={editing}
+            checklist={checklist}
+            onUpdate={(ni) => updateIngredient(ni, i)}
+            onDelete={() => deleteIngredient(i)}
+            onKeyDown={onKeyDown}
+            onPaste={onPaste}
+            ref={ref}
+          />
+        )}
+      />
+    </div>
   );
 }

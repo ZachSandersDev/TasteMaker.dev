@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "framer-motion";
 
-import { KeyboardEvent, forwardRef } from "react";
+import { ClipboardEvent, KeyboardEvent, forwardRef } from "react";
 
 import MultilineInput from "../../../@design/components/MultilineInput/MultilineInput";
 import { Step } from "../../../@modules/types/recipes";
@@ -18,11 +18,20 @@ export interface StepItemProps {
   onTextChange: (value: string) => void;
   onDelete: () => void;
   onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  onPaste?: (e: ClipboardEvent) => void;
 }
 
 export const StepItem = forwardRef<HTMLTextAreaElement, StepItemProps>(
   (
-    { step, index, editing, onTextChange, onDelete, onKeyDown }: StepItemProps,
+    {
+      step,
+      index,
+      editing,
+      onTextChange,
+      onDelete,
+      onKeyDown,
+      onPaste,
+    }: StepItemProps,
     ref
   ) => {
     const controls = useDragControls();
@@ -66,6 +75,7 @@ export const StepItem = forwardRef<HTMLTextAreaElement, StepItemProps>(
               value={step.text}
               onChange={onTextChange}
               onKeyDown={onKeyDown}
+              onPaste={onPaste}
               ref={ref}
             />
           </div>
