@@ -1,9 +1,10 @@
 export const CACHE_TTL = 500;
+export const DEDUPE_TTL = 500;
 
 export interface SWRCacheEntry<T> {
-  timestamp: number;
-  loading?: boolean;
-  value: T | undefined;
+  lastFetched?: number;
+  loadingStart?: number;
+  value?: T;
 }
 
 export interface SWRState<T> {
@@ -34,15 +35,44 @@ export function notifyListeners(cacheKey: string, value: any) {
 }
 
 function setIsLoading(cacheKey: string) {
-  const timestamp = new Date().getTime();
   const { value } = getCacheEntry(cacheKey) || {};
 
-  const cachedValue = JSON.stringify({ timestamp, value, loading: true });
-  localStorage.setItem(cacheKey, cachedValue);
+  const cacheEntry: SWRCacheEntry<unknown> = {
+    loadingStart: Date.now(),
+    value,
+  };
+
+  localStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
+}
+
+function shouldFetch(cacheKey: string): boolean {
+  if (
+    // If we fetched recently or are currently loading, don't fetch
+    isRecent(cacheKey) ||
+    isLoading(cacheKey)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function isRecent(cacheKey: string): boolean {
+  const { lastFetched } = getCacheEntry(cacheKey) || {};
+  if (!lastFetched || lastFetched < Date.now() - CACHE_TTL) {
+    return false;
+  }
+
+  return true;
 }
 
 function isLoading(cacheKey: string): boolean {
-  return !!getCacheEntry(cacheKey)?.loading;
+  const { loadingStart } = getCacheEntry(cacheKey) || {};
+  if (!loadingStart || loadingStart < Date.now() - DEDUPE_TTL) {
+    return false;
+  }
+
+  return true;
 }
 
 function getCacheEntry<T>(cacheKey: string): SWRCacheEntry<T> | undefined {
@@ -54,9 +84,8 @@ function getCacheEntry<T>(cacheKey: string): SWRCacheEntry<T> | undefined {
 }
 
 export function setCachedValue<T>(cacheKey: string, value: T) {
-  const timestamp = new Date().getTime();
-  const cachedValue = JSON.stringify({ timestamp, value });
-  localStorage.setItem(cacheKey, cachedValue);
+  const cacheEntry: SWRCacheEntry<T> = { lastFetched: Date.now(), value };
+  localStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
 }
 
 export function swr<T>(
@@ -64,24 +93,25 @@ export function swr<T>(
   loader: () => Promise<T | undefined>,
   callback: SWRListener<T>
 ): () => void {
+  // If we have a cached value, return it
   const cacheEntry = getCacheEntry<T>(cacheKey);
-  const isCurrentlyLoading = isLoading(cacheKey);
-
-  // If we have a cached value, immediately return that while we load from network
-  if (cacheEntry && !isCurrentlyLoading) {
-    callback({ loading: false, value: cacheEntry.value });
+  if (cacheEntry?.value) {
+    callback({
+      loading: false,
+      value: cacheEntry.value,
+    });
   }
-  // Otherwise, return that we're loading from network
+  // Otherwise return loading
   else {
     callback({ loading: true, value: undefined });
   }
 
-  // If we're already loading, skip calling loader() again
-  if (isCurrentlyLoading) {
+  // If we're already loading, don't load again
+  if (isLoading(cacheKey)) {
     addListener(cacheKey, callback);
   }
-  // Otherwise, load from network and notify listeners
-  else {
+  // If we haven't revalidated in a bit, and we aren't already loading, load from network and notify listeners
+  else if (shouldFetch(cacheKey)) {
     setIsLoading(cacheKey);
     loader()
       .then((value) => {
